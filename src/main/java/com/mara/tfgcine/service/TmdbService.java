@@ -117,7 +117,7 @@ public class TmdbService {
             JsonNode results = mapper.readTree(response).path("results"
 
             for (int i = 0; i < 25 && i < results.size( i++) {
-                seriesList.add(mapMovie(results.get(i), false)
+                seriesList.add(mapTv(results.get(i))
             }
 
         } catch (Exception e) {
@@ -128,7 +128,99 @@ public class TmdbService {
     }
 
     /* =========================
-       MAPPER CENTRAL
+       MAPPER series
+       ========================= */
+    private Movie mapTv(JsonNode jsonTv) {
+
+        Movie tv = new Movie(
+
+        int id = jsonTv.path("id").asInt(
+        tv.setId(id
+
+        /* ---------- TÍTULO ---------- */
+        String nameEs = jsonTv.path("name").asText(
+        String finalName = nameEs;
+
+        if (containsNonLatin(nameEs)) {
+            String nameEn = jsonTv.path("original_name").asText(
+            if (nameEn != null && !nameEn.isBlank()) {
+                finalName = nameEn;
+            }
+        }
+
+        if (finalName == null || finalName.isBlank()) {
+            finalName = "Sin título";
+        }
+
+        tv.setTitle(finalName
+
+        /* ---------- RATING ---------- */
+        tv.setVoteAverage(jsonTv.path("vote_average").asDouble(0.0)
+        tv.setVoteCount(jsonTv.path("vote_count").asInt(0)
+
+        /* ---------- POSTER ---------- */
+        String poster = jsonTv.path("poster_path").asText(null
+        tv.setPosterPath(
+                poster != null
+                        ? posterBase + poster
+                        : "/img/no-poster.png"
+        
+
+        /* ---------- BACKDROP ---------- */
+        String backdrop = jsonTv.path("backdrop_path").asText(null
+        tv.setBackdropPath(
+                backdrop != null
+                        ? backdropBase + backdrop
+                        : null
+        
+
+        /* ---------- GÉNEROS (TV) ---------- */
+        List<String> genreNames = new ArrayList<>(
+        JsonNode genreIds = jsonTv.path("genre_ids"
+
+        if (genreIds.isArray()) {
+            try {
+                List<JsonNode> genres = getTvGenres(
+
+                for (JsonNode idNode : genreIds) {
+                    int gid = idNode.asInt(
+                    genres.stream()
+                            .filter(g -> g.path("id").asInt() == gid)
+                            .findFirst()
+                            .ifPresent(g -> genreNames.add(g.path("name").asText())
+                }
+            } catch (Exception ignored) {}
+        }
+
+        tv.setGenres(genreNames
+
+        return tv;
+    }
+
+    private List<JsonNode> cachedTvGenres = null;
+
+    private List<JsonNode> getTvGenres() throws Exception {
+
+        if (cachedTvGenres != null) {
+            return cachedTvGenres;
+        }
+
+        String url = baseUrl + "/genre/tv/list"
+                + "?api_key=" + apiKey
+                + "&language=" + primaryLang;
+
+        String response = restTemplate.getForObject(url, String.class
+        JsonNode genresNode = mapper.readTree(response).path("genres"
+
+        cachedTvGenres = new ArrayList<>(
+        genresNode.forEach(cachedTvGenres::add
+
+        return cachedTvGenres;
+    }
+
+
+    /* =========================
+       MAPPER movies
        ========================= */
 
     private Movie mapMovie(JsonNode jsonMovie, boolean includeOverview) {
