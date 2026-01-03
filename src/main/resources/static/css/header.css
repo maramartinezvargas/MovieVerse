@@ -1,0 +1,74 @@
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* Fondo con transparencia y desenfoque */
+    background-color: rgba(13, 17, 23, 0.75
+    backdrop-filter: saturate(180%) blur(10px
+
+    border-bottom: 1px solid #21262d;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Logo */
+.logo a {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #e6edf3;
+    text-decoration: none;
+}
+
+/* Search bar */
+.search-bar {
+    display: flex;
+    max-width: 800px;
+    margin: 0 25px;
+}
+
+.search-bar input {
+    flex: 1;
+    background-color: rgba(13, 17, 23
+    border: 1px solid #30363d;
+    border-radius: 6px 0 0 6px;
+    padding: 0.5rem 0.75rem;
+    color: #e6edf3;
+}
+
+.search-bar input::placeholder {
+    color: #8b949e;
+}
+
+.search-bar button {
+    background-color: rgba(13, 17, 23
+    border: 1px solid #30363d;
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+    padding: 0 0.75rem;
+    cursor: pointer;
+}
+
+/* Navigation */
+.main-nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.main-nav a {
+    color: #c9d1d9;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.main-nav a:hover {
+    color: #ffffff;
+}

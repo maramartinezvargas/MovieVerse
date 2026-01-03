@@ -1,0 +1,92 @@
+.hero {
+    min-height: 45vh;
+    max-height: 50vh;
+    background-size: cover;
+    background-position: center 20%;
+    display: flex;
+    align-items: center;
+}
+
+/* Contenedor común (mismo que header y secciones) */
+.hero .layout-container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    display: flex;
+    align-items: center;
+
+}
+
+.hero-content {
+    max-width: 600px; /* ancho de lectura cómodo */
+    color: #e6edf3;
+}
+
+.hero-badge {
+    display: inline-block;
+    background-color: #f1c40f;
+    color: #0d1117;
+    font-weight: 700;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #c9d1d9;
+}
+
+.hero-meta .rating {
+    font-weight: 600;
+}
+
+.hero-meta .genre {
+    background: rgba(255,255,255,0.12
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+}
+
+.hero-overview {
+    max-width: 600px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #c9d1d9;
+    margin-bottom: 2rem;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.hero-actions .btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: #ffffff;
+    color: #0d1117;
+}
+
+.btn-secondary {
+    background-color: rgba(255,255,255,0.15
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.3
+}

@@ -1,0 +1,27 @@
+.carousel-section {
+    margin: 3rem 0;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #e6edf3;
+    margin: 0;
+}
+
+.section-link {
+    font-size: 0.9rem;
+    color: #8b949e;
+    text-decoration: none;
+}
+
+.section-link:hover {
+    color: #ffffff;
+}
