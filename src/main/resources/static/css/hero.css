@@ -19,7 +19,7 @@
 }
 
 .hero-content {
-    max-width: 600px; /* ancho de lectura cómodo */
+    max-width: 800px; /* Ancho sinópsis */
     color: #f0dfc8;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .hero-overview {
-    max-width: 600px;
+    max-width: 700px;
     font-size: 1rem;
     line-height: 1.5;
     color: #f0dfc8;
