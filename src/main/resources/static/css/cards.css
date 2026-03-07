@@ -1,6 +1,7 @@
 .carousel-card {
+    margin-top: 1rem;
     flex: 0 0 180px;
-    background: #161b22;
+    background: #272727;
     border-radius: 10px;
     overflow: hidden;
     transition: transform .2s ease;
@@ -27,7 +28,7 @@
 
 .card-meta span {
     font-size: 0.85rem;
-    color: #f1c40f;
+    color: #ffbd59
 }
 
 .carousel {

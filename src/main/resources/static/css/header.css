@@ -3,7 +3,7 @@
     top: 0;
     z-index: 1000;
     /* Fondo con transparencia y desenfoque */
-    background-color: rgba(13, 17, 23, 0.75
+    background-color: rgba(37, 37, 37, 0.75
     backdrop-filter: saturate(180%) blur(10px
 
     border-bottom: 1px solid #21262d;
@@ -21,6 +21,12 @@
 }
 
 /* Logo */
+
+.logo-img {
+    height: 40px;
+    width: auto;
+}
+
 .logo a {
     font-size: 1.3rem;
     font-weight: 700;

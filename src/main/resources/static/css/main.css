@@ -1,12 +1,13 @@
 body {
-    background: #0d1117;
-    color: #e6edf3;
+    background: #131313;
+    color: #f0dfc8;
     font-family: Inter; /*system-ui, sans-serif*/
+
 }
 
 .hero {
     padding: 6rem 1rem;
-    background: linear-gradient(180deg, #0d1117, #161b22
+    background: linear-gradient(180deg, #0d1117, #282828
 }
 
 .hero h1 {
@@ -25,7 +26,7 @@ body {
 }
 
 .movie-card {
-    background: #161b22;
+    background: #272727;
     border-radius: 12px;
     overflow: hidden;
     transition: transform .2s ease, box-shadow .2s ease;
@@ -59,7 +60,7 @@ body {
 }
 
 .footer{
-    background-color: #0d1117;
+    background-color: #1f1f1f;
     text-align: center;
     padding: 2rem 1rem;
     font-size: .85rem;
@@ -67,6 +68,6 @@ body {
 }
 
 .footer a {
-    color: #a837aa;
+    color: #aa7c37;
     text-decoration: none;
 }

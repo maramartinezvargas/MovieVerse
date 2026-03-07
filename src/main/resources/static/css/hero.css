@@ -10,7 +10,7 @@
 /* Contenedor común (mismo que header y secciones) */
 .hero .layout-container {
     width: 80%;
-    max-width: 1200px;
+    max-width: 1350px;
     margin: 0 auto;
     padding: 2rem 0;
     display: flex;
@@ -20,12 +20,12 @@
 
 .hero-content {
     max-width: 600px; /* ancho de lectura cómodo */
-    color: #e6edf3;
+    color: #f0dfc8;
 }
 
 .hero-badge {
     display: inline-block;
-    background-color: #f1c40f;
+    background-color: #ffbd59;
     color: #0d1117;
     font-weight: 700;
     padding: 0.3rem 0.6rem;
@@ -46,7 +46,7 @@
     gap: 0.8rem;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
-    color: #c9d1d9;
+    color: #f0dfc8;
 }
 
 .hero-meta .rating {
@@ -54,7 +54,7 @@
 }
 
 .hero-meta .genre {
-    background: rgba(255,255,255,0.12
+    background: rgba(240, 223, 200, 0.38
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
     font-size: 0.75rem;
@@ -64,7 +64,7 @@
     max-width: 600px;
     font-size: 1rem;
     line-height: 1.5;
-    color: #c9d1d9;
+    color: #f0dfc8;
     margin-bottom: 2rem;
 }
 
@@ -80,13 +80,23 @@
     text-decoration: none;
 }
 
+.hero-meta .bi-star-fill {
+    color: #ffbd59;
+}
+
 .btn-primary {
-    background-color: #ffffff;
+    background-color: #f0dfc8;
     color: #0d1117;
 }
 
 .btn-secondary {
     background-color: rgba(255,255,255,0.15
-    color: #ffffff;
+    color: #f0dfc8;
     border: 1px solid rgba(255,255,255,0.3
+}
+
+.btn-secondary:hover {
+    background-color: rgba(240, 223, 200, 0.25
+    color: #f0dfc8;
+    border-color: rgba(255,255,255,0.5
 }
