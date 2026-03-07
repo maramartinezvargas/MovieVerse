@@ -44,14 +44,8 @@ public class TmdbService {
     private List<JsonNode> cachedGenres = null;
 
     /* =========================
-       FEATURED (HERO)
+       FEATURED (HERO) - Película o serie destacada del día
        ========================= */
-
-    /**
-     * Película destacada:
-     * - Top trending del día (TMDB)
-     * - Usada en la sección HERO
-     */
     public Movie getFeaturedMovie() {
         try {
             String url = baseUrl + "/trending/movie/day"
@@ -79,6 +73,7 @@ public class TmdbService {
 
     public List<Movie> getTopMovies() {
 
+        // TMDB no tiene un endpoint específico de "top populares", así que uso el trending del día
         List<Movie> movies = new ArrayList<>(
 
         try {
@@ -101,7 +96,8 @@ public class TmdbService {
         return movies;
     }
 
-    /* Top Series en tendencia
+    /* =========================
+        Top Series en tendencia
        ========================= */
     public List<Movie> getTopSeries() {
 

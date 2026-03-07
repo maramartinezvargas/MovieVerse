@@ -42,6 +42,12 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+        <!-- Thymeleaf para plantillas HTML (Por si decido usarlo en lugar de Mustache) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
         <!-- Spring Data JPA para acceso a bases de datos -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
