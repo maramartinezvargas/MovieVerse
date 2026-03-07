@@ -16,10 +16,11 @@ import java.util.List;
 public class TmdbService {
 
     private static final Logger logger = LoggerFactory.getLogger(TmdbService.class
-
+    // Inyección de propiedades desde application.properties para la configuración de TMDB
     @Value("${tmdb.api.key}")
     private String apiKey;
 
+    // URL base de la API de TMDB
     @Value("${tmdb.api.base}")
     private String baseUrl;
 
@@ -27,6 +28,7 @@ public class TmdbService {
     @Value("${tmdb.image.poster}")
     private String posterBase;
 
+    // Base para imágenes de fondo (backdrop)
     @Value("${tmdb.image.backdrop}")
     private String backdropBase;
 
@@ -34,9 +36,11 @@ public class TmdbService {
     @Value("${tmdb.api.language.primary}")
     private String primaryLang;
 
+    // Idioma de fallback para títulos (inglés)
     @Value("${tmdb.api.language.fallback}")
     private String fallbackLang;
 
+    // RestTemplate para hacer llamadas HTTP a la API de TMDB
     private final RestTemplate restTemplate = new RestTemplate(
     private final ObjectMapper mapper = new ObjectMapper(
 
@@ -189,7 +193,7 @@ public class TmdbService {
         }
 
         tv.setGenres(genreNames
-
+        // Se devuelve la serie mapeada como un objeto Movie
         return tv;
     }
 
@@ -306,7 +310,7 @@ public class TmdbService {
        ========================= */
 
     /**
-     * Carga y cachea los géneros de películas (TMDB)
+     * Carga los géneros de películas (TMDB)
      */
     private List<JsonNode> getMovieGenres() throws Exception {
 
@@ -322,13 +326,16 @@ public class TmdbService {
         JsonNode genresNode = mapper.readTree(response).path("genres"
 
         cachedGenres = new ArrayList<>(
+        // Cachear los géneros para evitar llamadas repetidas a la API
         genresNode.forEach(cachedGenres::add
 
         return cachedGenres;
     }
 
     /**
-     * Fallback a título en inglés si el español contiene caracteres no latinos
+     * FALLBACK -> a inglés
+     * Si el título en español contiene caracteres no latinos (con la función containsNonLatin)
+     * y se intenta obtener el título en inglés
      */
     private String getEnglishTitle(int movieId) {
         try {
@@ -348,10 +355,12 @@ public class TmdbService {
     }
 
     /**
-     * Detecta caracteres no latinos (chino, japonés, cirílico, etc.)
+     * Detectar si el texto contiene caracteres no latinos (ej. cirílico, chino, árabe)
+     * para usar un título alternativo en inglés
      */
     private boolean containsNonLatin(String text) {
         if (text == null) return true;
+        // Regex que detecta cualquier carácter que no sea latino, número, espacio o signos de puntuación comunes
         return text.matches(".*[^\\p{IsLatin}0-9\\s:,'\"\\-\\.].*"
     }
 }

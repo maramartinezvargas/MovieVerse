@@ -9,7 +9,7 @@
 
 /* Contenedor común (mismo que header y secciones) */
 .hero .layout-container {
-    width: 80%;
+    width: 100%;
     max-width: 1350px;
     margin: 0 auto;
     padding: 2rem 0;
