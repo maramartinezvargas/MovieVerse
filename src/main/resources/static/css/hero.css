@@ -1,21 +1,22 @@
 .hero {
-    min-height: 45vh;
-    max-height: 50vh;
+    min-height: 55vh;
+    max-height: 70vh;
     background-size: cover;
-    background-position: center 20%;
+    background-position: center 25%;
     display: flex;
     align-items: center;
+    /*margin-top: -35px;        !* altura del header*!*/
+    padding-top: 61px;
 }
 
 /* Contenedor común (mismo que header y secciones) */
 .hero .layout-container {
     width: 100%;
-    max-width: 1350px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem 0;
+    padding: 5rem 0.3rem 1rem 0;
     display: flex;
     align-items: center;
-
 }
 
 .hero-content {
@@ -54,7 +55,8 @@
 }
 
 .hero-meta .genre {
-    background: rgba(240, 223, 200, 0.38
+    color: #f0dfc8;
+    background: rgba(192, 181, 167, 0.35
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
     font-size: 0.75rem;
@@ -63,9 +65,14 @@
 .hero-overview {
     max-width: 700px;
     font-size: 1rem;
+    font-weight: 300;
     line-height: 1.5;
     color: #f0dfc8;
-    margin-bottom: 2rem;
+    margin: 0 0.5rem 1rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .hero-actions {

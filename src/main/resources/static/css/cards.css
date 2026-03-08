@@ -1,19 +1,21 @@
 .carousel-card {
     margin-top: 1rem;
-    flex: 0 0 180px;
+    flex: 0 0 180px; /* ancho fijo para cada card */
+    max-height: 370px; /* altura fija para cada card */
     background: #272727;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    transition: transform .2s ease;
+    transition: transform .3s ease;
 }
 
 .carousel-card:hover {
-    transform: scale(1.05
+    transform: scale(1.03
+    transition: transform .4s ease;
 }
 
 .carousel-card img {
     width: 100%;
-    height: 270px;
+    height: 250px;
     object-fit: cover;
 }
 
@@ -24,11 +26,30 @@
 .card-meta h3 {
     font-size: 0.9rem;
     margin: 0 0 0.2rem;
+    font-weight: 400;
 }
 
 .card-meta span {
     font-size: 0.85rem;
     color: #ffbd59
+}
+
+.card-genres {
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: #a6a6a6;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Fecha de lanzamiento de serie/película */
+.card-date {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #ffbd59;
+    margin: 0;
 }
 
 .carousel {
@@ -77,4 +98,28 @@
 
 .carousel-card {
     scroll-snap-align: start;
+}
+
+/* Posicionamiento del badge de ranking */
+.carousel-card {
+    position: relative; /* necesario para posicionar el badge */
+}
+
+/* Badge de ranking */
+.rank-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 28px;
+    height: 28px;
+    background-color: rgba(19, 19, 19, 0.85
+    color: #ffbd59;
+    border: 1px solid #ffbd59;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
 }

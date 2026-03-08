@@ -26,14 +26,15 @@ public class HomeController {
         // Featured (Destacada) -> Se agrega al modelo la película destacada obtenida del servicio de TMDB
         model.addAttribute("featured", tmdbService.getFeaturedMovie()
 
-        // SECCIÓN: Películas en tendendia
-        // Se agrega al modelo la lista de películas top obtenida del servicio de TMDB
+        // SECCIÓN: Tendencias
+        // Se agrega al modelo la lista de películas y series populares obtenida del servicio de TMDB
         model.addAttribute("movies", tmdbService.getTopMovies()
-
-        // SECCIÓN: Series en tendencia
-        // Se agrega al modelo la lista de series top obtenida del servicio de TMDB
         model.addAttribute("tvShows", tmdbService.getTopSeries()
 
+        // SECCIÓN: Próximos estrenos
+        // Se agrega al modelo la lista de películas y series próximas a estrenarse obtenida del
+        model.addAttribute("nowPlayingMovies", tmdbService.getNowPlayingMovies()
+        model.addAttribute("upcomingSeries", tmdbService.getUpcomingSeries()
         // Retorna el nombre de la plantilla que se va a renderizar (index.html)
         return "index";
     }

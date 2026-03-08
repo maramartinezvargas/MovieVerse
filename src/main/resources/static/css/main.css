@@ -6,13 +6,14 @@ body {
 }
 
 .hero {
-    padding: 6rem 1rem;
-    background: linear-gradient(180deg, #0d1117, #282828
+    padding: 4rem 0 1rem 1rem;
+    background: linear-gradient(100deg, #1c1c1c, rgba(26, 26, 26, 0.37)
 }
 
 .hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
 }
 
 .hero p {
@@ -54,20 +55,20 @@ body {
 
 
 .layout-container {
-    max-width: 1400px;      /* mismo ancho que quieras para todo */
+    max-width: 1400px;      /* mismo ancho para todo */
     margin: 0 auto;
-    padding: 0 1.5rem;      /* espacio izquierda / derecha */
+    padding: 0 1rem;      /* espacio izquierda / derecha */
 }
 
 .footer{
-    background-color: #1f1f1f;
+    background-color: #272727;
     text-align: center;
     padding: 2rem 1rem;
     font-size: .85rem;
-    color: #8b949e;
+    color: #a6a6a6;
 }
 
 .footer a {
-    color: #aa7c37;
+    color: #efa93b;
     text-decoration: none;
 }
