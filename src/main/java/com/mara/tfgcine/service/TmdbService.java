@@ -123,13 +123,13 @@ public class TmdbService {
         return movies;
     }
 
-    /* SERIES MÁS POPULARES DEL MOMENTO (TENDENCIAS) - Se filtran las series con género "News" */
+    /* SERIES DEL MOMENTO (TENDENCIAS) - Se filtra para omitir el género "News" */
     public List<Movie> getTopSeries() {
 
         List<Movie> seriesList = new ArrayList<>(
 
         try {
-            String url = baseUrl + "/tv/popular"
+            String url = baseUrl + "/trending/tv/day"
                     + "?api_key=" + apiKey
                     + "&language=" + primaryLang
                     + "&page=1";
@@ -145,7 +145,7 @@ public class TmdbService {
             }
 
             // Ordenar por puntuación descendente
-            seriesList.sort((a, b) -> Double.compare(b.getVoteAverage(), a.getVoteAverage())
+            //seriesList.sort((a, b) -> Double.compare(b.getVoteAverage(), a.getVoteAverage())
 
         } catch (Exception e) {
             logger.error("Error obteniendo top series", e
@@ -156,6 +156,9 @@ public class TmdbService {
 
     /* =========================
        MAPPER SERIES
+       Para mapear los datos de una serie de TMDB al modelo Movie (usado también para series)
+         - Se hace un fallback a inglés si el título en español tiene caracteres no latinos
+         - Si el inglés también falla, se usa original_name
        ========================= */
     private Movie mapTv(JsonNode jsonTv) {
 
