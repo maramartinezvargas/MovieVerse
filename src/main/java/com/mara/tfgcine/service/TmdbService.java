@@ -345,6 +345,7 @@ public class TmdbService {
             String url = baseUrl + "/movie/now_playing"
                     + "?api_key=" + apiKey
                     + "&language=" + primaryLang
+                    + "&region=ES"
                     + "&page=1";
 
             String response = restTemplate.getForObject(url, String.class
@@ -372,6 +373,7 @@ public class TmdbService {
             String url = baseUrl + "/tv/on_the_air"
                     + "?api_key=" + apiKey
                     + "&language=" + primaryLang
+                    + "&region=ES"
                     + "&page=1";
 
             String response = restTemplate.getForObject(url, String.class
@@ -398,7 +400,7 @@ public class TmdbService {
        ========================= */
 
     /**
-     * Carga los géneros de películas desde TMDB con caché
+     * Carga los géneros de películas desde TMDB con caché para evitar llamadas repetidas
      */
     private List<JsonNode> getMovieGenres() throws Exception {
         if (cachedGenres != null) return cachedGenres;
@@ -416,7 +418,7 @@ public class TmdbService {
     }
 
     /**
-     * Carga los géneros de series desde TMDB con caché
+     * Carga los géneros de series desde TMDB con caché para evitar llamadas repetidas
      */
     private List<JsonNode> getTvGenres() throws Exception {
         if (cachedTvGenres != null) return cachedTvGenres;
@@ -474,10 +476,11 @@ public class TmdbService {
     }
 
     /**
-     * Detecta si el texto contiene caracteres no latinos (cirílico, chino, árabe...)
+     * Detecta si el texto contiene caracteres no occidentales (cirílico, chino, árabe...)
      */
     private boolean containsNonLatin(String text) {
         if (text == null) return true;
-        return text.matches(".*[^\\p{IsLatin}0-9\\s:,'\"\\-\\.].*"
+
+        return text.matches(".*[\\p{IsCyrillic}\\p{IsHan}\\p{IsArabic}\\p{IsHangul}].*"
     }
 }
