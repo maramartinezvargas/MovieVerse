@@ -1,14 +1,12 @@
 package com.mara.tfgcine.model.list;
 
 import com.mara.tfgcine.model.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "media_lists")
 public class MediaList {
 
     @Id

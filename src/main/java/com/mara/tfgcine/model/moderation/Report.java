@@ -3,6 +3,7 @@ package com.mara.tfgcine.model.moderation;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "reports")
 public class Report {
 
     @Id

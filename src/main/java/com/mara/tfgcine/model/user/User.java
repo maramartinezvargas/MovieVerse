@@ -3,6 +3,7 @@ package com.mara.tfgcine.model.user;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -20,8 +21,10 @@ public class User {
     private AccountStatus status;
 
     public void setRole(Role role) {
+        this.role = role;
     }
 
-    public void setStatus(AccountStatus accountStatus) {
+    public void setStatus(AccountStatus status) {
+        this.status = status;
     }
 }

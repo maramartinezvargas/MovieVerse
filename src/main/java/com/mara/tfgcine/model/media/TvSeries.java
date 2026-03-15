@@ -1,5 +1,7 @@
 package com.mara.tfgcine.model.media;
 
+import jakarta.persistence.Table;
+
 public class TvSeries extends Media {
 
     private String firstAirDate;
