@@ -1,25 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Para evitar que el scroll con la rueda del ratón se ejecute demasiado rápido se añaden 80ms al evento de scroll
-    const WHEEL_THROTTLE_MS = 80;
-    // Para almacenar el timestamp del último evento de scroll para cada carousel, y no afectar a otros carouseles al hacer scroll
+    const WHEEL_THROTTLE_MS = 60;
     const lastWheelMap = new WeakMap( // throttle por carousel
 
-    // Se añade el evento click a cada botón de cada carousel
     document.querySelectorAll('.carousel-section').forEach(section => {
         const carousel = section.querySelector('.carousel'
         const nextBtn = section.querySelector('.carousel-btn.next'
         const prevBtn = section.querySelector('.carousel-btn.prev'
 
-        // Si no se encuentra el carousel o los botones, se omite esta sección
+        // Si no hay cards o botones, se ejecuta el evento del scroll (los botones siguen funcionando pero no hacen nada)
         if (!carousel || !nextBtn || !prevBtn) return;
         const card = carousel.querySelector('.carousel-card'
-
-        // Si no se encuentra ninguna tarjeta dentro del carousel, se omite esta sección
         if (!card) return;
 
-        // Se calcula el número de tarjetas a desplazar al hacer click en los botones, teniendo en cuenta el ancho de las tarjetas y el gap entre ellas
-        const gap = parseInt(getComputedStyle(carousel).gap) || 15;
+        const gap = parseInt(getComputedStyle(carousel).gap) || 40;
         const cardWidth = card.offsetWidth + gap;
         const numberCards = 2;
         // Desplazamiento del carousel hacia la derecha
