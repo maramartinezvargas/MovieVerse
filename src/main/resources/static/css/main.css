@@ -2,6 +2,7 @@ body {
     background: #131313;
     color: #f0dfc8;
     font-family: Inter, sans-serif;
+    padding-top: 64px; /* compensar header fijo */
 }
 
 .hero {

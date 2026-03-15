@@ -1,7 +1,6 @@
 package com.mara.tfgcine.model.list;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -9,14 +8,18 @@ import java.time.LocalDateTime;
 public class ListItem {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "media_id")
     private int mediaId;
 
+    @Column(name = "added_at")
     private LocalDateTime addedAt;
 
     @ManyToOne
+    @JoinColumn(name = "list_id")
     private MediaList list;
 
+    public ListItem() {}
 }

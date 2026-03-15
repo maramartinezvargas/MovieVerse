@@ -10,28 +10,68 @@ import java.time.LocalDateTime;
 public class Review {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "rating", nullable = false)
     private int rating;
+
+    @Column(name = "comment")
     private String comment;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "media_id", nullable = false)
     private int mediaId;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public Review() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public int getMediaId() {
+        return mediaId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
     public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public void setCreatedAt(LocalDateTime now) {
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setMediaId(int mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

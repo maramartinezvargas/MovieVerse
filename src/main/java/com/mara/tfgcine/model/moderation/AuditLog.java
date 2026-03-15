@@ -1,10 +1,6 @@
 package com.mara.tfgcine.model.moderation;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,17 +8,21 @@ import java.time.LocalDateTime;
 public class AuditLog {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "moderator_id")
     private Long moderatorId;
 
+    @Column(name = "action")
     private String action;
 
+    @Column(name = "target_id")
     private Long targetId;
 
+    @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
+    @Column(name = "details")
     private String details;
-
 }
