@@ -1,179 +1,313 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <title>MovieVerse</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/header.css">
-    <link rel="stylesheet" href="/css/hero.css">
-    <link rel="stylesheet" href="/css/cards.css">
-    <link rel="stylesheet" href="/css/sections.css">
-</head>
+<head th:replace="fragments/head :: head('MovieVerse')"></head>
 
 <body>
 
-<header class="main-header">
-    <div class="header-container">
+    <th:block th:replace="fragments/header :: header"></th:block>
 
-        <a href="/" class="logo">
-            <img src="/img/mverse-logo.png" alt="MovieVerse">
-        </a>
+    <!-- HERO -->
+    <section class="hero" th:if="${featured != null and featured.backdropPath != null}"
+        th:style="|--hero-bg: url('${featured.backdropPath}')|">
 
-        <nav class="main-nav" id="main-nav">
-            <a href="/peliculas">Películas</a>
-            <a href="/series">Series</a>
-            <a href="/tendencias">Tendencias</a>
-            <a href="/estrenos">Próximos estrenos</a>
-        </nav>
+        <div class="container">
+            <div class="hero-content">
 
-        <button class="burger" id="burger-btn" aria-label="Abrir menú">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+                <span class="hero-badge">Destacado</span>
 
-    </div>
-</header>
+                <h1 class="hero-title" th:text="${featured.title}">
+                </h1>
 
-<!-- HERO -->
-<section class="hero"
-         th:if="${featured != null and featured.backdropPath != null}"
-         th:style="|background-image: linear-gradient(to top, rgb(19,19,19), rgba(13,17,23,0.0), rgba(13,17,23,0.0)), url('${featured.backdropPath}')|">
-    <div class="layout-container">
-        <div class="hero-content">
-            <span class="hero-badge">Destacado</span>
-            <h1 class="hero-title" th:text="${featured.title}"></h1>
-            <div class="hero-meta">
-                <span class="rating">
-                    <i class="bi bi-star-fill"></i>
-                    <span th:text="${featured.voteAverageFormatted}"></span> / 10
-                    <small>(<span th:text="${featured.voteCount}"></span> votos)</small>
-                </span>
-                <span class="genre" th:each="genre : ${featured.genres}" th:text="${genre}"></span>
-            </div>
-            <p class="hero-overview" th:text="${featured.overview}"></p>
-            <div class="hero-actions">
-                <a th:href="@{/peliculas/{id}(id=${featured.id})}" class="btn btn-secondary">Ver detalles</a>
-                <a href="#" class="btn btn-secondary">Ver tráiler</a>
-            </div>
-        </div>
-    </div>
-</section>
+                <div class="hero-meta">
 
-<!-- TENDENCIAS · PELÍCULAS -->
-<section class="carousel-section">
-    <div class="layout-container">
-        <div class="section-header">
-            <h2 class="section-title">Películas en tendencia</h2>
-            <div class="carousel-controls">
-                <button class="carousel-btn prev">‹</button>
-                <button class="carousel-btn next">›</button>
-            </div>
-        </div>
-        <div class="carousel" id="top-movies-carousel">
-            <article class="carousel-card" th:each="movie, iterStat : ${movies}">
-                <div class="rank-badge" th:text="${iterStat.count}"></div>
-                <img th:src="${movie.posterPath}" th:alt="${movie.title}">
-                <div class="card-meta">
-                    <span><i class="bi bi-star-fill"></i> <span th:text="${movie.voteAverageFormatted}"></span></span>
-                    <h3 th:text="${movie.title}"></h3>
-                    <p class="card-genres" th:text="${#strings.listJoin(movie.genres, ' · ')}"></p>
+                    <span class="rating">
+                        <i class="bi bi-star-fill"></i>
+                        <span th:text="${featured.voteAverageFormatted}"></span> / 10
+                        <small>(<span th:text="${featured.voteCount}"></span> votos)</small>
+                    </span>
+
+                    <span class="genre" th:each="genre : ${featured.genres}" th:text="${genre}">
+                    </span>
+
                 </div>
-            </article>
-        </div>
-    </div>
-</section>
 
-<!-- TENDENCIAS · SERIES -->
-<section class="carousel-section">
-    <div class="layout-container">
-        <div class="section-header">
-            <h2 class="section-title">Series en tendencia</h2>
-            <div class="carousel-controls">
-                <button class="carousel-btn prev">‹</button>
-                <button class="carousel-btn next">›</button>
+                <p class="hero-overview" th:text="${featured.overview}">
+                </p>
+
+                <div class="hero-actions">
+                    <a th:href="@{/peliculas/{id}(id=${featured.id})}" class="btn btn-secondary">
+                        Ver detalles
+                    </a>
+
+                    <a href="#" class="btn btn-secondary">
+                        Ver tráiler
+                    </a>
+                </div>
+
             </div>
         </div>
-        <div class="carousel" id="top-tv-carousel">
-            <article class="carousel-card" th:each="show, iterStat : ${tvShows}">
-                <div class="rank-badge" th:text="${iterStat.count}"></div>
-                <img th:src="${show.posterPath}" th:alt="${show.title}">
-                <div class="card-meta">
-                    <span><i class="bi bi-star-fill"></i> <span th:text="${show.voteAverageFormatted}"></span></span>
-                    <h3 th:text="${show.title}"></h3>
-                    <p class="card-genres" th:text="${#strings.listJoin(show.genres, ' · ')}"></p>
-                </div>
-            </article>
-        </div>
-    </div>
-</section>
 
-<!-- EN CARTELERA · PELÍCULAS -->
-<section class="carousel-section">
-    <div class="layout-container">
-        <div class="section-header">
-            <h2 class="section-title">En cartelera</h2>
-            <div class="carousel-controls">
-                <button class="carousel-btn prev">‹</button>
-                <button class="carousel-btn next">›</button>
+    </section>
+
+    <!-- TENDENCIAS · SERIES -->
+    <section class="carousel-section">
+
+        <div class="container">
+
+            <div class="section-header">
+                <h2 class="section-title">Series en tendencia</h2>
+
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev">‹</button>
+                    <button class="carousel-btn next">›</button>
+                </div>
             </div>
-        </div>
-        <div class="carousel" id="now-playing-carousel">
-            <article class="carousel-card" th:each="movie : ${nowPlayingMovies}">
-                <img th:src="${movie.posterPath}" th:alt="${movie.title}">
-                <div class="card-meta">
-                    <span><i class="bi bi-star-fill"></i> <span th:text="${movie.voteAverageFormatted}"></span></span>
-                    <h3 th:text="${movie.title}"></h3>
-                    <p class="card-genres" th:text="${#strings.listJoin(movie.genres, ' · ')}"></p>
-<!--                    <p class="card-date" th:if="${movie.releaseDate != null}" th:text="${movie.releaseDate}"></p>-->
-                </div>
-            </article>
-        </div>
-    </div>
-</section>
 
-<!-- SERIES EN EMISIÓN -->
-<section class="carousel-section">
-    <div class="layout-container">
-        <div class="section-header">
-            <h2 class="section-title">Series en emisión</h2>
-            <div class="carousel-controls">
-                <button class="carousel-btn prev">‹</button>
-                <button class="carousel-btn next">›</button>
+            <div class="carousel" id="top-tv-carousel">
+
+                <article class="carousel-card" th:each="show, iterStat : ${tvShows}">
+
+                    <div class="rank-badge" th:text="${iterStat.count}">
+                    </div>
+
+                    <img th:src="${show.posterPath}" th:alt="${show.title}">
+
+                    <div class="card-meta">
+
+                        <span>
+                            <i class="bi bi-star-fill"></i>
+                            <span th:text="${show.voteAverageFormatted}"></span>
+                        </span>
+
+                        <h3 th:text="${show.title}"></h3>
+
+                        <p class="card-genres" th:text="${#strings.listJoin(show.genres, ' · ')}">
+                        </p>
+
+                    </div>
+
+                </article>
+
             </div>
+
         </div>
-        <div class="carousel" id="upcoming-tv-carousel">
-            <article class="carousel-card" th:each="show : ${upcomingSeries}">
-                <img th:src="${show.posterPath}" th:alt="${show.title}">
-                <div class="card-meta">
-                    <span><i class="bi bi-star-fill"></i> <span th:text="${show.voteAverageFormatted}"></span></span>
-                    <h3 th:text="${show.title}"></h3>
-                    <p class="card-genres" th:text="${#strings.listJoin(show.genres, ' · ')}"></p>
-                    <p class="card-date"
-                       th:if="${show.seasonNumber != null and show.seasonNumber > 0}"
-                       th:text="'Temporada ' + ${show.seasonNumber}"></p>
+
+    </section>
+
+    <!-- EN CARTELERA · PELÍCULAS -->
+    <section class="carousel-section">
+
+        <div class="container">
+
+            <div class="section-header">
+                <h2 class="section-title">En cartelera</h2>
+
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev">‹</button>
+                    <button class="carousel-btn next">›</button>
                 </div>
-            </article>
+            </div>
+
+            <div class="carousel" id="now-playing-carousel">
+
+                <a th:href="@{/peliculas/{id}(id=${movie.id})}" class="carousel-card"
+                    th:each="movie : ${nowPlayingMovies}">
+
+                    <img th:src="${movie.posterPath}" th:alt="${movie.title}">
+
+                    <div class="card-meta">
+
+                        <span>
+                            <i class="bi bi-star-fill"></i>
+                            <span th:text="${movie.voteAverageFormatted}"></span>
+                        </span>
+
+                        <h3 th:text="${movie.title}"></h3>
+
+                        <p class="card-genres" th:text="${#strings.listJoin(movie.genres, ' · ')}">
+                        </p>
+
+                    </div>
+
+                </a>
+
+            </div>
+
         </div>
-    </div>
-</section>
 
-<!-- FOOTER -->
-<footer class="footer">
-    <div class="layout-container">
-        <p>© 2025 MovieVerse por Tamara Martinez. Datos de
-            <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">TMDB</a>.
-        </p>
-    </div>
-</footer>
+    </section>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/carousel.js}"></script>
-<script th:src="@{/js/main.js}"></script>
+    <!-- MEJOR VALORADAS DEL AÑO -->
+    <section class="carousel-section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2 class="section-title" th:text="'Mejor valoradas de ' + ${lastYear}">
+                </h2>
+
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev">‹</button>
+                    <button class="carousel-btn next">›</button>
+                </div>
+
+            </div>
+
+            <div class="carousel" id="best-year-carousel">
+
+                <a th:href="@{/peliculas/{id}(id=${movie.id})}" class="carousel-card"
+                    th:each="movie, iterStat : ${bestMoviesYear}">
+
+                    <div class="rank-badge" th:text="${iterStat.count}">
+                    </div>
+
+                    <img th:src="${movie.posterPath}" th:alt="${movie.title}">
+
+                    <div class="card-meta">
+
+                        <span>
+                            <i class="bi bi-star-fill"></i>
+                            <span th:text="${movie.voteAverageFormatted}"></span>
+                        </span>
+
+                        <h3 th:text="${movie.title}"></h3>
+
+                        <p class="card-genres" th:text="${#strings.listJoin(movie.genres, ' · ')}">
+                        </p>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- TENDENCIAS · PELÍCULAS -->
+    <section class="carousel-section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2 class="section-title">
+                    Películas en tendencia
+                </h2>
+
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev">‹</button>
+                    <button class="carousel-btn next">›</button>
+                </div>
+
+            </div>
+
+            <div class="carousel" id="top-movies-carousel">
+
+                <a th:href="@{/peliculas/{id}(id=${movie.id})}" class="carousel-card"
+                    th:each="movie, iterStat : ${movies}">
+
+                    <div class="rank-badge" th:text="${iterStat.count}">
+                    </div>
+
+                    <img th:src="${movie.posterPath}" th:alt="${movie.title}">
+
+                    <div class="card-meta">
+
+                        <span>
+                            <i class="bi bi-star-fill"></i>
+                            <span th:text="${movie.voteAverageFormatted}"></span>
+                        </span>
+
+                        <h3 th:text="${movie.title}"></h3>
+
+                        <p class="card-genres" th:if="${movie.genres != null}"
+                            th:text="${#strings.listJoin(movie.genres, ' · ')}">
+                        </p>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- SERIES EN EMISIÓN -->
+    <section class="carousel-section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2 class="section-title">
+                    Series en emisión
+                </h2>
+
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev">‹</button>
+                    <button class="carousel-btn next">›</button>
+                </div>
+
+            </div>
+
+            <div class="carousel" id="upcoming-tv-carousel">
+
+                <article class="carousel-card" th:each="show : ${upcomingSeries}">
+
+                    <img th:src="${show.posterPath}" th:alt="${show.title}">
+
+                    <div class="card-meta">
+
+                        <span>
+                            <i class="bi bi-star-fill"></i>
+                            <span th:text="${show.voteAverageFormatted}"></span>
+                        </span>
+
+                        <h3 th:text="${show.title}"></h3>
+
+                        <p class="card-genres" th:text="${#strings.listJoin(show.genres, ' · ')}">
+                        </p>
+
+                        <p class="card-date" th:if="${show.seasonNumber != null and show.seasonNumber > 0}"
+                            th:text="'Temporada ' + ${show.seasonNumber}">
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="container">
+
+            <p>
+                © 2025 MovieVerse por Tamara Martinez. Datos de
+                <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">
+                    TMDB
+                </a>.
+            </p>
+
+        </div>
+
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/carousel.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+
 </body>
+
 </html>

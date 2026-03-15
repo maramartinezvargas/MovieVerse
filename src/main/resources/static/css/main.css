@@ -1,8 +1,7 @@
 body {
     background: #131313;
     color: #f0dfc8;
-    font-family: Inter; /*system-ui, sans-serif*/
-
+    font-family: Inter, sans-serif;
 }
 
 .hero {
@@ -17,25 +16,43 @@ body {
 }
 
 .hero p {
-    color: #f0dfc8;
     font-size: 1rem;
 }
 
+.bi-star-fill {
+    color: #ffbd59;
+}
+
+.genre {
+    color: #ffbd59;
+    background: rgba(77, 77, 77, 0.78
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+}
+
+.release-date{
+    margin: 0;
+    padding: 0;
+    color: #ffbd59;
+}
+
 .section-title {
-    margin: 4rem 0 2rem;
     text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
 }
 
 .movie-card {
     background: #272727;
     border-radius: 12px;
     overflow: hidden;
-    transition: transform .2s ease, box-shadow .2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .movie-card:hover {
     transform: translateY(-6px
-    box-shadow: 0 15px 30px rgba(0,0,0,.6
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6
 }
 
 .movie-card img {
@@ -50,21 +67,19 @@ body {
 
 .movie-info h3 {
     font-size: 1rem;
-    margin-bottom: .3rem;
+    margin-bottom: 0.3rem;
 }
 
-
-.layout-container {
-    max-width: 1400px;      /* mismo ancho para todo */
+.container {
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1rem;      /* espacio izquierda / derecha */
 }
 
-.footer{
+.footer {
     background-color: #272727;
     text-align: center;
     padding: 2rem 1rem;
-    font-size: .85rem;
+    font-size: 0.85rem;
     color: #a6a6a6;
 }
 

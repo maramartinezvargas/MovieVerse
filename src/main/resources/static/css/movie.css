@@ -1,0 +1,188 @@
+.movie-hero {
+    min-height: 80vh;
+    /*padding-top: 61px;*/
+    background-image:
+            linear-gradient(to right, rgba(19,19,19,0.9) 0%, rgba(19,19,19,0.0), rgba(19,19,19,0.0), rgba(19,19,19,0)),
+            linear-gradient(to top, rgb(19,19,19), rgba(0, 0, 0, 0.51), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
+            var(--movie-bg
+
+    background-size: cover;
+    background-position: center 10%;
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.movie-layout {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    padding: 5rem 0.3rem 1rem;
+}
+
+
+.movie-poster {
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6
+    flex-shrink: 0;
+    transform: translateY(0
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie-poster:hover{
+    transform: translateY(-10px
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie-info {
+    max-width: 650px;
+}
+
+.movie-info h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.movie-hero-title{
+    font-size: clamp(2rem, 5vw, 3.5rem
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 2px 4px 25px rgba(75, 75, 75, 0.32
+}
+
+.movie-genres{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.movie-meta {
+    font-size: 16px;
+    color: #f0dfc8;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+}
+
+
+.movie-overview {
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+/* ===== RESPONSIVE ============================================= */
+
+/* Tablets: 768px - 900px */
+@media (max-width: 1024px) {
+    .movie-layout {
+        gap: 40px;
+        padding: 3rem 0.5rem 1rem;
+    }
+
+    .movie-poster {
+        width: 300px;
+    }
+
+    .movie-info {
+        max-width: 550px;
+    }
+
+    .movie-overview {
+        font-size: 15px;
+    }
+}
+
+/* Tablets pequeños y teléfonos grandes: 600px - 767px */
+@media (max-width: 768px) {
+    .movie-hero {
+        min-height: 70vh;
+    }
+
+    .movie-layout {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+        padding: 2rem 1rem;
+    }
+
+    .movie-poster {
+        width: 300px;
+        margin: 0 auto;
+    }
+
+    .movie-info {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+
+    .movie-hero-title {
+        font-size: clamp(1.75rem, 4vw, 2.5rem
+    }
+
+    .movie-meta {
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .movie-overview {
+        line-height: 1.5;
+        max-width: 100%;
+    }
+
+    /* Gradiente más oscuro en móviles */
+    .movie-hero {
+        background-image:
+                linear-gradient(to right, rgba(19,19,19,0.95) 0%, rgba(19,19,19,0.9) 100%),
+                linear-gradient(to top, rgb(19,19,19), rgba(19,19,19,0.5), rgba(19,19,19,0)),
+                var(--movie-bg
+    }
+}
+
+/* Teléfonos pequeños: menor de 600px */
+@media (max-width: 600px) {
+    .movie-hero {
+        min-height: 60vh;
+    }
+
+    .movie-genres{
+        margin-top: 1rem;
+        justify-content: center;
+    }
+
+    .movie-layout {
+        margin-top: 35px;
+        gap: 20px;
+        padding: 1.5rem 0.5rem;
+    }
+
+    .movie-poster {
+        width: 70%;
+    }
+
+    .movie-hero-title {
+        font-size: clamp(1.5rem, 3.5vw, 2rem
+        margin-bottom: 0.8rem;
+    }
+
+    .movie-meta {
+        gap: 10px;
+    }
+
+    .movie-overview {
+        line-height: 1.4;
+        margin-top: 1rem;
+    }
+
+
+    .mb-1 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+}

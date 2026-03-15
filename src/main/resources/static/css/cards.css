@@ -1,16 +1,44 @@
+.carousel {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 0.5rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    margin-bottom: 2rem;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
 .carousel-card {
     margin-top: 1rem;
-    flex: 0 0 180px; /* ancho fijo para cada card */
-    max-height: 370px; /* altura fija para cada card */
+    flex: 0 0 180px;
+    max-height: 370px;
     background: #272727;
     border-radius: 12px;
     overflow: hidden;
-    transition: transform .3s ease;
+    position: relative;
+    transition: transform 0.3s ease;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* Asegurar que elementos internos hereden color y no parezcan enlaces */
+.carousel-card h3,
+.carousel-card .card-meta span,
+.carousel-card .card-genres {
+    color: inherit;
+    text-decoration: none;
 }
 
 .carousel-card:hover {
     transform: scale(1.03
-    transition: transform .4s ease;
+    transition: transform 0.4s ease;
 }
 
 .carousel-card img {
@@ -31,7 +59,7 @@
 
 .card-meta span {
     font-size: 0.85rem;
-    color: #ffbd59
+    color: #ffbd59;
 }
 
 .card-genres {
@@ -44,29 +72,11 @@
     text-overflow: ellipsis;
 }
 
-/* Fecha de lanzamiento de serie/película */
 .card-date {
     font-size: 0.75rem;
     font-weight: 600;
     color: #ffbd59;
     margin: 0;
-}
-
-.carousel {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding-bottom: 0.5rem;
-}
-
-/* Ocultar scrollbar */
-.carousel::-webkit-scrollbar {
-    display: none;
-}
-.carousel {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
 }
 
 .carousel-controls {
@@ -83,7 +93,7 @@
     border: none;
     font-size: 1.4rem;
     cursor: pointer;
-    transition: background .2s ease, transform .2s ease;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .carousel-btn:hover {
@@ -91,21 +101,6 @@
     transform: scale(1.1
 }
 
-.carousel {
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
-}
-
-.carousel-card {
-    scroll-snap-align: start;
-}
-
-/* Posicionamiento del badge de ranking */
-.carousel-card {
-    position: relative; /* necesario para posicionar el badge */
-}
-
-/* Badge de ranking */
 .rank-badge {
     position: absolute;
     top: 8px;

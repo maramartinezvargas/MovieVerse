@@ -1,5 +1,5 @@
 .carousel-section {
-    margin: 1.5rem 0 1.5rem 0;
+    margin: 0rem;
 }
 
 .section-header {
@@ -9,9 +9,9 @@
 }
 
 .section-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #f0dfc8;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
     margin: 0;
 }
 
@@ -19,6 +19,7 @@
     font-size: 0.9rem;
     color: #8b949e;
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 .section-link:hover {

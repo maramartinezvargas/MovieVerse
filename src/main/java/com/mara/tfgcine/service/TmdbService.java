@@ -1,486 +1,347 @@
 package com.mara.tfgcine.service;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mara.tfgcine.model.Movie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import com.mara.tfgcine.client.TmdbClient;
+import com.mara.tfgcine.model.media.Movie;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 @Service
 public class TmdbService {
 
-    // RestTemplate inyectado para hacer llamadas HTTP a la API de TMDB
-    private final RestTemplate restTemplate;
-
-    // Constructor para inyectar el RestTemplate desde la configuración de Spring (AppConfig)
-    public TmdbService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    private static final Logger logger = LoggerFactory.getLogger(TmdbService.class
-
-    @Value("${tmdb.api.key}")
-    private String apiKey;
-
-    @Value("${tmdb.api.base}")
-    private String baseUrl;
-
-    @Value("${tmdb.image.poster}")
-    private String posterBase;
-
-    @Value("${tmdb.image.backdrop}")
-    private String backdropBase;
-
-    @Value("${tmdb.api.language.primary}")
-    private String primaryLang;
-
-    @Value("${tmdb.api.language.fallback}")
-    private String fallbackLang;
-
+    private final TmdbClient tmdbClient;
     private final ObjectMapper mapper = new ObjectMapper(
 
-    // Cache de géneros de películas (id → name)
-    private List<JsonNode> cachedGenres = null;
+    private Map<Integer, String> movieGenreMap = new HashMap<>(
+    private Map<Integer, String> tvGenreMap = new HashMap<>(
 
-    // Cache de géneros de series (id → name)
-    private List<JsonNode> cachedTvGenres = null;
+    private static final String IMG = "https://image.tmdb.org/t/p/w500";
+    private static final String BACKDROP = "https://image.tmdb.org/t/p/original";
 
+    public TmdbService(TmdbClient tmdbClient) {
+        this.tmdbClient = tmdbClient;
+    }
 
-    /* =========================
-       FEATURED (HERO)
-       ========================= */
+    @PostConstruct
+    public void loadGenres() throws Exception {
+        loadGenreMap(tmdbClient.getMovieGenres(), movieGenreMap
+        loadGenreMap(tmdbClient.getTvGenres(), tvGenreMap
+    }
 
-    // getFeaturedMovie() obtiene la película destacada de la semana desde TMDB
-    // combina dos factores:
-    // - sea relevante ahora (trending)
-    // - tenga una valoración fiable (mínimo de votos: >=100 ) y buena puntuación (score > bestScore)
+    private void loadGenreMap(String genreJson, Map<Integer, String> genreMap) throws Exception {
+        JsonNode genres = mapper.readTree(genreJson).path("genres"
+        for (JsonNode g : genres) {
+            genreMap.put(g.path("id").asInt(), g.path("name").asText()
+        }
+    }
+
+    /* TOP TRENDING MOVIES */
+    public List<Movie> getTopMovies() throws Exception {
+        return processMovieResults(tmdbClient.getTrendingMovies(), true
+    }
+
+    public List<Movie> getNowPlayingMovies() throws Exception {
+        return processMovieResults(tmdbClient.getNowPlayingMovies(), true
+    }
+
+    public List<Movie> discoverMovies() throws Exception {
+        return processMovieResults(tmdbClient.discoverMovies(), true
+    }
+
+    public List<Movie> getBestMoviesThisYear() throws Exception {
+        return processMovieResults(tmdbClient.getBestMoviesThisYear(), true
+    }
+
+    // procesa resultados comunes para películas y series, con lógica de título en inglés si el original contiene caracteres no latinos
+    private List<Movie> processMovieResults(String jsonResponse, boolean isMovie) throws Exception {
+        JsonNode results = mapper.readTree(jsonResponse).path("results"
+        List<Movie> movies = new ArrayList<>(
+
+        for (JsonNode node : results) {
+            Movie m = new Movie(
+            m.id = node.path("id").asInt(
+
+            String title = node.path(isMovie ? "title" : "name").asText(
+            if (containsNonLatin(title)) {
+                String english = isMovie ? getEnglishMovieTitle(m.id) : getEnglishTvTitle(m.id
+                if (english != null) title = english;
+            }
+            m.title = title;
+
+            if (!node.path("poster_path").isNull()) {
+                m.posterPath = IMG + node.path("poster_path").asText(
+            }
+
+            if (!node.path("backdrop_path").isNull()) {
+                m.backdropPath = BACKDROP + node.path("backdrop_path").asText(
+            }
+
+            m.voteAverage = node.path("vote_average").asDouble(
+            m.voteCount = node.path("vote_count").asInt(
+            m.genres = extractGenres(node, isMovie
+
+            movies.add(m
+        }
+
+        return movies;
+    }
+
+    private List<String> extractGenres(JsonNode node, boolean isMovie) {
+        List<String> genres = new ArrayList<>(
+        Map<Integer, String> genreMap = isMovie ? movieGenreMap : tvGenreMap;
+
+        for (JsonNode gid : node.path("genre_ids")) {
+            int id = gid.asInt(
+            if (genreMap.containsKey(id)) {
+                genres.add(genreMap.get(id)
+            }
+        }
+        return genres;
+    }
+
     public Movie getFeaturedMovie() {
+
         try {
-            String url = baseUrl + "/trending/movie/day"
-                    + "?api_key=" + apiKey
-                    + "&language=" + primaryLang;
 
-            String response = restTemplate.getForObject(url, String.class
-            JsonNode results = mapper.readTree(response).path("results"
-
+            JsonNode results = mapper.readTree(tmdbClient.getTrendingMovies()).path("results"
             if (results.isEmpty()) return null;
 
             JsonNode best = null;
             double bestScore = -1;
 
             for (JsonNode item : results) {
-                double score = item.path("vote_average").asDouble(0.0
+
+                if (!"movie".equals(item.path("media_type").asText())) continue;
+                if (item.path("backdrop_path").isNull()) continue;
+
+                double voteAverage = item.path("vote_average").asDouble(0.0
                 int voteCount = item.path("vote_count").asInt(0
 
-                // Mínimo 100 votos para evitar películas con pocas valoraciones
-                if (voteCount >= 100 && score > bestScore) {
-                    bestScore = score;
+                if (voteCount < 500) continue;
+
+                if (voteAverage > bestScore) {
+                    bestScore = voteAverage;
                     best = item;
                 }
             }
 
-            // Fallback: si ninguna supera los 100 votos, coge la más popular
+
             if (best == null) {
                 best = results.get(0
             }
 
-            return mapMovie(best, true
+            int movieId = best.path("id").asInt(
+            Movie featured = createMovieFromNode(best, movieId, true
+
+            JsonNode details = mapper.readTree(tmdbClient.getMovieDetails(movieId)
+            featured.overview = details.path("overview").asText(
+
+            return featured;
 
         } catch (Exception e) {
-            logger.error("Error obteniendo película destacada (featured)", e
+            e.printStackTrace(
             return null;
         }
     }
 
-    /* PELÍCULAS MÁS POPULARES DEL MOMENTO (TENDENCIAS) */
-    public List<Movie> getTopMovies() {
 
-        List<Movie> movies = new ArrayList<>(
 
-        try {
-            String url = baseUrl + "/trending/movie/day"
-                    + "?api_key=" + apiKey
-                    + "&language=" + primaryLang
-                    + "&page=1";
+    private Movie createMovieFromNode(JsonNode node, int id, boolean isMovie) {
+        Movie m = new Movie(
+        m.id = id;
 
-            String response = restTemplate.getForObject(url, String.class
-            JsonNode results = mapper.readTree(response).path("results"
+        String title = node.path(isMovie ? "title" : "name").asText(
+        if (containsNonLatin(title)) {
+            String english = isMovie ? getEnglishMovieTitle(id) : getEnglishTvTitle(id
+            if (english != null) title = english;
+        }
+        m.title = title;
 
-            for (int i = 0; i < 25 && i < results.size( i++) {
-                movies.add(mapMovie(results.get(i), false)
-            }
-
-        } catch (Exception e) {
-            logger.error("Error obteniendo top películas", e
+        if (!node.path("poster_path").isNull()) {
+            m.posterPath = IMG + node.path("poster_path").asText(
         }
 
-        return movies;
+        if (!node.path("backdrop_path").isNull()) {
+            m.backdropPath = BACKDROP + node.path("backdrop_path").asText(
+        }
+
+        m.voteAverage = node.path("vote_average").asDouble(
+        m.voteCount = node.path("vote_count").asInt(
+        m.genres = extractGenres(node, isMovie
+
+        return m;
     }
 
-    /* SERIES DEL MOMENTO (TENDENCIAS) - Se filtra para omitir el género "News" */
-    public List<Movie> getTopSeries() {
-
-        List<Movie> seriesList = new ArrayList<>(
-
-        try {
-            String url = baseUrl + "/trending/tv/day"
-                    + "?api_key=" + apiKey
-                    + "&language=" + primaryLang
-                    + "&page=1";
-
-            String response = restTemplate.getForObject(url, String.class
-            JsonNode results = mapper.readTree(response).path("results"
-
-            for (int i = 0; i < results.size() && seriesList.size() < 25; i++) {
-                Movie tv = mapTv(results.get(i)
-                if (tv.getGenres() == null || !tv.getGenres().contains("News")) {
-                    seriesList.add(tv
-                }
-            }
-
-            // Ordenar por puntuación descendente
-            //seriesList.sort((a, b) -> Double.compare(b.getVoteAverage(), a.getVoteAverage())
-
-        } catch (Exception e) {
-            logger.error("Error obteniendo top series", e
-        }
-
-        return seriesList;
+    public List<Movie> getTopSeries() throws Exception {
+        return processMovieResults(tmdbClient.getTrendingTv(), false
     }
 
-    /* =========================
-       MAPPER SERIES
-       Para mapear los datos de una serie de TMDB al modelo Movie (usado también para series)
-         - Se hace un fallback a inglés si el título en español tiene caracteres no latinos
-         - Si el inglés también falla, se usa original_name
-       ========================= */
-    private Movie mapTv(JsonNode jsonTv) {
-
-        Movie tv = new Movie(
-
-        /* ---------- ID ---------- */
-        int id = jsonTv.path("id").asInt(
-        tv.setId(id
-        /* ---------- FECHA DE ESTRENO ---------- */
-        tv.setReleaseDate(jsonTv.path("first_air_date").asText(null)
-
-        /* ---------- TEMPORADA ACTIVA ---------- */
-        tv.setSeasonNumber(jsonTv.path("number_of_seasons").asInt(0)
-
-        /* ---------- TÍTULO ---------- */
-        String nameEs = jsonTv.path("name").asText(
-        String finalName = nameEs;
-
-        if (containsNonLatin(nameEs)) {
-            // Primero intenta obtener el título en inglés via API
-            String nameEn = getEnglishTvTitle(id
-            if (nameEn != null && !containsNonLatin(nameEn)) {
-                finalName = nameEn;
-            } else {
-                // Si el inglés también tiene caracteres no latinos, usa original_name
-                String originalName = jsonTv.path("original_name").asText(
-                if (originalName != null && !originalName.isBlank()) {
-                    finalName = originalName;
-                }
-            }
-        }
-
-        if (finalName == null || finalName.isBlank()) {
-            finalName = "Sin título";
-        }
-
-        tv.setTitle(finalName
-
-        /* ---------- RATING ---------- */
-        tv.setVoteAverage(jsonTv.path("vote_average").asDouble(0.0)
-        tv.setVoteCount(jsonTv.path("vote_count").asInt(0)
-
-        /* ---------- POSTER ---------- */
-        String poster = jsonTv.path("poster_path").asText(null
-        tv.setPosterPath(
-                poster != null
-                        ? posterBase + poster
-                        : "/img/no-poster.png"
-        
-
-        /* ---------- BACKDROP ---------- */
-        String backdrop = jsonTv.path("backdrop_path").asText(null
-        tv.setBackdropPath(
-                backdrop != null
-                        ? backdropBase + backdrop
-                        : null
-        
-
-        /* ---------- GÉNEROS (TV) ---------- */
-        List<String> genreNames = new ArrayList<>(
-        JsonNode genreIds = jsonTv.path("genre_ids"
-
-        if (genreIds.isArray()) {
-            try {
-                List<JsonNode> genres = getTvGenres(
-
-                for (JsonNode idNode : genreIds) {
-                    int gid = idNode.asInt(
-                    genres.stream()
-                            .filter(g -> g.path("id").asInt() == gid)
-                            .findFirst()
-                            .ifPresent(g -> genreNames.add(g.path("name").asText())
-                }
-            } catch (Exception ignored) {}
-        }
-
-        tv.setGenres(genreNames
-        return tv;
-    }
-
-    /* =========================
-       MAPPER PELÍCULAS
-       ========================= */
-    private Movie mapMovie(JsonNode jsonMovie, boolean includeOverview) {
-
-        Movie movie = new Movie(
-
-        int movieId = jsonMovie.path("id").asInt(
-        movie.setId(movieId
-
-        /* ---------- TÍTULO ---------- */
-        String titleEs = jsonMovie.path("title").asText(
-        String finalTitle = titleEs;
-
-        if (containsNonLatin(titleEs)) {
-            String titleEn = getEnglishTitle(movieId
-            if (titleEn != null) {
-                finalTitle = titleEn;
-            }
-        }
-
-        if (finalTitle == null || finalTitle.isBlank()) {
-            finalTitle = jsonMovie.path("original_title").asText("Sin título"
-        }
-
-        movie.setTitle(finalTitle
-
-        /* ---------- RATING ---------- */
-        movie.setVoteAverage(jsonMovie.path("vote_average").asDouble(0.0)
-        movie.setVoteCount(jsonMovie.path("vote_count").asInt(0)
-
-        /* ---------- POSTER ---------- */
-        String poster = jsonMovie.path("poster_path").asText(null
-        movie.setPosterPath(
-                poster != null
-                        ? posterBase + poster
-                        : "/img/no-poster.png"
-        
-
-        /* ---------- FECHA DE ESTRENO ---------- */
-        movie.setReleaseDate(jsonMovie.path("release_date").asText(null)
-
-        // En mapMovie(), sustituye la línea de releaseDate por esto:
-        String rawDate = jsonMovie.path("release_date").asText(null
-        if (rawDate != null && !rawDate.isBlank()) {
-            try {
-                LocalDate date = LocalDate.parse(rawDate
-                movie.setReleaseDate(date.format(
-                        DateTimeFormatter.ofPattern("d MMMM, yyyy", new java.util.Locale("es", "ES"))
-                )
-            } catch (Exception e) {
-                movie.setReleaseDate(rawDate
-            }
-        }
-
-
-
-        /* ---------- BACKDROP (HERO) ---------- */
-        String backdrop = jsonMovie.path("backdrop_path").asText(null
-        movie.setBackdropPath(
-                backdrop != null
-                        ? backdropBase + backdrop
-                        : null
-        
-
-        /* ---------- OVERVIEW ---------- */
-        if (includeOverview) {
-            movie.setOverview(jsonMovie.path("overview").asText("")
-        }
-
-        /* ---------- GÉNEROS ---------- */
-        List<String> genreNames = new ArrayList<>(
-        JsonNode genreIds = jsonMovie.path("genre_ids"
-
-        if (genreIds.isArray()) {
-            try {
-                List<JsonNode> genres = getMovieGenres(
-
-                for (JsonNode idNode : genreIds) {
-                    int id = idNode.asInt(
-                    genres.stream()
-                            .filter(g -> g.path("id").asInt() == id)
-                            .findFirst()
-                            .ifPresent(g -> genreNames.add(g.path("name").asText())
-                }
-            } catch (Exception e) {
-                logger.warn("No se pudieron resolver los géneros", e
-            }
-        }
-
-        movie.setGenres(genreNames
-        return movie;
-    }
-
-
-    /* =========================
-   EN CARTELERA - Películas
-   ========================= */
-    public List<Movie> getNowPlayingMovies() {
-
-        List<Movie> movies = new ArrayList<>(
-
-        try {
-            String url = baseUrl + "/movie/now_playing"
-                    + "?api_key=" + apiKey
-                    + "&language=" + primaryLang
-                    + "&region=ES"
-                    + "&page=1";
-
-            String response = restTemplate.getForObject(url, String.class
-            JsonNode results = mapper.readTree(response).path("results"
-
-            for (int i = 0; i < 25 && i < results.size( i++) {
-                movies.add(mapMovie(results.get(i), false)
-            }
-
-        } catch (Exception e) {
-            logger.error("Error obteniendo películas en cartelera", e
-        }
-
-        return movies;
-    }
-
-    /* =========================
-       PRÓXIMOS ESTRENOS - Series
-       ========================= */
-    public List<Movie> getUpcomingSeries() {
-
-        List<Movie> seriesList = new ArrayList<>(
-
-        try {
-            String url = baseUrl + "/tv/on_the_air"
-                    + "?api_key=" + apiKey
-                    + "&language=" + primaryLang
-                    + "&region=ES"
-                    + "&page=1";
-
-            String response = restTemplate.getForObject(url, String.class
-            JsonNode results = mapper.readTree(response).path("results"
-
-            for (int i = 0; i < results.size() && seriesList.size() < 25; i++) {
-                Movie tv = mapTv(results.get(i)
-
-                // Filtrar series con género "News"
-                if (tv.getGenres() == null || !tv.getGenres().contains("News")) {
-                    seriesList.add(tv
-                }
-            }
-
-        } catch (Exception e) {
-            logger.error("Error obteniendo series en emisión", e
-        }
-
-        return seriesList;
+    public List<Movie> getUpcomingSeries() throws Exception {
+        return processMovieResults(tmdbClient.getOnTheAirTv(), false
     }
 
     /* =========================
        HELPERS
        ========================= */
 
-    /**
-     * Carga los géneros de películas desde TMDB con caché para evitar llamadas repetidas
-     */
-    private List<JsonNode> getMovieGenres() throws Exception {
-        if (cachedGenres != null) return cachedGenres;
-
-        String url = baseUrl + "/genre/movie/list"
-                + "?api_key=" + apiKey
-                + "&language=" + primaryLang;
-
-        String response = restTemplate.getForObject(url, String.class
-        JsonNode genresNode = mapper.readTree(response).path("genres"
-
-        cachedGenres = new ArrayList<>(
-        genresNode.forEach(cachedGenres::add
-        return cachedGenres;
-    }
-
-    /**
-     * Carga los géneros de series desde TMDB con caché para evitar llamadas repetidas
-     */
-    private List<JsonNode> getTvGenres() throws Exception {
-        if (cachedTvGenres != null) return cachedTvGenres;
-
-        String url = baseUrl + "/genre/tv/list"
-                + "?api_key=" + apiKey
-                + "&language=" + primaryLang;
-
-        String response = restTemplate.getForObject(url, String.class
-        JsonNode genresNode = mapper.readTree(response).path("genres"
-
-        cachedTvGenres = new ArrayList<>(
-        genresNode.forEach(cachedTvGenres::add
-        return cachedTvGenres;
-    }
-
-    /**
-     * Fallback a inglés para títulos de películas con caracteres no latinos
-     */
-    private String getEnglishTitle(int movieId) {
-        try {
-            String url = baseUrl + "/movie/" + movieId
-                    + "?api_key=" + apiKey
-                    + "&language=" + fallbackLang;
-
-            String response = restTemplate.getForObject(url, String.class
-            JsonNode json = mapper.readTree(response
-
-            String titleEn = json.path("title").asText(
-            return titleEn != null && !titleEn.isBlank() ? titleEn : null;
-
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Fallback a inglés para títulos de series con caracteres no latinos
-     */
-    private String getEnglishTvTitle(int tvId) {
-        try {
-            String url = baseUrl + "/tv/" + tvId
-                    + "?api_key=" + apiKey
-                    + "&language=" + fallbackLang;
-
-            String response = restTemplate.getForObject(url, String.class
-            JsonNode json = mapper.readTree(response
-
-            String titleEn = json.path("name").asText(
-            return titleEn != null && !titleEn.isBlank() ? titleEn : null;
-
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Detecta si el texto contiene caracteres no occidentales (cirílico, chino, árabe...)
-     */
     private boolean containsNonLatin(String text) {
         if (text == null) return true;
-
         return text.matches(".*[\\p{IsCyrillic}\\p{IsHan}\\p{IsArabic}\\p{IsHangul}].*"
+    }
+
+    private String getEnglishMovieTitle(int movieId) {
+        try {
+            JsonNode json = mapper.readTree(tmdbClient.getMovieDetails(movieId)
+            String title = json.path("title").asText(
+            return (title != null && !title.isBlank()) ? title : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String getEnglishTvTitle(int tvId) {
+        try {
+            JsonNode json = mapper.readTree(tmdbClient.getTvDetailsEnglish(tvId)
+            String title = json.path("name").asText(
+            return (title != null && !title.isBlank()) ? title : null;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Movie getMovieDetails(int movieId) throws Exception {
+        JsonNode json = mapper.readTree(tmdbClient.getMovieDetails(movieId)
+
+        Movie m = new Movie(
+        m.id = json.path("id").asInt(
+        m.title = json.path("title").asText(
+        m.overview = json.path("overview").asText(
+
+        if (!json.path("poster_path").isNull()) {
+            m.posterPath = IMG + json.path("poster_path").asText(
+        }
+
+        if (!json.path("backdrop_path").isNull()) {
+            String bestBackdrop = getBestBackdrop(movieId
+
+            if (bestBackdrop != null) {
+                m.backdropPath = bestBackdrop;
+            } else if (!json.path("backdrop_path").isNull()) {
+                m.backdropPath = BACKDROP + json.path("backdrop_path").asText(
+            }
+
+        }
+
+        m.voteAverage = json.path("vote_average").asDouble(
+        m.voteCount = json.path("vote_count").asInt(
+        m.releaseDate = json.path("release_date").asText(
+
+        List<String> genres = new ArrayList<>(
+        for (JsonNode g : json.path("genres")) {
+            genres.add(g.path("name").asText()
+        }
+
+        m.genres = genres;
+
+        // fecha formateada a dd/MM/yyyy
+        m.releaseDate = m.getFormattedReleaseDate(
+
+        return m;
+    }
+
+    private String getBestBackdrop(int movieId) {
+
+        try {
+
+            JsonNode images = mapper.readTree(tmdbClient.getMovieImages(movieId)
+            JsonNode backdrops = images.path("backdrops"
+
+            if (backdrops.isEmpty()) {
+                return null;
+            }
+
+            // Seleccionar el backdrop con mayor vote_average (mejor votado), luego con  más votos,  y por ultimo con mayor resolución (mayor width)
+            JsonNode bestBackdrop = null;
+            double highestVote = -1;
+
+            for (JsonNode b : backdrops) {
+                double vote = b.path("vote_count").asDouble(0
+                double average = b.path("vote_average").asDouble(0
+                int width = b.path("width").asInt(0
+
+                if (vote > highestVote ||
+                        (vote == highestVote && average > bestBackdrop.path("vote_average").asDouble(0)) ||
+                        (vote == highestVote && average == bestBackdrop.path("vote_average").asDouble(0) && width > bestBackdrop.path("width").asInt(0))) {
+                    bestBackdrop = b;
+                    highestVote = vote;
+                }
+            }
+
+            if (bestBackdrop != null && !bestBackdrop.path("file_path").isNull()) {
+                return BACKDROP + bestBackdrop.path("file_path").asText(
+            }
+
+            return null;
+
+        } catch (Exception e) {
+            // Si hay error, retornar null para usar el fallback
+            return null;
+        }
+    }
+
+    public List<Movie> getRelatedMovies(int movieId) throws Exception {
+        try {
+            String jsonResponse = tmdbClient.getMovieRecommendations(movieId
+            JsonNode results = mapper.readTree(jsonResponse).path("results"
+
+            // si recommendations está vacío, usar similar como fallback
+            if (results.isEmpty()) {
+                jsonResponse = tmdbClient.getMovieSimilar(movieId
+                results = mapper.readTree(jsonResponse).path("results"
+            }
+
+            List<Movie> movies = new ArrayList<>(
+
+            // Limitar a 20 películas relacionadas
+            int count = 0;
+            for (JsonNode node : results) {
+                if (count >= 20) break;
+
+                Movie m = new Movie(
+                m.id = node.path("id").asInt(
+
+                String title = node.path("title").asText(
+                if (containsNonLatin(title)) {
+                    String english = getEnglishMovieTitle(m.id
+                    if (english != null) title = english;
+                }
+                m.title = title;
+
+                if (!node.path("poster_path").isNull()) {
+                    m.posterPath = IMG + node.path("poster_path").asText(
+                }
+
+                if (!node.path("backdrop_path").isNull()) {
+                    m.backdropPath = BACKDROP + node.path("backdrop_path").asText(
+                }
+
+                m.voteAverage = node.path("vote_average").asDouble(
+                m.voteCount = node.path("vote_count").asInt(
+                m.genres = extractGenres(node, true
+
+                movies.add(m
+                count++;
+            }
+
+            return movies;
+        } catch (Exception e) {
+            System.err.println("Error al obtener películas relacionadas para ID " + movieId + ": " + e.getMessage()
+            e.printStackTrace(
+            return new ArrayList<>(
+        }
     }
 }
