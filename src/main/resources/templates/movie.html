@@ -25,7 +25,6 @@
                             Fecha de estreno: <span th:text="${movie.releaseDate}"></span>
                         </p>
                     </div>
-                    <!-- Hacer que se repartan en lineas segun el espacio disponible -->
                     <div class="movie-genres mb-2 mt-2 align-items-center gap-2">
                         <span class="genre " th:each="genre : ${movie.genres}" th:text="${genre}">
                         </span>
@@ -33,18 +32,13 @@
                     <p class="movie-overview" th:text="${movie.overview}">
                     </p>
                 </div>
-                <div class="movie-info">
-
-                </div>
             </div>
         </div>
     </section>
 
     <!-- Peliculas relacionadas -->
     <section class="carousel-section" th:if="${relatedMovies != null and #lists.size(relatedMovies) > 0}">
-
         <div class="container">
-
             <div class="section-header">
                 <h2 class="section-title">Películas relacionadas</h2>
                 <div class="carousel-controls">
@@ -73,12 +67,9 @@
                         <p class="card-genres"
                            th:text="${#strings.listJoin(related.genres, ' · ')}">
                         </p>
-
                     </div>
-
                 </a>
             </div>
-
         </div>
     </section>
     <footer th:replace="fragments/footer :: footer"></footer>

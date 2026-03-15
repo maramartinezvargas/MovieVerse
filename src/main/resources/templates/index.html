@@ -13,14 +13,10 @@
 
         <div class="container">
             <div class="hero-content">
-
                 <span class="hero-badge">Destacado</span>
-
                 <h1 class="hero-title" th:text="${featured.title}">
                 </h1>
-
                 <div class="hero-meta">
-
                     <span class="rating">
                         <i class="bi bi-star-fill"></i>
                         <span th:text="${featured.voteAverageFormatted}"></span> / 10
@@ -52,41 +48,28 @@
 
     <!-- TENDENCIAS · SERIES -->
     <section class="carousel-section">
-
         <div class="container">
-
             <div class="section-header">
                 <h2 class="section-title">Series en tendencia</h2>
-
                 <div class="carousel-controls">
                     <button class="carousel-btn prev">‹</button>
                     <button class="carousel-btn next">›</button>
                 </div>
             </div>
-
             <div class="carousel" id="top-tv-carousel">
-
                 <article class="carousel-card" th:each="show, iterStat : ${tvShows}">
-
                     <div class="rank-badge" th:text="${iterStat.count}">
                     </div>
-
                     <img th:src="${show.posterPath}" th:alt="${show.title}">
-
                     <div class="card-meta">
-
                         <span>
                             <i class="bi bi-star-fill"></i>
                             <span th:text="${show.voteAverageFormatted}"></span>
                         </span>
-
                         <h3 th:text="${show.title}"></h3>
-
                         <p class="card-genres" th:text="${#strings.listJoin(show.genres, ' · ')}">
                         </p>
-
                     </div>
-
                 </article>
 
             </div>
@@ -110,32 +93,21 @@
             </div>
 
             <div class="carousel" id="now-playing-carousel">
-
                 <a th:href="@{/peliculas/{id}(id=${movie.id})}" class="carousel-card"
                     th:each="movie : ${nowPlayingMovies}">
-
                     <img th:src="${movie.posterPath}" th:alt="${movie.title}">
-
                     <div class="card-meta">
-
                         <span>
                             <i class="bi bi-star-fill"></i>
                             <span th:text="${movie.voteAverageFormatted}"></span>
                         </span>
-
                         <h3 th:text="${movie.title}"></h3>
-
                         <p class="card-genres" th:text="${#strings.listJoin(movie.genres, ' · ')}">
                         </p>
-
                     </div>
-
                 </a>
-
             </div>
-
         </div>
-
     </section>
 
     <!-- MEJOR VALORADAS DEL AÑO -->

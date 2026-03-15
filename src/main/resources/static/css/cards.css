@@ -7,11 +7,18 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
     margin-bottom: 2rem;
-    overscroll-behavior: contain;
+    overscroll-behavior: contain; /* evitar scroll chaining hacia la página (desktop) */
+    touch-action: auto; /* permitir que el navegador maneje gestos nativos (horizontal y vertical) */
+    -webkit-overflow-scrolling: touch; /* inercia en iOS */
 }
 
-.carousel::-webkit-scrollbar {
-    display: none;
+@media (max-width: 768px) {
+    .carousel {
+        /* en móviles permitir overscroll para que la página pueda scrollar verticalmente
+           cuando el gesto es vertical (evita bloquear la experiencia táctil) */
+        overscroll-behavior: auto;
+        touch-action: auto; /* permitir scroll nativo en móviles */
+    }
 }
 
 .carousel-card {
