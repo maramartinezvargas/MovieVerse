@@ -12,6 +12,8 @@ public abstract class Media {
     public int voteCount;
     public List<String> genres;
 
+    public String mediaType;
+
     public Integer seasonNumber;
 
     public List<String> getGenres() {
@@ -28,5 +30,14 @@ public abstract class Media {
 
     public String getVoteAverageFormatted() {
         return String.format("%.1f", voteAverage
+    }
+
+    // Obtener url según sea pelicula o serie
+    public String getUrlPath() {
+        if (this instanceof Movie) {
+            return "/peliculas/" + id;
+        } else {
+            return "/series/" + id;
+        }
     }
 }

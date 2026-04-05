@@ -3,7 +3,9 @@ package com.mara.tfgcine.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mara.tfgcine.client.TmdbClient;
+import com.mara.tfgcine.model.media.Media;
 import com.mara.tfgcine.model.media.Movie;
+import com.mara.tfgcine.model.media.TvSeries;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +40,56 @@ public class TmdbService {
         }
     }
 
-    /* TOP TRENDING MOVIES */
+    /* Buscador multi - Tanto para peliculas como para series */
+    public List<Media> search(String query) throws Exception {
+
+        if (query == null || query.isBlank()) {
+            return Collections.emptyList(
+        }
+
+        String json = tmdbClient.searchMulti(query
+        JsonNode results = mapper.readTree(json).path("results"
+
+        List<Media> list = new ArrayList<>(
+
+        for (JsonNode node : results) {
+
+            String mediaType = node.path("media_type").asText(
+
+            if ("movie".equals(mediaType)) {
+                list.add(createMovieFromNode(node, node.path("id").asInt(), true)
+            }
+
+            if ("tv".equals(mediaType)) {
+                list.add(createMovieFromNode(node, node.path("id").asInt(), false)
+            }
+        }
+
+        String normalizedQuery = query.toLowerCase().trim(
+        String[] words = normalizedQuery.split("\\s+"
+
+        return list.stream()
+                .filter(item -> {
+                    if (item.title == null) return false;
+
+                    String title = item.title.toLowerCase(
+
+                    return Arrays.stream(words)
+                            .allMatch(title::contains
+                })
+                .limit(10)
+                .toList(
+    }
+
+
+    /* TOP TRENDING MOVIES --------------------------------------------------------- */
+
     public List<Movie> getTopMovies() throws Exception {
         return processMovieResults(tmdbClient.getTrendingMovies(), true
+    }
+
+    public List<Movie> getTrendingNowMovies() throws Exception {
+        return processMovieResults(tmdbClient.getTrendingNowMovies(), true
     }
 
     public List<Movie> getNowPlayingMovies() throws Exception {
@@ -87,6 +136,58 @@ public class TmdbService {
         }
 
         return movies;
+    }
+
+    public List<TvSeries> processTvResults(String jsonResponse) throws Exception {
+
+        JsonNode results = mapper.readTree(jsonResponse).path("results"
+        List<TvSeries> series = new ArrayList<>(
+
+        for (JsonNode node : results) {
+
+            TvSeries tv = new TvSeries(
+            tv.id = node.path("id").asInt(
+
+            String title = node.path("name").asText(
+            if (containsNonLatin(title)) {
+                String english = getEnglishTvTitle(tv.id
+                if (english != null) title = english;
+            }
+            tv.title = title;
+
+            if (!node.path("poster_path").isNull()) {
+                tv.posterPath = IMG + node.path("poster_path").asText(
+            }
+
+            tv.voteAverage = node.path("vote_average").asDouble(
+            tv.voteCount = node.path("vote_count").asInt(
+            tv.genres = extractGenres(node, false
+
+            series.add(tv
+        }
+
+        return series;
+    }
+
+    // Confort content
+    public List<Media> getComfortContent() throws Exception {
+
+        List<Media> combined = new ArrayList<>(
+
+        combined.addAll(getComfortMovies()
+        combined.addAll(getComfortSeries()
+
+        Collections.shuffle(combined // mezcla real
+
+        return combined.stream().limit(20).toList(
+    }
+
+    public List<Media> getComfortSeries() throws Exception {
+        return new ArrayList<>(processTvResults(tmdbClient.getComfortTv())
+    }
+
+    public List<Media> getComfortMovies() throws Exception {
+        return new ArrayList<>(processMovieResults(tmdbClient.getComfortMovies(), true)
     }
 
     private List<String> extractGenres(JsonNode node, boolean isMovie) {
@@ -152,6 +253,7 @@ public class TmdbService {
     private Movie createMovieFromNode(JsonNode node, int id, boolean isMovie) {
         Movie m = new Movie(
         m.id = id;
+        m.mediaType = isMovie ? "movie" : "tv";
 
         String title = node.path(isMovie ? "title" : "name").asText(
         if (containsNonLatin(title)) {
@@ -175,12 +277,72 @@ public class TmdbService {
         return m;
     }
 
+    /*  TOP TRENDING SERIES --------------------------------------------------------- */
+
+    public List<Movie> getTrendingNowSeries() throws Exception {
+        return processMovieResults(tmdbClient.getTrendingNowTv(), false
+    }
+
     public List<Movie> getTopSeries() throws Exception {
-        return processMovieResults(tmdbClient.getTrendingTv(), false
+
+        String jsonResponse = tmdbClient.getTrendingTv(
+        JsonNode results = mapper.readTree(jsonResponse).path("results"
+
+        List<Movie> series = new ArrayList<>(
+
+        int currentYear = java.time.Year.now().getValue(
+
+        for (JsonNode node : results) {
+
+            String firstAirDate = node.path("first_air_date").asText(
+
+            // ignorar si no tiene fecha
+            if (firstAirDate == null || firstAirDate.isBlank()) continue;
+
+            int year;
+            try {
+                year = Integer.parseInt(firstAirDate.substring(0, 4)
+            } catch (Exception e) {
+                continue;
+            }
+
+            // Filtro: solo series recientes (último año)
+            if (year < currentYear - 1) continue;
+
+            Movie m = new Movie(
+            m.id = node.path("id").asInt(
+
+            String title = node.path("name").asText(
+            if (containsNonLatin(title)) {
+                String english = getEnglishTvTitle(m.id
+                if (english != null) title = english;
+            }
+            m.title = title;
+
+            if (!node.path("poster_path").isNull()) {
+                m.posterPath = IMG + node.path("poster_path").asText(
+            }
+
+            if (!node.path("backdrop_path").isNull()) {
+                m.backdropPath = BACKDROP + node.path("backdrop_path").asText(
+            }
+
+            m.voteAverage = node.path("vote_average").asDouble(
+            m.voteCount = node.path("vote_count").asInt(
+            m.genres = extractGenres(node, false
+
+            series.add(m
+        }
+
+        return series.stream().limit(20).toList(
     }
 
     public List<Movie> getUpcomingSeries() throws Exception {
         return processMovieResults(tmdbClient.getOnTheAirTv(), false
+    }
+
+    public List<Movie> getPopularSeries() throws Exception {
+        return processMovieResults(tmdbClient.getPopularTv(), false
     }
 
     /* =========================

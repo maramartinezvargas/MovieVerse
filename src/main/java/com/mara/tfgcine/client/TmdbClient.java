@@ -26,6 +26,18 @@ public class TmdbClient {
         this.restTemplate = restTemplate;
     }
 
+    public String searchMulti(String query) {
+
+        String url = baseUrl + "/search/multi"
+                + "?api_key=" + apiKey
+                + "&language=" + language
+                + "&query=" + query
+                + "&include_adult=false"
+                + "&page=1";
+
+        return restTemplate.getForObject(url, String.class
+    }
+
     public String getTrendingMovies() {
         String url = baseUrl + "/trending/movie/day"
                 + "?api_key=" + apiKey
@@ -34,11 +46,52 @@ public class TmdbClient {
         return restTemplate.getForObject(url, String.class
     }
 
+    public String getTrendingNowMovies() {
+
+        int year = java.time.Year.now().getValue() - 2;
+
+        String url = baseUrl + "/discover/movie"
+                + "?api_key=" + apiKey
+                + "&language=" + language
+                + "&sort_by=popularity.desc"
+                + "&vote_count.gte=200"
+                + "&primary_release_date.gte=" + year + "-01-01"
+                + "&region=ES"
+                + "&page=1";
+
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getPopularTv() {
+        String url = baseUrl + "/tv/popular"
+                + "?api_key=" + apiKey
+                + "&language=" + language
+                + "&page=1";
+        return restTemplate.getForObject(url, String.class
+    }
+
     public String getTrendingTv() {
         String url = baseUrl + "/trending/tv/day"
                 + "?api_key=" + apiKey
                 + "&region=ES"
-                + "&language=" + language;
+                + "&language=" + language
+                + "&page=1";
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getTrendingNowTv() {
+
+        int year = java.time.Year.now().getValue() - 1;
+
+        String url = baseUrl + "/discover/tv"
+                + "?api_key=" + apiKey
+                + "&language=" + language
+                + "&sort_by=popularity.desc"
+                + "&vote_count.gte=100"
+                + "&first_air_date.gte=" + year + "-01-01"
+                + "&region=ES"
+                + "&page=1";
+
         return restTemplate.getForObject(url, String.class
     }
 
@@ -149,4 +202,35 @@ public class TmdbClient {
 
         return restTemplate.getForObject(url, String.class
     }
+
+    public String getComfortMovies() {
+
+        String url = baseUrl + "/discover/movie"
+                + "?api_key=" + apiKey
+                + "&language=" + language
+                + "&sort_by=popularity.desc"
+                + "&vote_average.gte=8"
+                + "&vote_count.gte=3000"
+                + "&primary_release_date.lte=2020-12-31"
+                + "&region=ES"
+                + "&page=1";
+
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getComfortTv() {
+
+        String url = baseUrl + "/discover/tv"
+                + "?api_key=" + apiKey
+                + "&language=" + language
+                + "&sort_by=popularity.desc"
+                + "&vote_average.gte=7"
+                + "&vote_count.gte=1000"
+                + "&first_air_date.lte=2020-12-31"
+                + "&region=ES"
+                + "&page=1";
+
+        return restTemplate.getForObject(url, String.class
+    }
+
 }

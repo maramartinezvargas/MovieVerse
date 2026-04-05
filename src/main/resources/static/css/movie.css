@@ -115,7 +115,7 @@
         flex-direction: column;
         text-align: center;
         gap: 30px;
-        padding: 2rem 1rem;
+        padding: 3.5rem 1rem;
         align-items: center; /* centrar en column */
     }
 
