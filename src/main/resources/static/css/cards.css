@@ -2,16 +2,17 @@
     display: flex;
     gap: 1rem;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-behavior: smooth;
     padding-bottom: 0.5rem;
     -ms-overflow-style: none;
     scrollbar-width: none;
     margin-bottom: 2rem;
-    overscroll-behavior: contain; /* evitar scroll chaining hacia la página (desktop) */
-    touch-action: auto; /* permitir que el navegador maneje gestos nativos (horizontal y vertical) */
-    -webkit-overflow-scrolling: touch; /* inercia en iOS */
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
 }
-
 @media (max-width: 768px) {
     .carousel {
         /* en móviles permitir overscroll para que la página pueda scrollar verticalmente
