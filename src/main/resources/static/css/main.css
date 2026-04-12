@@ -2,19 +2,17 @@ body {
     background: #131313;
     color: #f0dfc8;
     font-family: Inter, sans-serif;
-    /*padding-top: 64px;*/
 }
 
-
-/* Destacada - Hero ------------------------------------------------ */
+/* Hero ------------------------------------------------ */
 .hero {
     padding: 4rem 0 1rem 1rem;
-    background: linear-gradient(100deg, #1c1c1c, rgba(26, 26, 26, 0.37)
+    background: linear-gradient(100deg, #1c1c1c, rgba(26, 26, 26, 0.25)
 }
 
 .hero h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
+    font-size: 2.4rem;
+    font-weight: 700;
     margin-bottom: 1rem;
 }
 
@@ -26,25 +24,48 @@ body {
     color: #ffbd59;
 }
 
+/* COMPONENTE GLOBAL: GENRE (reutilizable en TODA la app) */
 .genre {
     color: #ffbd59;
-    background: rgba(77, 77, 77, 0.78
-    padding: 0.2rem 0.6rem;
+    background: rgba(255, 189, 89, 0.12
+    border: 1px solid rgba(255, 189, 89, 0.25
+
+    padding: 0.25rem 0.65rem;
     border-radius: 999px;
+
     font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
 }
 
-.release-date{
+/* Fecha (consistente con hero) */
+.release-date {
     margin: 0;
     padding: 0;
     color: #ffbd59;
 }
 
+.rating-value {
+    font-weight: 300;
+}
+
+.rating-count {
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+/* Títulos sección */
 .section-title {
     text-align: center;
     font-size: 1.4rem;
     font-weight: 700;
 }
+
+/* Cards ------------------------------------------------ */
 
 .movie-card {
     background: #272727;
@@ -73,11 +94,13 @@ body {
     margin-bottom: 0.3rem;
 }
 
+/* Layout */
 .container {
     max-width: 1400px;
     margin: 0 auto;
 }
 
+/* Footer */
 .footer {
     background-color: #272727;
     text-align: center;

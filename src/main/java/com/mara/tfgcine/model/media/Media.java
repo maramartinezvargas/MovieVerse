@@ -103,4 +103,13 @@ public abstract class Media {
             return "/series/" + id;
         }
     }
+
+    public String getYear() {
+        if (releaseDate == null || releaseDate.isBlank()) return "";
+        try {
+            return releaseDate.substring(0, 4
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }

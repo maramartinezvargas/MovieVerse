@@ -15,19 +15,31 @@
                 <img class="movie-poster" th:src="${movie.posterPath}" th:alt="${movie.title}">
                 <div class="movie-info">
                     <h1 class="movie-hero-title" th:text="${movie.title}"></h1>
-                    <div class="movie-meta mb-1 d-flex align-items-center gap-3">
-                        <span>
-                            <i class="bi bi-star-fill"></i>
-                            <span th:text="${movie.voteAverageFormatted}"></span>
-                            (<span th:text="${movie.voteCount}"></span> votos)
-                        </span>
-                        <p class="release-date" th:if="${movie.releaseDate != null}">
-                            Fecha de estreno: <span th:text="${movie.releaseDate}"></span>
-                        </p>
-                    </div>
-                    <div class="movie-genres mb-2 mt-2 align-items-center gap-2">
-                        <span class="genre " th:each="genre : ${movie.genres}" th:text="${genre}">
-                        </span>
+                    <div class="movie-meta">
+                        <!-- Línea 1 -->
+                        <div class="movie-meta-top">
+                            <span class="rating">
+                                <i class="bi bi-star-fill"></i>
+                                <span class="rating-value" th:text="${movie.voteAverageFormatted}"></span>
+                                <span class="rating-count">
+                                    (<span th:text="${movie.voteCount}"></span> votos)
+                                </span>
+                            </span>
+
+                            <span class="release-date"
+                                  th:if="${movie.releaseDate != null and !#strings.isEmpty(movie.releaseDate)}"
+                                  th:text="${movie.formattedReleaseDate}">
+                            </span>
+                        </div>
+
+                        <!-- Línea 2 -->
+                        <div class="movie-genres">
+                            <span class="genre"
+                                  th:each="genre : ${movie.genres}"
+                                  th:text="${genre}">
+                            </span>
+                        </div>
+
                     </div>
                     <p class="movie-overview" th:text="${movie.overview}">
                     </p>

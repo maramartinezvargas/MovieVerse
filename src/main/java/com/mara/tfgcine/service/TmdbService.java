@@ -192,6 +192,7 @@ public class TmdbService {
 
             JsonNode details = mapper.readTree(tmdbClient.getMovieDetails(movieId)
             featured.setOverview(details.path("overview").asText()
+            featured.setReleaseDate(details.path("release_date").asText()
 
             return featured;
 
@@ -215,6 +216,7 @@ public class TmdbService {
             if (english != null) title = english;
         }
         m.setTitle(title
+        m.setReleaseDate(node.path("release_date").asText()
 
         if (!node.path("poster_path").isNull()) {
             m.setPosterPath(IMG + node.path("poster_path").asText()
@@ -349,7 +351,7 @@ public class TmdbService {
             if (english != null) title = english;
         }
         tv.setTitle(title
-
+        tv.setReleaseDate(node.path("first_air_date").asText()
         if (!node.path("poster_path").isNull()) {
             tv.setPosterPath(IMG + node.path("poster_path").asText()
         }

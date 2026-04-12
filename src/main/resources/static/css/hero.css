@@ -1,9 +1,26 @@
 .hero {
     min-height: 55vh;
     max-height: 70vh;
+
+    background-image:
+            linear-gradient(
+                    to right,
+                    rgba(19,19,19,0.85) 0%,
+                    rgba(19,19,19,0.5) 35%,
+                    rgba(19,19,19,0.20) 60%,
+                    rgba(19,19,19,0) 70%
+            ),
+            linear-gradient(
+                    to top,
+                    rgba(19,19,19,1) 0%,
+                    rgba(19,19,19,0.7) 5%,
+                    rgba(19,19,19,0.4) 25%,
+                    rgba(19,19,19,0) 60%
+            ),
+            var(--hero-bg, url('/images/hero-bg.jpg')
+
     background-size: cover;
     background-position: center 20%;
-    background-image: linear-gradient(to top, rgb(19, 19, 19), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgb(19, 19, 19,0)), var(--hero-bg, url('/images/hero-bg.jpg')
     display: flex;
     align-items: center;
     padding-top: 71px;
@@ -39,12 +56,25 @@
 
 .hero-meta {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 0.8rem;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
     color: #f0dfc8;
     text-shadow: 2px 4px 25px rgba(56, 56, 56, 0.75
+}
+
+.hero-meta .genre {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+}
+
+.hero-meta .rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .hero-meta .rating {
@@ -61,7 +91,6 @@
     font-weight: 300;
     line-height: 1.5;
     color: #f0dfc8;
-    margin: 0 0.5rem 1rem;
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;

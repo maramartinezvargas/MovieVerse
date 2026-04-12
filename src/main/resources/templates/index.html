@@ -19,10 +19,15 @@
             <div class="hero-meta">
                 <span class="rating">
                     <i class="bi bi-star-fill"></i>
-                    <span th:text="${featured.voteAverageFormatted}"></span> / 10
-                    <small>(<span th:text="${featured.voteCount}"></span> votos)</small>
+                    <span class="rating-value" th:text="${featured.voteAverageFormatted}"></span>
+                    <span class="rating-count">
+                        (<span th:text="${featured.voteCount}"></span> votos)
+                    </span>
                 </span>
-
+                <span class="release-date"
+                      th:if="${featured.releaseDate != null and !#strings.isEmpty(featured.releaseDate)}"
+                      th:text="${featured.formattedReleaseDate}">
+                </span>
                 <span class="genre"
                       th:each="genre : ${featured.genres}"
                       th:text="${genre}">

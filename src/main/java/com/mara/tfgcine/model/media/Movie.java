@@ -1,7 +1,5 @@
 package com.mara.tfgcine.model.media;
-
 import lombok.Data;
-
 @Data
 public class Movie extends Media {
 
@@ -9,21 +7,23 @@ public class Movie extends Media {
 
     // Formato fecha (usa la de Media)
     public String getFormattedReleaseDate() {
-        String releaseDate = getReleaseDate(
 
-        if (releaseDate == null || releaseDate.isBlank()) {
+        String date = getReleaseDate(
+
+        if (date == null || date.isBlank()) {
             return "Fecha desconocida";
         }
 
         try {
-            String[] parts = releaseDate.split("-"
+            String[] parts = date.split("-"
             if (parts.length == 3) {
-                return parts[2] + " / " + parts[1] + " / " + parts[0];
+                return parts[2] + "/" + parts[1] + "/" + parts[0];
             } else {
-                return releaseDate;
+                return date;
             }
         } catch (Exception e) {
-            return releaseDate;
+            return date;
         }
     }
+
 }
