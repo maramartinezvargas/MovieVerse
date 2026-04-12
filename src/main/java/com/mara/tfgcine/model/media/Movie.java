@@ -4,6 +4,8 @@ import lombok.Data;
 public class Movie extends Media {
 
     private String backdropPath;
+    private Integer runtime; // Duración en minutos
+    private String trailerKey;
 
     // Formato fecha (usa la de Media)
     public String getFormattedReleaseDate() {
@@ -24,6 +26,18 @@ public class Movie extends Media {
         } catch (Exception e) {
             return date;
         }
+    }
+
+    // Formato duración en horas y minutos
+    public String getFormattedRuntime() {
+        if (runtime == null || runtime <= 0) return "";
+        int h = runtime / 60;
+        int m = runtime % 60;
+
+        if (h > 0) {
+            return h + "h " + m + "min";
+        }
+        return m + "min";
     }
 
 }

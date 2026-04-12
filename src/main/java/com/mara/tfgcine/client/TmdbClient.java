@@ -185,6 +185,15 @@ public class TmdbClient {
         
     }
 
+    public String getMovieVideos(int movieId) {
+
+        String url = baseUrl + "/movie/" + movieId + "/videos"
+                + "?api_key=" + apiKey
+                + "&language=" + language;
+
+        return restTemplate.getForObject(url, String.class
+    }
+
     public String getMovieRecommendations(int movieId) {
         String url = baseUrl + "/movie/" + movieId + "/recommendations"
                 + "?api_key=" + apiKey

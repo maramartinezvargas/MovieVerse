@@ -1,0 +1,29 @@
+<th:block th:fragment="trailerModal">
+
+    <div class="modal fade" id="trailerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-dark border-0">
+
+                <div class="modal-body p-0 position-relative">
+
+                    <button type="button"
+                            class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+                            data-bs-dismiss="modal">
+                    </button>
+
+                    <div class="ratio ratio-16x9">
+                        <iframe id="trailerIframe"
+                                src=""
+                                title="Trailer"
+                                allow="autoplay; encrypted-media"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</th:block>

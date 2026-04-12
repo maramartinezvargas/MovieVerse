@@ -10,7 +10,7 @@
     margin-bottom: 2rem;
     overscroll-behavior-x: contain;
     overscroll-behavior-y: auto;
-    touch-action: pan-y;
+    touch-action: pan-x;
     -webkit-overflow-scrolling: touch;
 }
 @media (max-width: 768px) {

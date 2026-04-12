@@ -191,8 +191,15 @@ public class TmdbService {
             Movie featured = createMovieFromNode(best, movieId, true
 
             JsonNode details = mapper.readTree(tmdbClient.getMovieDetails(movieId)
+
             featured.setOverview(details.path("overview").asText()
             featured.setReleaseDate(details.path("release_date").asText()
+
+            // ✅ runtime
+            featured.setRuntime(details.path("runtime").asInt()
+
+            // ✅ trailer
+            featured.setTrailerKey(getTrailerKey(movieId)
 
             return featured;
 
@@ -230,6 +237,7 @@ public class TmdbService {
         m.setVoteCount(node.path("vote_count").asInt()
         m.setGenres(extractGenres(node, isMovie)
 
+
         return m;
     }
 
@@ -251,7 +259,7 @@ public class TmdbService {
 
             if (bestBackdrop != null) {
                 m.setBackdropPath(bestBackdrop
-            } else if (!json.path("backdrop_path").isNull()) {
+            } else {
                 m.setBackdropPath(BACKDROP + json.path("backdrop_path").asText()
             }
         }
@@ -259,6 +267,12 @@ public class TmdbService {
         m.setVoteAverage(json.path("vote_average").asDouble()
         m.setVoteCount(json.path("vote_count").asInt()
         m.setReleaseDate(json.path("release_date").asText()
+
+        // ✅ runtime
+        m.setRuntime(json.path("runtime").asInt()
+
+        // ✅ trailer
+        m.setTrailerKey(getTrailerKey(movieId)
 
         List<String> genres = new ArrayList<>(
         for (JsonNode g : json.path("genres")) {
@@ -402,4 +416,34 @@ public class TmdbService {
             return null;
         }
     }
+
+    private String getTrailerKey(int movieId) {
+        try {
+            JsonNode json = mapper.readTree(tmdbClient.getMovieVideos(movieId)
+            JsonNode results = json.path("results"
+
+            for (JsonNode video : results) {
+                String type = video.path("type").asText(
+                String site = video.path("site").asText(
+
+                if ("Trailer".equalsIgnoreCase(type) && "YouTube".equalsIgnoreCase(site)) {
+                    return video.path("key").asText(
+                }
+            }
+
+            // fallback → a veces no hay "Trailer", pero sí "Teaser"
+            for (JsonNode video : results) {
+                String site = video.path("site").asText(
+                if ("YouTube".equalsIgnoreCase(site)) {
+                    return video.path("key").asText(
+                }
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return null;
+    }
+
 }
