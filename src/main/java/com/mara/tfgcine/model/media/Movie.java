@@ -5,24 +5,25 @@ import lombok.Data;
 @Data
 public class Movie extends Media {
 
-    public String releaseDate;
-    public String overview;
-    public String backdropPath;
+    private String backdropPath;
 
-    // actualizar formato fecha a dd/MM/yyyy
+    // Formato fecha (usa la de Media)
     public String getFormattedReleaseDate() {
+        String releaseDate = getReleaseDate(
+
         if (releaseDate == null || releaseDate.isBlank()) {
             return "Fecha desconocida";
         }
+
         try {
             String[] parts = releaseDate.split("-"
             if (parts.length == 3) {
                 return parts[2] + " / " + parts[1] + " / " + parts[0];
             } else {
-                return releaseDate; // formato inesperado, devolver tal cual
+                return releaseDate;
             }
         } catch (Exception e) {
-            return releaseDate; // en caso de error, devolver tal cual
+            return releaseDate;
         }
     }
 }
