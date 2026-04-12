@@ -245,7 +245,13 @@ public class TmdbService {
         }
 
         if (!json.path("backdrop_path").isNull()) {
-            m.setBackdropPath(BACKDROP + json.path("backdrop_path").asText()
+            String bestBackdrop = getBestBackdrop(movieId
+
+            if (bestBackdrop != null) {
+                m.setBackdropPath(bestBackdrop
+            } else if (!json.path("backdrop_path").isNull()) {
+                m.setBackdropPath(BACKDROP + json.path("backdrop_path").asText()
+            }
         }
 
         m.setVoteAverage(json.path("vote_average").asDouble()
@@ -259,6 +265,43 @@ public class TmdbService {
         m.setGenres(genres
 
         return m;
+    }
+
+    private String getBestBackdrop(int movieId) {
+        try {
+            JsonNode images = mapper.readTree(tmdbClient.getMovieImages(movieId)
+            JsonNode backdrops = images.path("backdrops"
+
+            if (backdrops.isEmpty()) return null;
+
+            JsonNode bestBackdrop = null;
+            double highestVote = -1;
+
+            for (JsonNode b : backdrops) {
+                double vote = b.path("vote_count").asDouble(0
+                double average = b.path("vote_average").asDouble(0
+                int width = b.path("width").asInt(0
+
+                if (bestBackdrop == null ||
+                        vote > highestVote ||
+                        (vote == highestVote && average > bestBackdrop.path("vote_average").asDouble(0)) ||
+                        (vote == highestVote && average == bestBackdrop.path("vote_average").asDouble(0)
+                                && width > bestBackdrop.path("width").asInt(0))) {
+
+                    bestBackdrop = b;
+                    highestVote = vote;
+                }
+            }
+
+            if (bestBackdrop != null && !bestBackdrop.path("file_path").isNull()) {
+                return BACKDROP + bestBackdrop.path("file_path").asText(
+            }
+
+            return null;
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public List<Movie> getRelatedMovies(int movieId) throws Exception {
