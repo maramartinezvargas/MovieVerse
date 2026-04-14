@@ -79,6 +79,21 @@ body {
     opacity: 1;
 }
 
+.modal-dialog {
+    max-width: 1200px;
+}
+
+.modal-body {
+    position: relative;
+    padding: 0;
+}
+
+.modal-body iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+}
+
 .modal-content {
     background: rgba(20, 20, 20, 0.9
     backdrop-filter: blur(10px

@@ -3,11 +3,13 @@ package com.mara.tfgcine.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mara.tfgcine.client.TmdbClient;
+import com.mara.tfgcine.model.CastMember;
 import com.mara.tfgcine.model.media.Media;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.TvSeries;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.*;
 
@@ -375,6 +377,45 @@ public class TmdbService {
         tv.setGenres(extractGenres(node, false)
 
         return tv;
+    }
+
+    /* Cast ---------------------------------------------------------------------------- */
+    public List<CastMember> getCast(int movieId) {
+
+        try {
+            String json = tmdbClient.getMovieCredits(movieId
+
+            JsonNode root = mapper.readTree(json
+            JsonNode castArray = root.path("cast"
+
+            List<CastMember> castList = new ArrayList<>(
+
+            int limit = Math.min(castArray.size(), 15
+
+            for (int i = 0; i < limit; i++) {
+
+                JsonNode actor = castArray.get(i
+
+                String name = actor.path("name").asText(
+                String character = actor.path("character").asText(
+
+                String profilePath = actor.path("profile_path").asText(null
+
+                if (profilePath != null && !profilePath.isBlank()) {
+                    profilePath = "https://image.tmdb.org/t/p/w185" + profilePath;
+                } else {
+                    profilePath = null; // fallback controlado (lo manejas en Thymeleaf)
+                }
+
+                castList.add(new CastMember(name, character, profilePath)
+            }
+
+            return castList;
+
+        } catch (Exception e) {
+            e.printStackTrace(
+            return Collections.emptyList(
+        }
     }
 
     /* Helpers ---------------------------------------------------------------------------- */

@@ -48,6 +48,8 @@
                     <p class="movie-overview" th:text="${movie.overview}">
                     </p>
                     <div class="movie-actions">
+
+                        <!-- TRAILER -->
                         <button
                                 class="btn-pill btn-trailer open-trailer"
                                 th:if="${movie.trailerKey != null}"
@@ -58,6 +60,57 @@
                             <i class="bi bi-play-fill"></i>
                             Ver tráiler
                         </button>
+
+                        <!-- LIKE -->
+                        <button class="btn-pill btn-details btn-like">
+                            <i class="bi bi-heart"></i>
+                            Me gusta
+                        </button>
+
+                        <!-- LISTA -->
+                        <button class="btn-pill btn-details">
+                            <i class="bi bi-plus-lg"></i>
+                            Añadir a lista
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- REPARTO -->
+    <section class="carousel-section"
+             th:if="${cast != null and #lists.size(cast) > 0}">
+
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Reparto principal</h2>
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev">‹</button>
+                    <button class="carousel-btn next">›</button>
+                </div>
+            </div>
+
+            <div class="carousel" id="cast-carousel">
+                <div class="carousel-card cast-card"
+                     th:each="actor : ${cast}">
+                    <div class="cast-avatar">
+
+                        <!-- Imagen si existe -->
+                        <img th:if="${actor.profilePath != null}"
+                             th:src="${actor.profilePath}"
+                             th:alt="${actor.name}">
+
+                        <!-- Placeholder si NO existe -->
+                        <div class="avatar-placeholder"
+                             th:if="${actor.profilePath == null}">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                    </div>
+                    <div class="cast-meta">
+                        <h3 th:text="${actor.name}"></h3>
+                        <p th:text="${actor.character}"></p>
                     </div>
                 </div>
             </div>
@@ -68,7 +121,9 @@
     <section class="carousel-section" th:if="${relatedMovies != null and #lists.size(relatedMovies) > 0}">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Películas relacionadas</h2>
+                <h2 class="section-title">
+                    Si te gustó "<span th:text="${movie.title}"></span>", también te puede gustar...
+                </h2>
                 <div class="carousel-controls">
                     <button class="carousel-btn prev">‹</button>
                     <button class="carousel-btn next">›</button>

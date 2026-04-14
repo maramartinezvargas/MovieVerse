@@ -16,6 +16,7 @@ public class MovieController {
         this.tmdbService = tmdbService;
     }
 
+
     @GetMapping("/peliculas/{id}")
     public String movieDetails(@PathVariable int id, Model model) throws Exception {
 
@@ -23,6 +24,8 @@ public class MovieController {
         model.addAttribute("movie", movie
 
         model.addAttribute("relatedMovies", tmdbService.getRelatedMovies(id)
+
+        model.addAttribute("cast", tmdbService.getCast(id)
 
         return "movie";
     }

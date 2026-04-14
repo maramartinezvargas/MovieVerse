@@ -1,5 +1,5 @@
 .movie-hero {
-    min-height: 80vh;
+    min-height: 60vh;
 
     background-image:
             linear-gradient(to right,
@@ -92,6 +92,11 @@
     display: flex;
     gap: 0.8rem;
     margin-top: 1.2rem;
+}
+
+.btn-like:hover {
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.4
 }
 
 /* MOBILE */

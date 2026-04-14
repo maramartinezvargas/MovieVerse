@@ -31,6 +31,40 @@
     max-width: 800px;
 }
 
+/* BADGE */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    padding: 0.35rem 0.9rem; /* 👉 más ancho */
+    border-radius: 999px;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+
+    color: rgba(52, 52, 52
+
+    background: #ffbd59;
+    border: 1px solid rgba(255, 189, 89, 0.3
+    backdrop-filter: blur(6px
+
+    margin-bottom: 0.8rem;
+    white-space: nowrap;
+}
+
+.hero-badge i {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.hero-badge:hover {
+    background: #ffc76b;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25
+    transform: translateY(-1px
+}
+
 /* TITLE */
 
 .hero-title {
@@ -46,7 +80,6 @@
     flex-wrap: wrap;
     gap: 0.8rem;
     margin-bottom: 1.2rem;
-    font-size: 0.9rem;
 }
 
 /* OVERVIEW */
@@ -78,14 +111,14 @@
     .hero-content {
         max-width: 500px;
         margin: 0 auto;
-        text-align: center;
+        text-align: left;
     }
 
     .hero-meta {
-        justify-content: center;
+        justify-content: left;
     }
 
     .hero-actions {
-        justify-content: center;
+        justify-content: left;
     }
 }

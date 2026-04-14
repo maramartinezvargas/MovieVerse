@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Validación básica
         if (!carousel || !nextBtn || !prevBtn) return;
 
-        const card = carousel.querySelector('.carousel-card'
+        const card = carousel.querySelector('.carousel-card, .cast-card'
         if (!card) return;
 
         const gap = parseInt(getComputedStyle(carousel).gap) || 40;

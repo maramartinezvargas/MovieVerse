@@ -242,4 +242,14 @@ public class TmdbClient {
         return restTemplate.getForObject(url, String.class
     }
 
+    // Para la sección de reparto en la página de detalles
+    public String getMovieCredits(int movieId) {
+
+        String url = baseUrl +
+                "/movie/" + movieId + "/credits" +
+                "?api_key=" + apiKey;
+
+        return restTemplate.getForObject(url, String.class
+    }
+
 }
