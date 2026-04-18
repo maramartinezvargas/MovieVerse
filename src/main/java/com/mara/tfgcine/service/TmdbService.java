@@ -166,8 +166,7 @@ public class TmdbService {
             JsonNode results = mapper.readTree(tmdbClient.getTrendingMovies()).path("results"
             if (results.isEmpty()) return null;
 
-            JsonNode best = null;
-            double bestScore = -1;
+            List<JsonNode> candidates = new ArrayList<>(
 
             for (JsonNode item : results) {
 
@@ -177,30 +176,46 @@ public class TmdbService {
                 double voteAverage = item.path("vote_average").asDouble(0.0
                 int voteCount = item.path("vote_count").asInt(0
 
-                if (voteCount < 500) continue;
+                // filtros de calidad
+                if (voteCount < 300) continue;
+                if (voteAverage < 6.5) continue;
 
-                if (voteAverage > bestScore) {
-                    bestScore = voteAverage;
-                    best = item;
+                candidates.add(item
+            }
+
+            // fallback si no hay candidatos
+            if (candidates.isEmpty()) {
+                for (JsonNode item : results) {
+                    if (!item.path("backdrop_path").isNull()) {
+                        candidates.add(item
+                    }
                 }
             }
 
-            if (best == null) {
-                best = results.get(0
+            if (candidates.isEmpty()) {
+                JsonNode first = results.get(0
+                if (first == null) return null;
+
+                int movieId = first.path("id").asInt(
+                return createMovieFromNode(first, movieId, true
             }
 
-            int movieId = best.path("id").asInt(
-            Movie featured = createMovieFromNode(best, movieId, true
+            // rotación por tiempo (cada hora cambia la película destacada)
+            long interval =  1000 * 60 * 60 * 1;
+            int index = (int) ((System.currentTimeMillis() / interval) % candidates.size()
+
+            JsonNode selected = candidates.get(index
+
+            int movieId = selected.path("id").asInt(
+            Movie featured = createMovieFromNode(selected, movieId, true
 
             JsonNode details = mapper.readTree(tmdbClient.getMovieDetails(movieId)
 
             featured.setOverview(details.path("overview").asText()
             featured.setReleaseDate(details.path("release_date").asText()
-
-            // ✅ runtime
             featured.setRuntime(details.path("runtime").asInt()
 
-            // ✅ trailer
+            // trailer
             featured.setTrailerKey(getTrailerKey(movieId)
 
             return featured;
