@@ -3,6 +3,7 @@ package com.mara.tfgcine.client;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import com.mara.tfgcine.model.review.TmdbReview;
 
 @Component
 public class TmdbClient {
@@ -256,6 +257,15 @@ public class TmdbClient {
         String url = baseUrl +
                 "/movie/" + movieId +
                 "/watch/providers?api_key=" + apiKey;
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getMovieReviews(int movieId) {
+
+        String url = baseUrl +
+                "/movie/" + movieId + "/reviews" +
+                "?api_key=" + apiKey;
+
         return restTemplate.getForObject(url, String.class
     }
 

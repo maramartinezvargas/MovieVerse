@@ -1,6 +1,9 @@
 package com.mara.tfgcine.model.user;
 
+import com.mara.tfgcine.model.review.Review;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -26,6 +29,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private AccountStatus status;
+
+    // Relación con reviews
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     public User() {}
 
@@ -53,11 +60,19 @@ public class User {
         return status;
     }
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
     public void setRole(Role role) {
         this.role = role;
     }
 
     public void setStatus(AccountStatus status) {
         this.status = status;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

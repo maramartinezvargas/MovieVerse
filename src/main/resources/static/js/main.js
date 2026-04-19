@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* =========================
-       NAV / BURGER
-    ========================= */
+    /* ==================================================
+       NAV / BURGER */
 
     const burger = document.getElementById("burger-btn"
     const nav = document.getElementById("main-nav"
@@ -21,9 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* =========================
-       SEARCH
-    ========================= */
+    /* ====================================================================================================
+       SEARCH */
 
     const input = document.getElementById("search-input"
     const resultsBox = document.getElementById("search-results"
@@ -117,9 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* =========================
-       TRAILER MODAL
-    ========================= */
+    /* ================================================================================================
+       TRAILER MODAL */
 
     const modalEl = document.getElementById("trailerModal"
     const iframe = document.getElementById("trailerIframe"
@@ -150,4 +147,36 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+}
+
+// Toggle expand / collapse
+function toggleReview(button) {
+    const text = button.closest(".review-card").querySelector(".review-text"
+    const label = button.querySelector(".label"
+    const icon = button.querySelector("i"
+
+    text.classList.toggle("expanded"
+
+    if (text.classList.contains("expanded")) {
+        label.textContent = "Leer menos";
+        icon.classList.replace("bi-chevron-down", "bi-chevron-up"
+    } else {
+        label.textContent = "Leer más";
+        icon.classList.replace("bi-chevron-up", "bi-chevron-down"
+    }
+}
+
+
+// Ocultar botón si no hace falta
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".review-card").forEach(card => {
+        const text = card.querySelector(".review-text"
+        const button = card.querySelector(".read-more-btn"
+
+        if (!text || !button) return;
+
+        if (text.scrollHeight <= text.clientHeight) {
+            button.style.display = "none";
+        }
+    }
 }

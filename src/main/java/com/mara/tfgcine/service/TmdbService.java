@@ -8,6 +8,7 @@ import com.mara.tfgcine.model.media.Media;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.model.media.TvSeries;
+import com.mara.tfgcine.model.review.TmdbReview;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -419,6 +420,45 @@ public class TmdbService {
 
         } catch (Exception e) {
             return Collections.emptyList( // importante
+        }
+    }
+
+    /* Reviews *--------------------------------------------------------------------------- */
+    public List<TmdbReview> getReviews(Long movieId) {
+
+        try {
+            String json = tmdbClient.getMovieReviews(movieId.intValue()
+            JsonNode root = mapper.readTree(json).path("results"
+
+            List<TmdbReview> list = new ArrayList<>(
+
+            for (JsonNode node : root) {
+
+                TmdbReview review = new TmdbReview(
+
+                review.setAuthor(node.path("author").asText()
+                review.setContent(node.path("content").asText()
+                review.setCreatedAt(node.path("created_at").asText()
+
+                JsonNode authorDetailsNode = node.path("author_details"
+
+                TmdbReview.AuthorDetails details = new TmdbReview.AuthorDetails(
+                if (!authorDetailsNode.isMissingNode()) {
+                    if (!authorDetailsNode.path("rating").isNull()) {
+                        details.setRating(authorDetailsNode.path("rating").asDouble()
+                    }
+                    details.setAvatarPath(authorDetailsNode.path("avatar_path").asText(null)
+                }
+
+                review.setAuthorDetails(details
+
+                list.add(review
+            }
+
+            return list;
+
+        } catch (Exception e) {
+            return Collections.emptyList(
         }
     }
 

@@ -21,8 +21,8 @@
                             <span class="rating">
                                 <i class="bi bi-star-fill"></i>
                                 <span class="rating-value" th:text="${movie.voteAverageFormatted}"></span>
-                                <span class="rating-count">
-                                    (<span th:text="${movie.voteCount}"></span>)
+                                <span class="rating-count"
+                                      th:text="'(' + ${movie.voteCount} + ' votos en TMDB)'">
                                 </span>
                             </span>
                             <span class="runtime"
@@ -171,6 +171,122 @@
                     </div>
                 </a>
             </div>
+        </div>
+    </section>
+    <!-- RESEÑAS -->
+
+    <section class="reviews-section"
+             th:if="${reviews != null and #lists.size(reviews) > 0}">
+
+        <div class="container">
+
+            <div class="reviews-header">
+                <h2>Reseñas</h2>
+                <button class="btn-pill btn-trailer btn-review">
+                    <i class="bi bi-pencil-fill"></i>
+                    Escribir reseña
+                </button>
+            </div>
+
+            <div class="reviews-layout">
+
+                <!-- COLUMNA IZQUIERDA -->
+                <div class="reviews-summary">
+
+                    <div class="reviews-score-big">
+                        <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}"></span>
+                    </div>
+
+                    <div class="reviews-stars">
+                        <i class="bi bi-star-fill"
+                           th:each="i : ${#numbers.sequence(1, T(java.lang.Math).round(avgRating))}">
+                        </i>
+                        <i class="bi bi-star"
+                           th:each="i : ${#numbers.sequence(T(java.lang.Math).round(avgRating)+1, 10)}">
+                        </i>
+                    </div>
+
+                    <div class="reviews-count">
+                        <span th:text="${reviewCount}"></span> reseñas
+                    </div>
+
+                </div>
+
+                <!-- COLUMNA DERECHA -->
+                <div class="reviews-list">
+
+                    <div class="review-card"
+                         th:each="review : ${reviews}">
+
+                        <div class="review-top">
+
+                            <!-- IZQUIERDA -->
+                            <div class="review-user-info">
+
+                                <div class="review-avatar">
+                                    <i class="bi bi-person"></i>
+                                </div>
+
+                                <div>
+                                    <div class="review-name">
+                                        <span th:text="'@' + ${review.username}"></span>
+                                        <span class="user-badge"
+                                              th:classappend="${review.source == 'TMDB'} ? ' badge-tmdb' : ' badge-local'"
+                                              th:text="${review.source == 'TMDB'} ? 'Usuario TMDB' : 'Usuario MovieVerse'">
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- DERECHA -->
+                            <div class="review-meta-right">
+                                <!-- estrellas -->
+                                <div class="review-stars" th:if="${review.rating != null}"
+                                     th:with="stars=${T(java.lang.Math).floor(review.rating)}">
+
+                                    <i class="bi bi-star-fill"
+                                       th:each="i : ${#numbers.sequence(1, stars)}"></i>
+
+                                    <i class="bi bi-star"
+                                       th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+
+                                    <span class="review-rating"
+                                          th:text="${review.rating}"></span>
+                                </div>
+
+                                <!-- fecha -->
+                                <div class="review-date"
+                                     th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <p class="review-text" th:text="${review.comment}"></p>
+
+
+
+                        <div class="review-footer">
+                            <button class="read-more-btn" onclick="toggleReview(this)">
+                                <span class="label">Leer más</span>
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
+                            <!--<div class="review-actions">
+                                <button class="review-btn">
+                                    <i class="bi bi-hand-thumbs-up"></i>
+                                    <span>0</span>
+                                </button>
+                            </div>-->
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
     </section>
     <footer th:replace="fragments/footer :: footer"></footer>
