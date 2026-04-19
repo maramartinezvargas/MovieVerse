@@ -252,4 +252,11 @@ public class TmdbClient {
         return restTemplate.getForObject(url, String.class
     }
 
+    public String getWatchProviders(int movieId) {
+        String url = baseUrl +
+                "/movie/" + movieId +
+                "/watch/providers?api_key=" + apiKey;
+        return restTemplate.getForObject(url, String.class
+    }
+
 }

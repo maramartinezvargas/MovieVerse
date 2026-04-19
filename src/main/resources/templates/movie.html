@@ -47,6 +47,7 @@
                     </div>
                     <p class="movie-overview" th:text="${movie.overview}">
                     </p>
+                    <!-- Acciones (tráiler, like, lista) -->
                     <div class="movie-actions">
 
                         <!-- TRAILER -->
@@ -72,6 +73,23 @@
                             <i class="bi bi-plus-lg"></i>
                             Añadir a lista
                         </button>
+
+                    </div>
+                    <!-- Proveedores de streaming -->
+                    <div class="movie-providers"
+                         th:if="${providers != null and !#lists.isEmpty(providers)}">
+
+                        <span class="providers-label">Disponible en:</span>
+
+                        <div class="providers-list">
+                            <div class="provider-item" th:each="p : ${providers}">
+                                <img th:src="'https://image.tmdb.org/t/p/w45' + ${p.logoPath}"
+                                     th:alt="${p.name}"
+                                     class="provider-logo"/>
+
+                                <span class="provider-tooltip" th:text="${p.name}"></span>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

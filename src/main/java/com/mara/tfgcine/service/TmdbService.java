@@ -6,6 +6,7 @@ import com.mara.tfgcine.client.TmdbClient;
 import com.mara.tfgcine.model.CastMember;
 import com.mara.tfgcine.model.media.Media;
 import com.mara.tfgcine.model.media.Movie;
+import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.model.media.TvSeries;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -392,6 +393,33 @@ public class TmdbService {
         tv.setGenres(extractGenres(node, false)
 
         return tv;
+    }
+
+    /* Plataformas de streaming --------------- */
+    public List<Provider> getProvidersForMovie(int movieId) {
+
+        try {
+            String json = tmdbClient.getWatchProviders(movieId
+
+            JsonNode root = mapper.readTree(json
+            JsonNode providersES = root.path("results").path("ES").path("flatrate"
+
+            List<Provider> providers = new ArrayList<>(
+
+            if (providersES.isArray()) {
+                for (JsonNode p : providersES) {
+                    providers.add(new Provider(
+                            p.path("provider_name").asText(),
+                            p.path("logo_path").asText()
+                    )
+                }
+            }
+
+            return providers;
+
+        } catch (Exception e) {
+            return Collections.emptyList( // importante
+        }
     }
 
     /* Cast ---------------------------------------------------------------------------- */
