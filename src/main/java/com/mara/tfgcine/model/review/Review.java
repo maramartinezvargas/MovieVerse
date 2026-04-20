@@ -23,7 +23,7 @@ public class Review {
     private LocalDateTime createdAt;
 
     @Column(name = "media_id", nullable = false)
-    private int mediaId;
+    private Long mediaId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -47,7 +47,7 @@ public class Review {
         return createdAt;
     }
 
-    public int getMediaId() {
+    public Long getMediaId() {
         return mediaId;
     }
 
@@ -67,7 +67,7 @@ public class Review {
         this.createdAt = createdAt;
     }
 
-    public void setMediaId(int mediaId) {
+    public void setMediaId(Long mediaId) {
         this.mediaId = mediaId;
     }
 

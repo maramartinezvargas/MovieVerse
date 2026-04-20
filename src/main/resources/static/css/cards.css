@@ -41,7 +41,7 @@
 .carousel-card h3,
 .carousel-card .card-meta span,
 .carousel-card .card-genres {
-    color: inherit;
+    /*color: inherit;*/
     text-decoration: none;
 }
 
@@ -98,7 +98,7 @@
     height: 36px;
     border-radius: 50%;
     background: rgba(255,255,255,0.1
-    color: #fff;
+    /*color: #fff;*/
     border: none;
     font-size: 1.4rem;
     cursor: pointer;

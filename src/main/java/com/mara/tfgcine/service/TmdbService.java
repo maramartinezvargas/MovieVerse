@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mara.tfgcine.client.TmdbClient;
 import com.mara.tfgcine.model.CastMember;
+import com.mara.tfgcine.model.dto.ReviewDTO;
 import com.mara.tfgcine.model.media.Media;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.Provider;
@@ -13,6 +14,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -424,33 +426,47 @@ public class TmdbService {
     }
 
     /* Reviews *--------------------------------------------------------------------------- */
-    public List<TmdbReview> getReviews(Long movieId) {
+    public List<ReviewDTO> getReviews(Long movieId) {
 
         try {
             String json = tmdbClient.getMovieReviews(movieId.intValue()
             JsonNode root = mapper.readTree(json).path("results"
 
-            List<TmdbReview> list = new ArrayList<>(
+            List<ReviewDTO> list = new ArrayList<>(
 
             for (JsonNode node : root) {
 
-                TmdbReview review = new TmdbReview(
+                ReviewDTO review = new ReviewDTO(
 
-                review.setAuthor(node.path("author").asText()
-                review.setContent(node.path("content").asText()
-                review.setCreatedAt(node.path("created_at").asText()
+                review.setUsername(node.path("author").asText()
+                review.setComment(node.path("content").asText()
+                review.setSource("TMDB"
+
+                // fecha (parse si quieres fino, esto vale para ahora)
+                review.setCreatedAt(LocalDateTime.now() // o parse real si quieres
 
                 JsonNode authorDetailsNode = node.path("author_details"
 
-                TmdbReview.AuthorDetails details = new TmdbReview.AuthorDetails(
                 if (!authorDetailsNode.isMissingNode()) {
-                    if (!authorDetailsNode.path("rating").isNull()) {
-                        details.setRating(authorDetailsNode.path("rating").asDouble()
-                    }
-                    details.setAvatarPath(authorDetailsNode.path("avatar_path").asText(null)
-                }
 
-                review.setAuthorDetails(details
+                    if (!authorDetailsNode.path("rating").isNull()) {
+                        review.setRating(authorDetailsNode.path("rating").asDouble()
+                    }
+
+                    String avatarPath = authorDetailsNode.path("avatar_path").asText(null
+                    String avatarUrl = null;
+
+                    if (avatarPath != null && !avatarPath.isBlank()) {
+
+                        if (avatarPath.startsWith("/http")) {
+                            avatarUrl = avatarPath.substring(1
+                        } else {
+                            avatarUrl = "https://image.tmdb.org/t/p/w45" + avatarPath;
+                        }
+                    }
+
+                    review.setAvatarUrl(avatarUrl
+                }
 
                 list.add(review
             }

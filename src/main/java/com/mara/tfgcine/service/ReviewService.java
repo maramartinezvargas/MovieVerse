@@ -6,6 +6,7 @@ import com.mara.tfgcine.model.review.TmdbReview;
 import com.mara.tfgcine.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -30,10 +31,7 @@ public class ReviewService {
                 .map(this::mapLocalReview)
                 .toList(
 
-        List<ReviewDTO> tmdb = tmdbService.getReviews(mediaId)
-                .stream()
-                .map(this::mapTmdbReview)
-                .toList(
+        List<ReviewDTO> tmdb = tmdbService.getReviews(mediaId
 
         // Combinar, ordenar por fecha (más reciente primero) y devolver
         return Stream.concat(local.stream(), tmdb.stream())
@@ -80,5 +78,20 @@ public class ReviewService {
         }
 
         return dto;
+    }
+
+    public void createReview(Long mediaId, String comment, Integer rating) {
+
+        Review review = new Review(
+
+        review.setMediaId(mediaId
+        review.setComment(comment
+        review.setRating(rating
+        review.setCreatedAt(LocalDateTime.now()
+
+        // Aaquí deberías poner el usuario real (login)
+        review.setUser(null
+
+        reviewRepository.save(review
     }
 }

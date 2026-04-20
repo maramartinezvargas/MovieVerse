@@ -1,7 +1,8 @@
 /* CAST CARDS */
 
 .cast-card {
-    flex: 0 0 140px;
+    /*flex: 0 0 140px;*/
+    max-height: 240px;
     text-align: center;
     color: #f0dfc8;
 }

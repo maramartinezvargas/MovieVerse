@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ====================================================================================================
+    /* ==================================================
        SEARCH */
 
     const input = document.getElementById("search-input"
@@ -47,9 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`
                     const data = await res.json(
-
                     renderResults(data
-
                 } catch (err) {
                     console.error("Error en búsqueda:", err
                 }
@@ -115,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ================================================================================================
+    /* ==================================================
        TRAILER MODAL */
 
     const modalEl = document.getElementById("trailerModal"
@@ -128,11 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
             button.addEventListener("click", () => {
 
                 const key = button.dataset.trailer;
-
-                if (!key) {
-                    console.warn("No hay trailer disponible"
-                    return;
-                }
+                if (!key) return;
 
                 iframe.src = `https://www.youtube.com/embed/${key}?autoplay=1`;
 
@@ -141,15 +135,116 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // limpiar vídeo al cerrar
         modalEl.addEventListener("hidden.bs.modal", () => {
             iframe.src = "";
         }
     }
 
+    /* ==================================================
+       REVIEWS: TOGGLE LIST */
+
+    const btn = document.getElementById("toggle-reviews-btn"
+
+    if (btn) {
+
+        let expanded = false;
+
+        btn.addEventListener("click", () => {
+            const hiddenReviews = document.querySelectorAll(".hidden-review"
+
+            if (!expanded) {
+                hiddenReviews.forEach(el => el.style.display = "block"
+                btn.textContent = "Ver menos reseñas";
+                expanded = true;
+            } else {
+                hiddenReviews.forEach(el => el.style.display = "none"
+                btn.textContent = "Ver más reseñas";
+
+                document.querySelector(".reviews-section")
+                    ?.scrollIntoView({ behavior: "smooth" }
+
+                expanded = false;
+            }
+
+            updateReadMoreButtons(
+        }
+    }
+
+    /* ==================================================
+       STAR RATING */
+
+    document.querySelectorAll(".star-rating").forEach(rating => {
+
+        const stars = rating.querySelectorAll(".star"
+        const ratingInput = rating.querySelector(".rating-input"
+        const ratingText = rating.querySelector(".rating-value"
+
+        if (!stars.length || !ratingInput) return;
+
+        let selectedValue = 0;
+
+        stars.forEach(star => {
+
+            const value = parseInt(star.dataset.value
+
+            star.addEventListener("mouseover", () => {
+                highlightStars(value
+
+                if (ratingText) {
+                    ratingText.textContent = `${value}/10`;
+                }
+            }
+
+            star.addEventListener("click", () => {
+                selectedValue = value;
+                ratingInput.value = value;
+                setSelected(value
+
+                if (ratingText) {
+                    ratingText.textContent = `${value}/10`;
+                }
+            }
+
+        }
+
+        rating.addEventListener("mouseleave", () => {
+            highlightStars(selectedValue
+
+            if (ratingText) {
+                ratingText.textContent = `${selectedValue}/10`;
+            }
+        }
+
+        function highlightStars(value) {
+            stars.forEach(star => {
+                const starValue = parseInt(star.dataset.value
+                star.classList.toggle("hovered", starValue <= value
+            }
+        }
+
+        function setSelected(value) {
+            stars.forEach(star => {
+                const starValue = parseInt(star.dataset.value
+
+                star.classList.toggle("selected", starValue <= value
+                star.classList.toggle("bi-star-fill", starValue <= value
+                star.classList.toggle("bi-star", starValue > value
+            }
+        }
+
+    }
+
+    /* ==================================================
+       INIT */
+
+    updateReadMoreButtons(
+
 }
 
-// Toggle expand / collapse
+
+/* ==================================================
+   REVIEW TEXT TOGGLE */
+
 function toggleReview(button) {
     const text = button.closest(".review-card").querySelector(".review-text"
     const label = button.querySelector(".label"
@@ -167,16 +262,37 @@ function toggleReview(button) {
 }
 
 
-// Ocultar botón si no hace falta
-document.addEventListener("DOMContentLoaded", () => {
+/* ==================================================
+   CONTROL BOTONES "LEER MÁS" */
+
+function updateReadMoreButtons() {
     document.querySelectorAll(".review-card").forEach(card => {
+
         const text = card.querySelector(".review-text"
         const button = card.querySelector(".read-more-btn"
 
         if (!text || !button) return;
 
-        if (text.scrollHeight <= text.clientHeight) {
+        const label = button.querySelector(".label"
+        const icon = button.querySelector("i"
+
+        // 🔥 mantener estado visual correcto
+        if (text.classList.contains("expanded")) {
+            label.textContent = "Leer menos";
+            icon.classList.replace("bi-chevron-down", "bi-chevron-up"
+            button.style.display = "inline-flex";
+            return; // ← IMPORTANTE: no recalcular nada más
+        }
+
+        // 🔥 detectar si el texto está truncado (line-clamp hack)
+        const isClamped = text.scrollHeight > text.clientHeight + 1;
+
+        if (!isClamped) {
             button.style.display = "none";
+        } else {
+            button.style.display = "inline-flex";
+            label.textContent = "Leer más";
+            icon.classList.replace("bi-chevron-up", "bi-chevron-down"
         }
     }
 }

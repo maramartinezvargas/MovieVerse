@@ -9,6 +9,7 @@ public class ReviewDTO {
     private Double rating;
     private LocalDateTime createdAt;
     private String source; // "LOCAL" o "TMDB"
+    private String avatarUrl; // Imagen Avatar TMDB user
 
     // getters y setters
     public String getUsername() {
@@ -49,5 +50,13 @@ public class ReviewDTO {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

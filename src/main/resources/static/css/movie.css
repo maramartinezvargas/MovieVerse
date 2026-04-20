@@ -44,12 +44,6 @@
     box-shadow: 0 20px 45px rgba(0,0,0,0.7
 }
 
-/* INFO */
-
-.movie-info {
-    max-width: 650px;
-}
-
 /* TITLE */
 
 .movie-hero-title {
@@ -84,7 +78,7 @@
 /* OVERVIEW */
 
 .movie-overview {
-    max-width: 600px;
+   /* max-width: 800px*/;
 }
 
 /* ACTIONS */
@@ -171,6 +165,16 @@
 }
 
 /* Reviews --------------------------------------------------------------------- */
+
+.no-reviews {
+    text-align: center;
+    padding: 40px 20px;
+    opacity: 0.7;
+}
+
+.no-reviews-text {
+    font-size: 1rem;
+}
 
 .reviews-section {
     margin: 40px 0 60px;
@@ -268,6 +272,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.review-avatar img{
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar-placeholder i
+{
+    font-size: 0.8rem;
+    color: #aa7c37;
+}
+
+.bi-person{
+    font-size: 0.6rem;
+    color: #aa7c37;
 }
 
 .review-name {
@@ -419,6 +441,7 @@
 .btn-review {
     background: rgba(255, 199, 107, 0.15
     border: 1px solid rgba(255, 199, 107, 0.3
+    border-radius: 999px;
     color: #ffc76b;
     backdrop-filter: blur(6px
 }
@@ -426,6 +449,262 @@
 .btn-review:hover {
     background: rgba(255, 199, 107, 0.3
     transform: translateY(-1px
+    border: 1px solid rgba(255, 199, 107, 0.3
+    color: #ffc76b;
+}
+
+.hidden-review {
+    display: none;
+}
+
+.reviews-load-more {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Modal de review */
+/* =========================
+   MODAL REVIEW (REWORK)
+   ========================= */
+
+.review-modal .modal-content {
+    background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(0,0,0,0.7)
+    backdrop-filter: blur(12px
+    border-radius: 16px;
+    border-color: rgba(255, 199, 107, 0.2
+    color: white;
+    padding: 0;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6
+}
+
+/* HEADER */
+.review-modal .modal-header {
+    border: none;
+    padding: 18px 22px 10px;
+}
+
+.review-modal .modal-title {
+    font-weight: 400;
+    color: #ffc76b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.review-modal .modal-title i {
+    color: #ffc76b;
+}
+
+/* BODY */
+.review-modal .modal-body {
+    padding: 10px 22px 5px;
+}
+
+.review-field {
+    margin-bottom: 18px;
+}
+
+.review-field label {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* INPUT BASE (IMPORTANTE: coherente con cards) */
+.custom-select,
+.custom-textarea {
+    background: rgba(255,255,255,0.04
+    border: 1px solid rgba(255,255,255,0.08
+    color: white;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+/* HOVER */
+.custom-select:hover,
+.custom-textarea:hover {
+    border-color: rgba(255, 199, 107, 0.25
+}
+
+/* FOCUS (tu color dorado) */
+.custom-select:focus,
+.custom-textarea:focus {
+    border-color: #ffc76b;
+    box-shadow: 0 0 0 2px rgba(255,199,107,0.15
+    outline: none;
+}
+
+/* TEXTAREA */
+.custom-textarea {
+    resize: none;
+    min-height: 110px;
+}
+
+/* FOOTER */
+.review-modal .modal-footer {
+    border: none;
+    padding: 10px 22px 18px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* BOTÓN CANCELAR (coherente con btn-details) */
+.review-modal .btn-secondary {
+    background: rgba(255,255,255,0.08
+    border: 1px solid rgba(255,255,255,0.1
+    color: white;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.review-modal .btn-secondary:hover {
+    background: rgba(255,255,255,0.15
+}
+
+/* BOTÓN PUBLICAR (estilo principal de tu app) */
+.btn-submit {
+    background: rgba(255, 199, 107, 0.2
+    border: 1px solid rgba(255, 199, 107, 0.35
+    color: #ffc76b;
+    border-radius: 999px !important;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-submit:hover {
+    background: rgba(255, 199, 107, 0.35
+    transform: translateY(-1px
+}
+
+.modal-backdrop.show {
+    backdrop-filter: blur(6px
+    background: rgba(0,0,0,0.7
+}
+
+/* ===== STAR RATING ===== */
+.rating-value {
+    margin-left: 10px;
+    font-size: 0.9rem;
+    color: #ffc76b;
+    font-weight: 500;
+    min-width: 35px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 6px;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* estado base */
+.star-rating .star {
+    color: rgba(255, 255, 255, 0.37
+    transition: all 0.2s ease;
+}
+
+/* hover preview */
+.star-rating .star.hovered,
+.star-rating .star.selected {
+    color: #ffc76b;
+}
+
+/* pequeño glow coherente con tu UI */
+.star-rating .star.selected {
+    text-shadow: 0 0 6px rgba(255, 199, 107, 0.52
+}
+
+/* animación sutil */
+.star-rating .star:hover {
+    transform: scale(1.15
+}
+
+/* FIX textarea blanco en focus */
+.review-modal .custom-textarea:focus {
+    background: rgba(255,255,255,0.04) !important;
+    color: white !important;
+}
+
+/* también en estado normal por seguridad */
+.review-modal .custom-textarea {
+    font-size: 0.9rem;
+    font-weight: 200;
+    background: rgba(255,255,255,0.04) !important;
+    color: white;
+}
+
+.review-modal .custom-textarea {
+    background: rgba(255,255,255,0.03) !important;
+    border: 1px solid rgba(255,255,255,0.08
+    border-radius: 14px;
+    padding: 14px;
+    line-height: 1.5;
+    font-size: 0.9rem;
+    font-weight: 200;
+    transition: all 0.2s ease;
+}
+
+/* hover suave */
+.review-modal .custom-textarea:hover {
+    border-color: rgba(255, 199, 107, 0.2
+}
+
+/* focus premium */
+.review-modal .custom-textarea:focus {
+    border-color: #ffc76b;
+    box-shadow: 0 0 0 2px rgba(255,199,107,0.12
+}
+
+.review-modal .custom-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.45
+}
+
+.review-modal .custom-select::placeholder {
+    color: rgba(255, 255, 255, 0.45
+}
+
+.review-card {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.review-user-info,
+.review-top {
+    min-width: 0;
+}
+
+.review-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.review-name span {
+    overflow-wrap: anywhere;
+}
+
+.review-card * {
+    max-width: 100%;
+}
+
+/* BOTÓN PRINCIPAL -------------- */
+.btn-submit {
+    background: #ffc76b;
+    border: none;
+    color: #1a1a1a;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 6px 16px;
+}
+
+.btn-submit:hover {
+    background: #ffb84d;
 }
 
 /* MOBILE reviews */
@@ -451,9 +730,69 @@
     .review-meta-right {
         align-items: flex-start;
     }
+
+    .reviews-list {
+        width: 100%;
+    }
+
+    .review-card {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .review-name {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .review-username {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 200px;
+    }
+
+    .user-badge {
+        flex-shrink: 0;
+    }
+}
+@media (min-width: 768px) {
+    .review-modal .modal-dialog {
+        max-width: 520px;
+        margin-top: 6vh;
+    }
 }
 
-/* MOBILE */
+/* Mobile modal review */
+
+/* margen lateral en móvil */
+@media (max-width: 576px) {
+
+    .review-modal .modal-content {
+        border-radius: 16px;
+    }
+
+    .review-modal .modal-body {
+        padding: 12px 16px 6px;
+    }
+
+    .review-modal .modal-header {
+        padding: 14px 16px 8px;
+    }
+
+    .review-modal .modal-footer {
+        padding: 8px 16px 14px;
+    }
+
+    .review-modal .modal-dialog {
+        margin: auto;
+        max-width: calc(100% - 24px
+    }
+}
+
+/* MOBILE General*/
 
 @media (max-width: 768px) {
 
@@ -482,7 +821,7 @@
     }
 
     .movie-info {
-        max-width: 500px;
+       /* max-width: 800px;*/
         margin: 0 auto;
     }
 
