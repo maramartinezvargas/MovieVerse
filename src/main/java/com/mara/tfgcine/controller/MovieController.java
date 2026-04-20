@@ -48,7 +48,7 @@ public class MovieController {
         model.addAttribute("cinematography", crew.get("cinematography")
 
         // Obtener reviews (locales + TMDB)
-        var reviews = reviewService.getAllReviews((long) id
+        var reviews = reviewService.getAllReviews((long) id, "movie"
         model.addAttribute("reviews", reviews
 
         // Calcular rating promedio
@@ -76,9 +76,14 @@ public class MovieController {
     @PostMapping("/reviews")
     public String createReview(@RequestParam Long mediaId,
                                @RequestParam String comment,
-                               @RequestParam Integer rating) {
+                               @RequestParam Integer rating,
+                               @RequestParam String mediaType) {
 
-        reviewService.createReview(mediaId, comment, rating
+        reviewService.createReview(mediaId, comment, rating, mediaType
+
+        if ("tv".equals(mediaType)) {
+            return "redirect:/series/" + mediaId;
+        }
 
         return "redirect:/peliculas/" + mediaId;
     }

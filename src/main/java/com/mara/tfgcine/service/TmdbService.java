@@ -623,8 +623,8 @@ public class TmdbService {
 
         tv.setReleaseDate(json.path("first_air_date").asText()
 
-        // trailer (reutilizado)
-        tv.setTrailerKey(getTrailerKey(tvId)
+        // trailer
+        tv.setTrailerKey(getTvTrailerKey(tvId)
 
         // géneros
         List<String> genres = new ArrayList<>(
@@ -780,6 +780,85 @@ public class TmdbService {
             return Collections.emptyMap(
         }
     }
+
+    public List<ReviewDTO> getSerieReviews(Long tvId) {
+
+        try {
+            String json = tmdbClient.getTvReviews(tvId.intValue()
+            JsonNode root = mapper.readTree(json).path("results"
+
+            List<ReviewDTO> list = new ArrayList<>(
+
+            for (JsonNode node : root) {
+
+                ReviewDTO review = new ReviewDTO(
+
+                review.setUsername(node.path("author").asText()
+                review.setComment(node.path("content").asText()
+                review.setSource("TMDB"
+
+                review.setCreatedAt(
+                        OffsetDateTime.parse(node.path("created_at").asText()).toLocalDateTime()
+                
+
+                JsonNode authorDetailsNode = node.path("author_details"
+
+                if (!authorDetailsNode.isMissingNode()) {
+
+                    if (!authorDetailsNode.path("rating").isNull()) {
+                        review.setRating(authorDetailsNode.path("rating").asDouble()
+                    }
+
+                    String avatarPath = authorDetailsNode.path("avatar_path").asText(null
+
+                    if (avatarPath != null && !avatarPath.isBlank()) {
+
+                        if (avatarPath.startsWith("/http")) {
+                            review.setAvatarUrl(avatarPath.substring(1)
+                        } else {
+                            review.setAvatarUrl("https://image.tmdb.org/t/p/w45" + avatarPath
+                        }
+                    }
+                }
+
+                list.add(review
+            }
+
+            return list;
+
+        } catch (Exception e) {
+            return Collections.emptyList(
+        }
+    }
+
+    private String getTvTrailerKey(int tvId) {
+        try {
+            JsonNode json = mapper.readTree(tmdbClient.getTvVideos(tvId)
+            JsonNode results = json.path("results"
+
+            for (JsonNode video : results) {
+                String type = video.path("type").asText(
+                String site = video.path("site").asText(
+
+                if ("Trailer".equalsIgnoreCase(type) && "YouTube".equalsIgnoreCase(site)) {
+                    return video.path("key").asText(
+                }
+            }
+
+            // fallback
+            for (JsonNode video : results) {
+                if ("YouTube".equalsIgnoreCase(video.path("site").asText())) {
+                    return video.path("key").asText(
+                }
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return null;
+    }
+
 
     /* Helpers ---------------------------------------------------------------------------- */
 

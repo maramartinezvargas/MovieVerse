@@ -23,17 +23,23 @@ public class ReviewService {
         this.tmdbService = tmdbService;
     }
 
-    // Obtener todas las reviews (locales + TMDB) para una película o serie
-    public List<ReviewDTO> getAllReviews(Long mediaId) {
+    // Obtener todas las reviews (locales + TMDB) para una película o serie concreta, ordenadas por fecha (más recientes primero)
+    public List<ReviewDTO> getAllReviews(Long mediaId, String mediaType) {
 
-        List<ReviewDTO> local = reviewRepository.findByMediaId(mediaId)
+        List<ReviewDTO> local = reviewRepository
+                .findByMediaIdAndMediaType(mediaId, mediaType)
                 .stream()
                 .map(this::mapLocalReview)
                 .toList(
 
-        List<ReviewDTO> tmdb = tmdbService.getReviews(mediaId
+        List<ReviewDTO> tmdb;
 
-        // Combinar, ordenar por fecha (más reciente primero) y devolver
+        if ("tv".equals(mediaType)) {
+            tmdb = tmdbService.getSerieReviews(mediaId
+        } else {
+            tmdb = tmdbService.getReviews(mediaId
+        }
+
         return Stream.concat(local.stream(), tmdb.stream())
                 .sorted(
                         Comparator.comparing(
@@ -86,16 +92,18 @@ public class ReviewService {
         return dto;
     }
 
-    public void createReview(Long mediaId, String comment, Integer rating) {
+    public void createReview(Long mediaId, String comment, Integer rating, String mediaType) {
 
         Review review = new Review(
 
         review.setMediaId(mediaId
+        review.setMediaType(mediaType // CLAVE
         review.setComment(comment
         review.setRating(rating
         review.setCreatedAt(LocalDateTime.now()
 
-        // AQUÍ SE DEBERÍA PONER EL USUARIO REAL!!!!!!!!!!!!!  (login)
+        // usuario (deberia ir aqui el usuario real, pero de momento null)
+        //User user = userService.getCurrentUser(
         review.setUser(null
 
         reviewRepository.save(review

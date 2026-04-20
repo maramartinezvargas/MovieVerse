@@ -320,4 +320,23 @@ public class TmdbClient {
         return restTemplate.getForObject(url, String.class
     }
 
+    public String getTvReviews(int tvId) {
+
+        String url = baseUrl +
+                "/tv/" + tvId + "/reviews" +
+                "?api_key=" + apiKey;
+
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getTvVideos(int tvId) {
+
+        String url = baseUrl +
+                "/tv/" + tvId + "/videos" +
+                "?api_key=" + apiKey +
+                "&language=" + language;
+
+        return restTemplate.getForObject(url, String.class
+    }
+
 }

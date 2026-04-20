@@ -25,6 +25,9 @@ public class Review {
     @Column(name = "media_id", nullable = false)
     private Long mediaId;
 
+    @Column(name = "media_type", nullable = false)
+    private String mediaType;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -73,5 +76,13 @@ public class Review {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
 }

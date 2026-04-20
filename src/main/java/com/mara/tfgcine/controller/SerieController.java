@@ -49,7 +49,7 @@ public class SerieController {
         model.addAttribute("cinematography", crew.get("cinematography")
 
         // Reviews (igual que en movies)
-        var reviews = reviewService.getAllReviews((long) id
+        var reviews = reviewService.getAllReviews((long) id, "tv"
         model.addAttribute("reviews", reviews
 
         double avgRating = reviews.stream()
@@ -69,4 +69,6 @@ public class SerieController {
 
         return "serie";
     }
+
+
 }

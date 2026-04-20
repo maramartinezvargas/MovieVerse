@@ -313,11 +313,27 @@
                     </div>
 
                     <p class="review-text" th:text="${review.comment}"></p>
+                    <div class="review-footer">
+                        <button class="read-more-btn" onclick="toggleReview(this)">
+                            <span class="label">Leer más</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
 
                 </div>
+                <div class="reviews-load-more"
+                     th:if="${#lists.size(reviews) > 1}">
 
+                    <button id="toggle-reviews-btn" class="btn-pill btn-trailer">
+                        <i class="bi bi-chevron-down"></i>
+                        Ver más reseñas
+                    </button>
+
+                </div>
             </div>
+
         </div>
+
     </div>
 </section>
 
@@ -371,6 +387,7 @@
             <form th:action="@{/reviews}" method="post">
 
                 <input type="hidden" name="mediaId" th:value="${series.id}" />
+                <input type="hidden" name="mediaType" value="tv">
 
                 <div class="modal-body">
 

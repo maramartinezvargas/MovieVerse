@@ -13,8 +13,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         SELECT r FROM Review r
         JOIN FETCH r.user
         WHERE r.mediaId = :mediaId
+        AND r.mediaType = :mediaType
         ORDER BY r.createdAt DESC
         """)
+    List<Review> findByMediaIdAndMediaType(@Param("mediaId") Long mediaId,
+                                           @Param("mediaType") String mediaType
     List<Review> findByMediaId(@Param("mediaId") Long mediaId
 
     List<Review> findByUserId(Long userId
