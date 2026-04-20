@@ -431,9 +431,14 @@ public class TmdbService {
 
             if (providersES.isArray()) {
                 for (JsonNode p : providersES) {
+
+                    String name = p.path("provider_name").asText(""
+                    String logoPath = p.path("logo_path").asText(""
+
                     providers.add(new Provider(
-                            p.path("provider_name").asText(),
-                            p.path("logo_path").asText()
+                            name,
+                            logoPath,
+                            getProviderLink(name)
                     )
                 }
             }
@@ -443,6 +448,22 @@ public class TmdbService {
         } catch (Exception e) {
             return Collections.emptyList( // importante
         }
+    }
+
+    private String getProviderLink(String name) {
+        return switch (name.toLowerCase()) {
+            case "netflix" -> "https://www.netflix.com";
+            case "amazon prime video" -> "https://www.primevideo.com";
+            case "disney plus" -> "https://www.disneyplus.com";
+            case "hbo max" -> "https://www.hbomax.com";
+            case "apple tv plus" -> "https://tv.apple.com";
+            case "movistar plus+" -> "https://ver.movistarplus.es";
+            case "filmin" -> "https://www.filmin.es";
+            case "rakuten tv" -> "https://www.rakuten.tv";
+            case "google play movies" -> "https://play.google.com/store/movies";
+            case "youtube" -> "https://www.youtube.com";
+            default -> "#";
+        };
     }
 
     /* Reviews *--------------------------------------------------------------------------- */
