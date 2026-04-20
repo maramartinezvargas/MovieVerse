@@ -92,10 +92,76 @@
                         </div>
 
                     </div>
+
+
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Detalles técnicos -->
+    <section class="movie-details-section">
+        <div class="container">
+
+            <h2 class="section-title">
+                Detalles técnicos
+            </h2>
+
+            <div class="movie-details-grid">
+
+                <div class="detail-item" th:if="${directors != null}">
+                <span class="label">
+                    <i class="bi bi-camera-reels"></i> Dirección
+                </span>
+                    <span th:text="${directors}"></span>
+                </div>
+
+                <div class="detail-item" th:if="${writers != null}">
+                <span class="label">
+                    <i class="bi bi-pencil-square"></i> Guion
+                </span>
+                    <span th:text="${writers}"></span>
+                </div>
+
+                <div class="detail-item" th:if="${composer != null}">
+                <span class="label">
+                    <i class="bi bi-music-note-beamed"></i> Música
+                </span>
+                    <span th:text="${composer}"></span>
+                </div>
+
+                <div class="detail-item" th:if="${cinematography != null}">
+                <span class="label">
+                    <i class="bi bi-camera"></i> Fotografía
+                </span>
+                    <span th:text="${cinematography}"></span>
+                </div>
+
+                <div class="detail-item" th:if="${movie.productionCompanies != null}">
+                <span class="label">
+                    <i class="bi bi-building"></i> Productoras
+                </span>
+                    <span th:text="${#strings.listJoin(movie.productionCompanies, ', ')}"></span>
+                </div>
+
+                <div class="detail-item" th:if="${movie.productionCountries != null}">
+                <span class="label">
+                    <i class="bi bi-globe"></i> País
+                </span>
+                    <span th:text="${#strings.listJoin(movie.productionCountries, ', ')}"></span>
+                </div>
+
+                <div class="detail-item" th:if="${movie.originalLanguage != null}">
+                <span class="label">
+                    <i class="bi bi-translate"></i> Idioma original
+                </span>
+                    <span th:text="${movie.originalLanguage}"></span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- REPARTO -->
     <section class="carousel-section"
              th:if="${cast != null and #lists.size(cast) > 0}">
@@ -164,19 +230,35 @@
                 <!-- COLUMNA IZQUIERDA -->
                 <div class="reviews-summary">
 
-                    <div class="reviews-score-big">
-                        <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}"></span>
+                    <!-- TMDB -->
+                    <div class="reviews-main-score">
+                        <div class="reviews-score-big"
+                             th:text="${movie.voteAverageFormatted}"></div>
+
+                        <div class="reviews-count"> En TMDB</div>
+
+                        <div class="reviews-stars">
+                            <i class="bi bi-star-fill"
+                               th:each="i : ${#numbers.sequence(1, T(java.lang.Math).round(movie.voteAverage))}">
+                            </i>
+                            <i class="bi bi-star"
+                               th:each="i : ${#numbers.sequence(T(java.lang.Math).round(movie.voteAverage)+1, 10)}">
+                            </i>
+                        </div>
                     </div>
 
-                    <div class="reviews-stars">
-                        <i class="bi bi-star-fill"
-                           th:each="i : ${#numbers.sequence(1, T(java.lang.Math).round(avgRating))}">
-                        </i>
-                        <i class="bi bi-star"
-                           th:each="i : ${#numbers.sequence(T(java.lang.Math).round(avgRating)+1, 10)}">
-                        </i>
-                    </div>
+                    <!-- USERS -->
+                    <div class="reviews-user-score" th:if="${localReviewCount > 0}">
 
+                        <div class="reviews-user-value">
+                            <i class="bi bi-people-fill"></i>
+                            <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}"></span>
+                        </div>
+
+                        <div class="reviews-user-label">
+                            Valoración de la comunidad
+                        </div>
+                    </div>
                     <div class="reviews-count">
                         <span th:text="${reviewCount}"></span> reseñas
                     </div>
@@ -258,7 +340,8 @@
                     <div class="reviews-load-more"
                          th:if="${#lists.size(reviews) > 1}">
 
-                        <button id="toggle-reviews-btn" class="btn-pill btn-details">
+                        <button id="toggle-reviews-btn" class="btn-pill btn-trailer">
+                            <i class="bi bi-chevron-down"></i>
                             Ver más reseñas
                         </button>
 

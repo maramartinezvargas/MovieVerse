@@ -46,9 +46,15 @@ public class ReviewService {
 
     // LOCAL
     private ReviewDTO mapLocalReview(Review review) {
+
         ReviewDTO dto = new ReviewDTO(
 
-        dto.setUsername(review.getUser().getUsername()
+        if (review.getUser() != null) {
+            dto.setUsername(review.getUser().getUsername()
+        } else {
+            dto.setUsername("Usuario MovieVerse"
+        }
+
         dto.setComment(review.getComment()
         dto.setRating((double) review.getRating()
         dto.setCreatedAt(review.getCreatedAt()
@@ -89,7 +95,7 @@ public class ReviewService {
         review.setRating(rating
         review.setCreatedAt(LocalDateTime.now()
 
-        // Aaquí deberías poner el usuario real (login)
+        // AQUÍ SE DEBERÍA PONER EL USUARIO REAL!!!!!!!!!!!!!  (login)
         review.setUser(null
 
         reviewRepository.save(review

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 @Service
@@ -289,10 +290,10 @@ public class TmdbService {
         m.setVoteCount(json.path("vote_count").asInt()
         m.setReleaseDate(json.path("release_date").asText()
 
-        // ✅ runtime
+        // runtime
         m.setRuntime(json.path("runtime").asInt()
 
-        // ✅ trailer
+        // trailer
         m.setTrailerKey(getTrailerKey(movieId)
 
         List<String> genres = new ArrayList<>(
@@ -300,6 +301,25 @@ public class TmdbService {
             genres.add(g.path("name").asText()
         }
         m.setGenres(genres
+
+        List<String> companies = new ArrayList<>(
+
+        for (JsonNode c : json.path("production_companies")) {
+            companies.add(c.path("name").asText()
+        }
+
+        m.setProductionCompanies(companies
+
+        List<String> countries = new ArrayList<>(
+
+        for (JsonNode c : json.path("production_countries")) {
+            countries.add(c.path("name").asText()
+        }
+
+        m.setProductionCountries(countries
+
+        // idioma original
+        m.setOriginalLanguage(json.path("original_language").asText()
 
         return m;
     }
@@ -443,7 +463,9 @@ public class TmdbService {
                 review.setSource("TMDB"
 
                 // fecha (parse si quieres fino, esto vale para ahora)
-                review.setCreatedAt(LocalDateTime.now() // o parse real si quieres
+                review.setCreatedAt(
+                        OffsetDateTime.parse(node.path("created_at").asText()).toLocalDateTime()
+                
 
                 JsonNode authorDetailsNode = node.path("author_details"
 
@@ -514,6 +536,45 @@ public class TmdbService {
         } catch (Exception e) {
             e.printStackTrace(
             return Collections.emptyList(
+        }
+    }
+
+    /* Crew (director, guionista, compositor, director de fotografía) -------------------------------------------------- */
+    public Map<String, String> getMovieCrewInfo(int movieId) {
+
+        try {
+            String json = tmdbClient.getMovieCredits(movieId
+            JsonNode crewArray = mapper.readTree(json).path("crew"
+
+            Set<String> directors = new LinkedHashSet<>(
+            Set<String> writers = new LinkedHashSet<>(
+            Set<String> composers = new LinkedHashSet<>(
+            Set<String> cinematographers = new LinkedHashSet<>(
+
+            for (JsonNode person : crewArray) {
+
+                String job = person.path("job").asText(
+                String name = person.path("name").asText(
+
+                switch (job) {
+                    case "Director" -> directors.add(name
+                    case "Screenplay", "Writer" -> writers.add(name
+                    case "Original Music Composer" -> composers.add(name
+                    case "Director of Photography" -> cinematographers.add(name
+                }
+            }
+
+            Map<String, String> result = new HashMap<>(
+
+            result.put("directors", directors.isEmpty() ? null : String.join(", ", directors)
+            result.put("writers", writers.isEmpty() ? null : String.join(", ", writers)
+            result.put("composer", composers.isEmpty() ? null : String.join(", ", composers)
+            result.put("cinematography", cinematographers.isEmpty() ? null : String.join(", ", cinematographers)
+
+            return result;
+
+        } catch (Exception e) {
+            return Collections.emptyMap(
         }
     }
 

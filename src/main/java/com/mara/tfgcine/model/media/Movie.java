@@ -1,11 +1,17 @@
 package com.mara.tfgcine.model.media;
 import lombok.Data;
+
+import java.util.List;
+
 @Data
 public class Movie extends Media {
 
     private String backdropPath;
     private Integer runtime; // Duración en minutos
     private String trailerKey;
+    private List<String> productionCompanies;
+    private List<String> productionCountries;
+    private String originalLanguage;
 
     // Formato fecha (usa la de Media)
     public String getFormattedReleaseDate() {

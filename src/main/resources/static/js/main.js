@@ -154,17 +154,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!expanded) {
                 hiddenReviews.forEach(el => el.style.display = "block"
-                btn.textContent = "Ver menos reseñas";
                 expanded = true;
             } else {
                 hiddenReviews.forEach(el => el.style.display = "none"
-                btn.textContent = "Ver más reseñas";
 
                 document.querySelector(".reviews-section")
                     ?.scrollIntoView({ behavior: "smooth" }
 
                 expanded = false;
             }
+
+            // ICONO + TEXTO
+            btn.innerHTML = expanded
+                ? '<i class="bi bi-chevron-up"></i> Ver menos reseñas'
+                : '<i class="bi bi-chevron-down"></i> Ver más reseñas';
 
             updateReadMoreButtons(
         }

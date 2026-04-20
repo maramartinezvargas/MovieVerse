@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MovieController {
@@ -38,6 +39,14 @@ public class MovieController {
         List<Provider> providers = tmdbService.getProvidersForMovie(id
         model.addAttribute("providers", providers
 
+        // Datos detalle
+        Map<String, String> crew = tmdbService.getMovieCrewInfo(id
+
+        model.addAttribute("directors", crew.get("directors")
+        model.addAttribute("writers", crew.get("writers")
+        model.addAttribute("composer", crew.get("composer")
+        model.addAttribute("cinematography", crew.get("cinematography")
+
         // Obtener reviews (locales + TMDB)
         var reviews = reviewService.getAllReviews((long) id
         model.addAttribute("reviews", reviews
@@ -45,12 +54,21 @@ public class MovieController {
         // Calcular rating promedio
         double avgRating = reviews.stream()
                 .filter(r -> r.getRating() != null)
+                .filter(r -> "LOCAL".equals(r.getSource()))
                 .mapToDouble(r -> r.getRating())
                 .average()
                 .orElse(0.0
 
+        long localReviewCount = reviews.stream()
+                .filter(r -> "LOCAL".equals(r.getSource()))
+                .count(
+
+        model.addAttribute("localReviewCount", localReviewCount
+
         model.addAttribute("avgRating", avgRating
         model.addAttribute("reviewCount", reviews.size()
+
+
 
         return "movie";
     }
