@@ -599,6 +599,188 @@ public class TmdbService {
         }
     }
 
+    /* SERIES ---------------------------------------------------------------------------- */
+    public TvSeries getSerieDetails(int tvId) throws Exception {
+
+        JsonNode json = mapper.readTree(tmdbClient.getTvDetails(tvId)
+
+        TvSeries tv = new TvSeries(
+
+        tv.setId(json.path("id").asInt()
+        tv.setTitle(json.path("name").asText()
+        tv.setOverview(json.path("overview").asText()
+
+        if (!json.path("poster_path").isNull()) {
+            tv.setPosterPath(IMG + json.path("poster_path").asText()
+        }
+
+        if (!json.path("backdrop_path").isNull()) {
+            tv.setBackdropPath(BACKDROP + json.path("backdrop_path").asText()
+        }
+
+        tv.setVoteAverage(json.path("vote_average").asDouble()
+        tv.setVoteCount(json.path("vote_count").asInt()
+
+        tv.setReleaseDate(json.path("first_air_date").asText()
+
+        // trailer (reutilizado)
+        tv.setTrailerKey(getTrailerKey(tvId)
+
+        // géneros
+        List<String> genres = new ArrayList<>(
+        for (JsonNode g : json.path("genres")) {
+            genres.add(g.path("name").asText()
+        }
+        tv.setGenres(genres
+
+        // production companies
+        List<String> companies = new ArrayList<>(
+        for (JsonNode c : json.path("production_companies")) {
+            companies.add(c.path("name").asText()
+        }
+        tv.setProductionCompanies(companies
+
+        // production countries
+        List<String> countries = new ArrayList<>(
+        for (JsonNode c : json.path("production_countries")) {
+            countries.add(c.path("name").asText()
+        }
+        tv.setProductionCountries(countries
+        tv.setOriginalLanguage(json.path("original_language").asText()
+
+        tv.setNumberOfSeasons(json.path("number_of_seasons").asInt()
+        tv.setNumberOfEpisodes(json.path("number_of_episodes").asInt()
+
+        return tv;
+    }
+
+    public List<CastMember> getSerieCast(int tvId) {
+
+        try {
+            String json = tmdbClient.getTvCredits(tvId
+
+            JsonNode root = mapper.readTree(json
+            JsonNode castArray = root.path("cast"
+
+            List<CastMember> castList = new ArrayList<>(
+
+            int limit = Math.min(castArray.size(), 15
+
+            for (int i = 0; i < limit; i++) {
+
+                JsonNode actor = castArray.get(i
+
+                String name = actor.path("name").asText(
+                String character = actor.path("character").asText(
+
+                String profilePath = actor.path("profile_path").asText(null
+
+                if (profilePath != null && !profilePath.isBlank()) {
+                    profilePath = "https://image.tmdb.org/t/p/w185" + profilePath;
+                } else {
+                    profilePath = null;
+                }
+
+                castList.add(new CastMember(name, character, profilePath)
+            }
+
+            return castList;
+
+        } catch (Exception e) {
+            return Collections.emptyList(
+        }
+    }
+
+    public List<TvSeries> getRelatedSeries(int tvId) throws Exception {
+
+        try {
+            String jsonResponse = tmdbClient.getTvRecommendations(tvId
+            JsonNode results = mapper.readTree(jsonResponse).path("results"
+
+            if (results.isEmpty()) {
+                jsonResponse = tmdbClient.getTvSimilar(tvId
+                results = mapper.readTree(jsonResponse).path("results"
+            }
+
+            List<TvSeries> series = new ArrayList<>(
+
+            int count = 0;
+            for (JsonNode node : results) {
+
+                if (count >= 20) break;
+
+                TvSeries tv = createTvFromNode(node, node.path("id").asInt()
+                series.add(tv
+
+                count++;
+            }
+
+            return series;
+
+        } catch (Exception e) {
+            return new ArrayList<>(
+        }
+    }
+
+    public List<Provider> getProvidersForSeries(int tvId) {
+
+        try {
+            String json = tmdbClient.getTvWatchProviders(tvId
+
+            JsonNode root = mapper.readTree(json
+            JsonNode providersES = root.path("results").path("ES").path("flatrate"
+
+            List<Provider> providers = new ArrayList<>(
+
+            if (providersES.isArray()) {
+                for (JsonNode p : providersES) {
+
+                    String name = p.path("provider_name").asText(""
+                    String logoPath = p.path("logo_path").asText(""
+
+                    providers.add(new Provider(
+                            name,
+                            logoPath,
+                            getProviderLink(name)
+                    )
+                }
+            }
+
+            return providers;
+
+        } catch (Exception e) {
+            return Collections.emptyList(
+        }
+    }
+
+    public Map<String, String> getSerieCrewInfo(int tvId) {
+
+        try {
+            String json = tmdbClient.getTvCredits(tvId
+            JsonNode crewArray = mapper.readTree(json).path("crew"
+
+            Set<String> creators = new LinkedHashSet<>(
+
+            for (JsonNode person : crewArray) {
+                String job = person.path("job").asText(
+                if ("Creator".equalsIgnoreCase(job)) {
+                    creators.add(person.path("name").asText()
+                }
+            }
+
+            Map<String, String> result = new HashMap<>(
+            result.put("directors", creators.isEmpty() ? null : String.join(", ", creators)
+            result.put("writers", null
+            result.put("composer", null
+            result.put("cinematography", null
+
+            return result;
+
+        } catch (Exception e) {
+            return Collections.emptyMap(
+        }
+    }
+
     /* Helpers ---------------------------------------------------------------------------- */
 
     private List<String> extractGenres(JsonNode node, boolean isMovie) {

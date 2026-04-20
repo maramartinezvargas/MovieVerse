@@ -269,4 +269,55 @@ public class TmdbClient {
         return restTemplate.getForObject(url, String.class
     }
 
+    /* Series ------------------------------------------------------------------------------------------------- */
+    public String getTvDetails(int tvId) {
+
+        String url = baseUrl +
+                "/tv/" + tvId +
+                "?api_key=" + apiKey +
+                "&language=" + language;
+
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getTvCredits(int tvId) {
+
+        String url = baseUrl +
+                "/tv/" + tvId + "/credits" +
+                "?api_key=" + apiKey;
+
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getTvRecommendations(int tvId) {
+
+        String url = baseUrl +
+                "/tv/" + tvId + "/recommendations" +
+                "?api_key=" + apiKey +
+                "&language=" + language +
+                "&page=1";
+
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getTvSimilar(int tvId) {
+
+        String url = baseUrl +
+                "/tv/" + tvId + "/similar" +
+                "?api_key=" + apiKey +
+                "&language=" + language +
+                "&page=1";
+
+        return restTemplate.getForObject(url, String.class
+    }
+
+    public String getTvWatchProviders(int tvId) {
+
+        String url = baseUrl +
+                "/tv/" + tvId +
+                "/watch/providers?api_key=" + apiKey;
+
+        return restTemplate.getForObject(url, String.class
+    }
+
 }

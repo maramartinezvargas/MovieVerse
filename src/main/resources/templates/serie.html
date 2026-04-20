@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head(${series.title})"></head>
+
+<body>
+
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<!-- Hero -->
+<section class="movie-hero"
+         th:if="${series.backdropPath != null}"
+         th:style="|--movie-bg: url('${series.backdropPath}')|">
+
+    <div class="container">
+        <div class="movie-layout">
+
+            <img class="movie-poster"
+                 th:src="${series.posterPath}"
+                 th:alt="${series.title}">
+
+            <div class="movie-info">
+
+                <h1 class="movie-hero-title"
+                    th:text="${series.title}"></h1>
+
+                <div class="movie-meta">
+
+                    <!-- Línea 1 -->
+                    <div class="movie-meta-top">
+
+                        <span class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <span class="rating-value"
+                                  th:text="${series.voteAverageFormatted}"></span>
+
+                            <span class="rating-count"
+                                  th:text="'(' + ${series.voteCount} + ' votos en TMDB)'">
+                            </span>
+                        </span>
+
+                        <span class="release-date"
+                              th:if="${series.firstAirDate != null and !#strings.isEmpty(series.firstAirDate)}"
+                              th:text="${series.formattedFirstAirDate}">
+                        </span>
+
+                    </div>
+
+                    <!-- Géneros -->
+                    <div class="movie-genres">
+                        <span class="genre"
+                              th:each="genre : ${series.genres}"
+                              th:text="${genre}">
+                        </span>
+                    </div>
+
+                </div>
+
+                <p class="movie-overview"
+                   th:text="${series.overview}">
+                </p>
+
+                <!-- Acciones -->
+                <div class="movie-actions">
+
+                    <button class="btn-pill btn-trailer open-trailer"
+                            th:if="${series.trailerKey != null}"
+                            th:attr="data-trailer=${series.trailerKey}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#trailerModal">
+
+                        <i class="bi bi-play-fill"></i>
+                        Ver tráiler
+                    </button>
+
+                    <button class="btn-pill btn-details btn-like">
+                        <i class="bi bi-heart"></i>
+                        Me gusta
+                    </button>
+
+                    <button class="btn-pill btn-details">
+                        <i class="bi bi-plus-lg"></i>
+                        Añadir a lista
+                    </button>
+
+                </div>
+
+                <!-- Providers -->
+                <div class="movie-providers"
+                     th:if="${providers != null and !#lists.isEmpty(providers)}">
+
+                    <span class="providers-label">Disponible en:</span>
+
+                    <div class="providers-list">
+                        <a class="provider-item"
+                           th:each="p : ${providers}"
+                           th:href="${p.link}"
+                           th:attr="target=${p.link != '#'} ? '_blank' : null">
+
+                            <img th:src="'https://image.tmdb.org/t/p/w45' + ${p.logoPath}"
+                                 th:alt="${p.name}"
+                                 class="provider-logo"/>
+
+                            <span class="provider-tooltip"
+                                  th:text="${p.name}"></span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Detalles -->
+<section class="movie-details-section">
+    <div class="container">
+
+        <h2 class="section-title">Detalles técnicos</h2>
+
+        <div class="movie-details-grid">
+
+            <div class="detail-item" th:if="${directors != null}">
+                <span class="label"><i class="bi bi-camera-reels"></i> Dirección</span>
+                <span th:text="${directors}"></span>
+            </div>
+
+            <div class="detail-item" th:if="${writers != null}">
+                <span class="label"><i class="bi bi-pencil-square"></i> Guion</span>
+                <span th:text="${writers}"></span>
+            </div>
+
+            <div class="detail-item" th:if="${composer != null}">
+                <span class="label"><i class="bi bi-music-note-beamed"></i> Música</span>
+                <span th:text="${composer}"></span>
+            </div>
+
+            <div class="detail-item" th:if="${cinematography != null}">
+                <span class="label"><i class="bi bi-camera"></i> Fotografía</span>
+                <span th:text="${cinematography}"></span>
+            </div>
+
+            <div class="detail-item" th:if="${series.productionCompanies != null}">
+                <span class="label"><i class="bi bi-building"></i> Productoras</span>
+                <span th:text="${#strings.listJoin(series.productionCompanies, ', ')}"></span>
+            </div>
+
+            <div class="detail-item" th:if="${series.productionCountries != null}">
+                <span class="label"><i class="bi bi-globe"></i> País</span>
+                <span th:text="${#strings.listJoin(series.productionCountries, ', ')}"></span>
+            </div>
+
+            <div class="detail-item" th:if="${series.originalLanguage != null}">
+                <span class="label"><i class="bi bi-translate"></i> Idioma original</span>
+                <span th:text="${series.originalLanguage}"></span>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- REPARTO -->
+<section class="carousel-section"
+         th:if="${cast != null and #lists.size(cast) > 0}">
+
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Reparto principal</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn prev">‹</button>
+                <button class="carousel-btn next">›</button>
+            </div>
+        </div>
+
+        <div class="carousel" id="cast-carousel">
+            <div class="carousel-card cast-card"
+                 th:each="actor : ${cast}">
+
+                <div class="cast-avatar">
+                    <img th:if="${actor.profilePath != null}"
+                         th:src="${actor.profilePath}"
+                         th:alt="${actor.name}">
+
+                    <div class="avatar-placeholder"
+                         th:if="${actor.profilePath == null}">
+                        <i class="bi bi-person"></i>
+                    </div>
+                </div>
+
+                <div class="cast-meta">
+                    <h3 th:text="${actor.name}"></h3>
+                    <p th:text="${actor.character}"></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RESEÑAS (igual que movie, solo cambia movie→series donde toca) -->
+<section class="reviews-section" th:if="${reviews != null}">
+    <div class="container">
+
+        <div class="reviews-header">
+            <h2 class="section-title">Reseñas</h2>
+            <button class="btn-pill btn-trailer btn-review"
+                    data-bs-toggle="modal"
+                    data-bs-target="#reviewModal">
+                <i class="bi bi-pencil-fill"></i>
+                Escribir reseña
+            </button>
+        </div>
+
+        <div th:if="${#lists.isEmpty(reviews)}" class="no-reviews">
+            <p class="no-reviews-text">
+                Nadie ha reseñado aún este título.
+            </p>
+        </div>
+
+        <div class="reviews-layout" th:if="${!#lists.isEmpty(reviews)}">
+
+            <!-- IZQUIERDA -->
+            <div class="reviews-summary">
+
+                <div class="reviews-main-score">
+                    <div class="reviews-score-big"
+                         th:text="${series.voteAverageFormatted}"></div>
+
+                    <div class="reviews-count"> En TMDB</div>
+
+                    <div class="reviews-stars">
+                        <i class="bi bi-star-fill"
+                           th:each="i : ${#numbers.sequence(1, T(java.lang.Math).round(series.voteAverage))}"></i>
+                        <i class="bi bi-star"
+                           th:each="i : ${#numbers.sequence(T(java.lang.Math).round(series.voteAverage)+1, 10)}"></i>
+                    </div>
+                </div>
+
+                <div class="reviews-user-score" th:if="${localReviewCount > 0}">
+                    <div class="reviews-user-value">
+                        <i class="bi bi-people-fill"></i>
+                        <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}"></span>
+                    </div>
+
+                    <div class="reviews-user-label">
+                        Valoración de la comunidad
+                    </div>
+                </div>
+
+                <div class="reviews-count">
+                    <span th:text="${reviewCount}"></span> reseñas
+                </div>
+
+            </div>
+
+            <!-- DERECHA -->
+            <div class="reviews-list">
+
+                <div class="review-card"
+                     th:each="review, iterStat : ${reviews}"
+                     th:classappend="${iterStat.index > 0} ? ' hidden-review'">
+
+                    <div class="review-top">
+
+                        <div class="review-user-info">
+
+                            <div class="review-avatar">
+                                <img th:if="${review.avatarUrl != null}"
+                                     th:src="${review.avatarUrl}"
+                                     th:alt="${review.username}">
+                                <div class="review-avatar avatar-placeholder"
+                                     th:if="${review.avatarUrl == null}">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="review-name">
+                                    <span class="review-username"
+                                          th:text="'@' + ${review.username}"></span>
+
+                                    <span class="user-badge"
+                                          th:classappend="${review.source == 'TMDB'} ? ' badge-tmdb' : ' badge-local'"
+                                          th:text="${review.source == 'TMDB'} ? 'Usuario TMDB' : 'Usuario MovieVerse'">
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="review-meta-right">
+
+                            <div class="review-stars"
+                                 th:if="${review.rating != null}"
+                                 th:with="stars=${T(java.lang.Math).floor(review.rating)}">
+
+                                <i class="bi bi-star-fill"
+                                   th:each="i : ${#numbers.sequence(1, stars)}"></i>
+
+                                <i class="bi bi-star"
+                                   th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+
+                                <span class="review-rating"
+                                      th:text="${review.rating}"></span>
+                            </div>
+
+                            <div class="review-date"
+                                 th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <p class="review-text" th:text="${review.comment}"></p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERIES relacionadas -->
+<section class="carousel-section"
+         th:if="${relatedSeries != null and #lists.size(relatedSeries) > 0}">
+
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">
+                Si te gustó "<span th:text="${series.title}"></span>", te puede gustar...
+            </h2>
+
+            <div class="carousel-controls">
+                <button class="carousel-btn prev">‹</button>
+                <button class="carousel-btn next">›</button>
+            </div>
+        </div>
+
+        <div class="carousel" id="related-carousel">
+
+            <a th:href="@{/series/{id}(id=${related.id})}"
+               class="carousel-card"
+               th:each="related : ${relatedSeries}">
+
+                <img th:src="${related.posterPath}"
+                     th:alt="${related.title}">
+
+                <div class="card-meta">
+
+                    <span>
+                        <i class="bi bi-star-fill"></i>
+                        <span th:text="${related.voteAverageFormatted}"></span>
+                    </span>
+
+                    <h3 th:text="${related.title}"></h3>
+
+                    <p th:text="${#strings.listJoin(related.genres, ' · ')}"></p>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<!-- Modal review -->
+<div class="modal fade review-modal" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <form th:action="@{/reviews}" method="post">
+
+                <input type="hidden" name="mediaId" th:value="${series.id}" />
+
+                <div class="modal-body">
+
+                    <textarea name="comment"
+                              class="form-control"
+                              required></textarea>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn btn-trailer btn-review">
+                        Publicar
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/carousel.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+
+</body>
+
+<th:block th:replace="~{fragments/trailer-modal :: trailerModal}"></th:block>
+
+</html>
