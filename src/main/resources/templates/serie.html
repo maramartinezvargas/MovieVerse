@@ -92,7 +92,6 @@
                     <span class="providers-label">Disponible en:</span>
 
                     <div class="providers-list">
-                        <div class="providers-list">
                             <a class="provider-item"
                                th:each="p : ${providers}"
                                th:href="${p.link != null} ? ${p.link} : '#'"
@@ -105,7 +104,6 @@
                                 <span class="provider-tooltip"
                                       th:text="${p.name}"></span>
                             </a>
-                        </div>
                     </div>
                 </div>
 

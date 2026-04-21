@@ -448,15 +448,16 @@ public class TmdbService {
             case 119, 10, 2100, 1825, 1968,  528, 2243 -> "https://www.primevideo.com/";
             case 337 -> "https://www.disneyplus.com";
             case 384, 1899 -> "https://www.hbomax.com";
-            case 350, 1854 -> "https://tv.apple.com";
-            case 149 -> "https://ver.movistarplus.es";
-            case 64 -> "https://www.filmin.es";
+            case 2, 350, 1854 -> "https://tv.apple.com";
+            case 149, 2241 -> "https://ver.movistarplus.es";
+            case 63, 64 -> "https://www.filmin.es";
             case 35 -> "https://www.rakuten.tv";
             case 1773 -> "https://www.skyshowtime.com";
             case 283 -> "https://www.crunchyroll.com";
             case 62 -> "https://www.atresplayer.com";
             case 541 -> "https://www.rtve.es/play/";
             case 1838 -> "https://www.tivify.tv/";
+            case 538 -> "https://watch.plex.tv/es";
             default -> null;
         };
     }
