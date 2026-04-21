@@ -221,7 +221,7 @@ public class TmdbService {
             featured.setRuntime(details.path("runtime").asInt()
 
             // trailer
-            featured.setTrailerKey(getTrailerKey(movieId)
+            featured.setTrailerKey(getTrailerKey(movieId, true)
 
             return featured;
 
@@ -294,8 +294,7 @@ public class TmdbService {
         m.setRuntime(json.path("runtime").asInt()
 
         // trailer
-        m.setTrailerKey(getTrailerKey(movieId)
-
+        m.setTrailerKey(getTrailerKey(movieId, true)
         List<String> genres = new ArrayList<>(
         for (JsonNode g : json.path("genres")) {
             genres.add(g.path("name").asText()
@@ -624,7 +623,7 @@ public class TmdbService {
         tv.setReleaseDate(json.path("first_air_date").asText()
 
         // trailer
-        tv.setTrailerKey(getTvTrailerKey(tvId)
+        tv.setTrailerKey(getTrailerKey(tvId, false)
 
         // géneros
         List<String> genres = new ArrayList<>(
@@ -831,21 +830,28 @@ public class TmdbService {
         }
     }
 
-    private String getTvTrailerKey(int tvId) {
+    /* Método genérico para obtener trailer tanto de película como de serie */
+    private String getTrailerKey(int id, boolean isMovie) {
+
         try {
-            JsonNode json = mapper.readTree(tmdbClient.getTvVideos(tvId)
+
+            String jsonStr = isMovie
+                    ? tmdbClient.getMovieVideos(id)
+                    : tmdbClient.getTvVideos(id
+
+            JsonNode json = mapper.readTree(jsonStr
             JsonNode results = json.path("results"
 
+            // 1. Buscar trailer
             for (JsonNode video : results) {
-                String type = video.path("type").asText(
-                String site = video.path("site").asText(
+                if ("Trailer".equalsIgnoreCase(video.path("type").asText()) &&
+                        "YouTube".equalsIgnoreCase(video.path("site").asText())) {
 
-                if ("Trailer".equalsIgnoreCase(type) && "YouTube".equalsIgnoreCase(site)) {
                     return video.path("key").asText(
                 }
             }
 
-            // fallback
+            // 2. Fallback a video oficial de YouTube (aunque no sea trailer)
             for (JsonNode video : results) {
                 if ("YouTube".equalsIgnoreCase(video.path("site").asText())) {
                     return video.path("key").asText(
@@ -899,34 +905,4 @@ public class TmdbService {
             return null;
         }
     }
-
-    private String getTrailerKey(int movieId) {
-        try {
-            JsonNode json = mapper.readTree(tmdbClient.getMovieVideos(movieId)
-            JsonNode results = json.path("results"
-
-            for (JsonNode video : results) {
-                String type = video.path("type").asText(
-                String site = video.path("site").asText(
-
-                if ("Trailer".equalsIgnoreCase(type) && "YouTube".equalsIgnoreCase(site)) {
-                    return video.path("key").asText(
-                }
-            }
-
-            // fallback → a veces no hay "Trailer", pero sí "Teaser"
-            for (JsonNode video : results) {
-                String site = video.path("site").asText(
-                if ("YouTube".equalsIgnoreCase(site)) {
-                    return video.path("key").asText(
-                }
-            }
-
-        } catch (Exception e) {
-            return null;
-        }
-
-        return null;
-    }
-
 }
