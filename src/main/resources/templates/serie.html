@@ -92,18 +92,20 @@
                     <span class="providers-label">Disponible en:</span>
 
                     <div class="providers-list">
-                        <a class="provider-item"
-                           th:each="p : ${providers}"
-                           th:href="${p.link}"
-                           th:attr="target=${p.link != '#'} ? '_blank' : null">
+                        <div class="providers-list">
+                            <a class="provider-item"
+                               th:each="p : ${providers}"
+                               th:href="${p.link != null} ? ${p.link} : '#'"
+                               th:attr="target=${p.link != null} ? '_blank' : null">
 
-                            <img th:src="'https://image.tmdb.org/t/p/w45' + ${p.logoPath}"
-                                 th:alt="${p.name}"
-                                 class="provider-logo"/>
+                                <img th:src="'https://image.tmdb.org/t/p/w45' + ${p.logoPath}"
+                                     th:alt="${p.name}"
+                                     class="provider-logo"/>
 
-                            <span class="provider-tooltip"
-                                  th:text="${p.name}"></span>
-                        </a>
+                                <span class="provider-tooltip"
+                                      th:text="${p.name}"></span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -116,28 +118,40 @@
 <section class="movie-details-section">
     <div class="container">
 
-        <h2 class="section-title">Detalles técnicos</h2>
+        <h2 class="section-title">Información de la serie</h2>
 
         <div class="movie-details-grid">
 
             <div class="detail-item" th:if="${directors != null}">
-                <span class="label"><i class="bi bi-camera-reels"></i> Dirección</span>
+                <span class="label"><i class="bi bi-camera-reels"></i> Creador</span>
                 <span th:text="${directors}"></span>
             </div>
 
-            <div class="detail-item" th:if="${writers != null}">
-                <span class="label"><i class="bi bi-pencil-square"></i> Guion</span>
-                <span th:text="${writers}"></span>
+            <div class="detail-item" th:if="${series.numberOfSeasons > 0}">
+                <span class="label"><i class="bi bi-collection-play"></i> Temporadas</span>
+                <span th:text="${series.numberOfSeasons}"></span>
             </div>
 
-            <div class="detail-item" th:if="${composer != null}">
-                <span class="label"><i class="bi bi-music-note-beamed"></i> Música</span>
-                <span th:text="${composer}"></span>
+            <div class="detail-item" th:if="${series.numberOfEpisodes != null}">
+                <span class="label"><i class="bi bi-list-ol"></i> Episodios</span>
+                <span th:text="${series.numberOfEpisodes}"></span>
             </div>
 
-            <div class="detail-item" th:if="${cinematography != null}">
-                <span class="label"><i class="bi bi-camera"></i> Fotografía</span>
-                <span th:text="${cinematography}"></span>
+            <div class="detail-item" th:if="${series.status != null}">
+                <span class="label"><i class="bi bi-broadcast"></i> Estado</span>
+                <span th:switch="${series.status}">
+                    <span th:case="'Returning Series'">En emisión</span>
+                    <span th:case="'Ended'">Finalizada</span>
+                    <span th:case="'Canceled'">Cancelada</span>
+                    <span th:case="'In Production'">En producción</span>
+                    <span th:case="*"
+                          th:text="${series.status}"></span>
+                </span>
+            </div>
+
+            <div class="detail-item" th:if="${series.episodeRuntime != null}">
+                <span class="label"><i class="bi bi-clock"></i> Duración</span>
+                <span th:text="${series.episodeRuntime + ' min'}"></span>
             </div>
 
             <div class="detail-item" th:if="${series.productionCompanies != null}">

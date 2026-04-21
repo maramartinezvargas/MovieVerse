@@ -12,7 +12,6 @@ import com.mara.tfgcine.model.media.TvSeries;
 import com.mara.tfgcine.model.review.TmdbReview;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -424,44 +423,41 @@ public class TmdbService {
             String json = tmdbClient.getWatchProviders(movieId
 
             JsonNode root = mapper.readTree(json
-            JsonNode providersES = root.path("results").path("ES").path("flatrate"
+            JsonNode es = root.path("results").path("ES"
 
             List<Provider> providers = new ArrayList<>(
+            Set<Integer> seen = new HashSet<>( // ✅ aquí
 
-            if (providersES.isArray()) {
-                for (JsonNode p : providersES) {
-
-                    String name = p.path("provider_name").asText(""
-                    String logoPath = p.path("logo_path").asText(""
-
-                    providers.add(new Provider(
-                            name,
-                            logoPath,
-                            getProviderLink(name)
-                    )
-                }
-            }
+            addProviders(providers, es.path("flatrate"), seen
+            addProviders(providers, es.path("buy"), seen
+            addProviders(providers, es.path("rent"), seen
+            addProviders(providers, es.path("free"), seen
+            addProviders(providers, es.path("ads"), seen
 
             return providers;
 
         } catch (Exception e) {
-            return Collections.emptyList( // importante
+            return Collections.emptyList(
         }
     }
 
-    private String getProviderLink(String name) {
-        return switch (name.toLowerCase()) {
-            case "netflix" -> "https://www.netflix.com";
-            case "amazon prime video" -> "https://www.primevideo.com";
-            case "disney plus" -> "https://www.disneyplus.com";
-            case "hbo max" -> "https://www.hbomax.com";
-            case "apple tv plus" -> "https://tv.apple.com";
-            case "movistar plus+" -> "https://ver.movistarplus.es";
-            case "filmin" -> "https://www.filmin.es";
-            case "rakuten tv" -> "https://www.rakuten.tv";
-            case "google play movies" -> "https://play.google.com/store/movies";
-            case "youtube" -> "https://www.youtube.com";
-            default -> "#";
+    /* Enlaza el ID del proveedor con su web oficial. TMDB no proporciona el link directo, solo el ID y el nombre, así que hacemos esta asociación manualmente para los proveedores más comunes en España. */
+    private String getProviderLink(int id) {
+        return switch (id) {
+            case 8, 1796 -> "https://www.netflix.com";
+            case 119, 10, 2100, 1825, 1968,  528, 2243 -> "https://www.primevideo.com/";
+            case 337 -> "https://www.disneyplus.com";
+            case 384, 1899 -> "https://www.hbomax.com";
+            case 350, 1854 -> "https://tv.apple.com";
+            case 149 -> "https://ver.movistarplus.es";
+            case 64 -> "https://www.filmin.es";
+            case 35 -> "https://www.rakuten.tv";
+            case 1773 -> "https://www.skyshowtime.com";
+            case 283 -> "https://www.crunchyroll.com";
+            case 62 -> "https://www.atresplayer.com";
+            case 541 -> "https://www.rtve.es/play/";
+            case 1838 -> "https://www.tivify.tv/";
+            default -> null;
         };
     }
 
@@ -649,6 +645,15 @@ public class TmdbService {
 
         tv.setNumberOfSeasons(json.path("number_of_seasons").asInt()
         tv.setNumberOfEpisodes(json.path("number_of_episodes").asInt()
+        // status (Ended / Returning Series)
+        tv.setStatus(json.path("status").asText()
+
+        // duración episodios
+        JsonNode runtimes = json.path("episode_run_time"
+
+        if (runtimes.isArray() && runtimes.size() > 0) {
+            tv.setEpisodeRuntime(runtimes.get(0).asInt()
+        }
 
         return tv;
     }
@@ -727,20 +732,45 @@ public class TmdbService {
             String json = tmdbClient.getTvWatchProviders(tvId
 
             JsonNode root = mapper.readTree(json
-            JsonNode providersES = root.path("results").path("ES").path("flatrate"
+            JsonNode es = root.path("results").path("ES"
 
             List<Provider> providers = new ArrayList<>(
 
-            if (providersES.isArray()) {
-                for (JsonNode p : providersES) {
-
-                    String name = p.path("provider_name").asText(""
-                    String logoPath = p.path("logo_path").asText(""
-
+            // flatrate
+            JsonNode flatrate = es.path("flatrate"
+            if (flatrate.isArray()) {
+                for (JsonNode p : flatrate) {
                     providers.add(new Provider(
-                            name,
-                            logoPath,
-                            getProviderLink(name)
+                            p.path("provider_id").asInt(),
+                            p.path("provider_name").asText(""),
+                            p.path("logo_path").asText(""),
+                            getProviderLink(p.path("provider_id").asInt())
+                    )
+                }
+            }
+
+            // free (RTVE, Tivify, etc)
+            JsonNode free = es.path("free"
+            if (free.isArray()) {
+                for (JsonNode p : free) {
+                    providers.add(new Provider(
+                            p.path("provider_id").asInt(),
+                            p.path("provider_name").asText(""),
+                            p.path("logo_path").asText(""),
+                            getProviderLink(p.path("provider_id").asInt())
+                    )
+                }
+            }
+
+            // ads
+            JsonNode ads = es.path("ads"
+            if (ads.isArray()) {
+                for (JsonNode p : ads) {
+                    providers.add(new Provider(
+                            p.path("provider_id").asInt(),
+                            p.path("provider_name").asText(""),
+                            p.path("logo_path").asText(""),
+                            getProviderLink(p.path("provider_id").asInt())
                     )
                 }
             }
@@ -903,6 +933,27 @@ public class TmdbService {
             return (title != null && !title.isBlank()) ? title : null;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+
+    // Método genérico para añadir proveedores de cualquier categoría (flatrate, buy, rent, free, ads)
+    private void addProviders(List<Provider> list, JsonNode array, Set<Integer> seen){
+        if (array != null && array.isArray()) {
+            for (JsonNode p : array) {
+
+                int providerId = p.path("provider_id").asInt(
+                if (seen.contains(providerId)) continue;
+
+                seen.add(providerId
+
+                list.add(new Provider(
+                        providerId,
+                        p.path("provider_name").asText(""),
+                        p.path("logo_path").asText(""),
+                        getProviderLink(providerId)
+                )
+            }
         }
     }
 }

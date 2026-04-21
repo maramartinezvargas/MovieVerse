@@ -1,7 +1,5 @@
 package com.mara.tfgcine.model.media;
 
-import jakarta.persistence.Table;
-
 import java.util.List;
 
 public class TvSeries extends Media {
@@ -10,14 +8,19 @@ public class TvSeries extends Media {
     private int seasonNumber;
     private int numberOfSeasons;
     private int numberOfEpisodes;
+
     private String overview;
     private String backdropPath;
     private String trailerKey;
+
     private List<String> productionCompanies;
     private List<String> productionCountries;
     private String originalLanguage;
+    private String status;
+    private Integer episodeRuntime;
 
-    // Getters y setters
+    // GETTERS & SETTERS
+
     public String getBackdropPath() {
         return backdropPath;
     }
@@ -84,7 +87,6 @@ public class TvSeries extends Media {
         this.originalLanguage = originalLanguage;
     }
 
-
     public void setNumberOfSeasons(int numberOfSeasons) {
         this.numberOfSeasons = numberOfSeasons;
     }
@@ -99,5 +101,21 @@ public class TvSeries extends Media {
 
     public int getNumberOfEpisodes() {
         return numberOfEpisodes;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getEpisodeRuntime() {
+        return episodeRuntime;
+    }
+
+    public void setEpisodeRuntime(Integer episodeRuntime) {
+        this.episodeRuntime = episodeRuntime;
     }
 }
