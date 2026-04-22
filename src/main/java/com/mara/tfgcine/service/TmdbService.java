@@ -865,29 +865,42 @@ public class TmdbService {
     private String getTrailerKey(int id, boolean isMovie) {
 
         try {
-
             String jsonStr = isMovie
                     ? tmdbClient.getMovieVideos(id)
                     : tmdbClient.getTvVideos(id
 
-            JsonNode json = mapper.readTree(jsonStr
-            JsonNode results = json.path("results"
+            JsonNode results = mapper.readTree(jsonStr).path("results"
 
-            // 1. Buscar trailer
+            JsonNode fallback = null;
+
             for (JsonNode video : results) {
-                if ("Trailer".equalsIgnoreCase(video.path("type").asText()) &&
-                        "YouTube".equalsIgnoreCase(video.path("site").asText())) {
 
+                String type = video.path("type").asText(
+                String site = video.path("site").asText(
+                String name = video.path("name").asText().toLowerCase(
+                String lang = video.path("iso_639_1").asText(
+
+                if (!lang.equals("es") && !lang.equals("en")) continue;
+
+                if (!"YouTube".equalsIgnoreCase(site)) continue;
+
+                // ✅ PRIORIDAD 1 → Trailer real
+                if ("Trailer".equalsIgnoreCase(type)) {
                     return video.path("key").asText(
+                }
+
+                // 🟡 PRIORIDAD 2 → algo que tenga pinta de trailer
+                if (fallback == null && name.contains("trailer")) {
+                    fallback = video;
                 }
             }
 
-            // 2. Fallback a video oficial de YouTube (aunque no sea trailer)
-            for (JsonNode video : results) {
-                if ("YouTube".equalsIgnoreCase(video.path("site").asText())) {
-                    return video.path("key").asText(
-                }
+            // fallback inteligente
+            if (fallback != null) {
+                return fallback.path("key").asText(
             }
+
+
 
         } catch (Exception e) {
             return null;
