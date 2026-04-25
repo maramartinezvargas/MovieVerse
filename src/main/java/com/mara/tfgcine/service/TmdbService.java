@@ -81,8 +81,45 @@ public class TmdbService {
                     String title = normalize(item.getTitle()
                     return Arrays.stream(words).anyMatch(title::contains
                 })
+                .sorted((a, b) -> {
+                    String ta = normalize(a.getTitle()
+                    String tb = normalize(b.getTitle()
+
+                    return Integer.compare(
+                            score(tb, words, normalizedQuery),
+                            score(ta, words, normalizedQuery)
+                    
+                })
                 .limit(50)
                 .toList(
+    }
+
+    private int score(String title, String[] words, String fullQuery) {
+        int score = 0;
+
+        // MATCH EXACTO
+        if (title.equals(fullQuery)) {
+            return 1000;
+        }
+
+        // CONTIENE FRASE COMPLETA
+        if (title.contains(fullQuery)) {
+            score += 200;
+        }
+
+        // empieza por la query
+        if (title.startsWith(fullQuery)) {
+            score += 150;
+        }
+
+        // palabras sueltas
+        for (String word : words) {
+            if (title.contains(word)) {
+                score += 20;
+            }
+        }
+
+        return score;
     }
 
     /* Peliculas ---------------------------------------------------------------------------- */
