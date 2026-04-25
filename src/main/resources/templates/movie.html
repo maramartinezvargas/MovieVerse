@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/head :: head(${movie.title})"></head>
 
@@ -225,11 +225,19 @@
 
             <div class="reviews-header">
                 <h2 class="section-title">Reseñas</h2>
-                <button class="btn-pill btn-trailer btn-review"
+
+                <button sec:authorize="isAuthenticated()"
+                        class="btn-pill btn-trailer btn-review"
                         data-bs-toggle="modal"
                         data-bs-target="#reviewModal">
                     <i class="bi bi-pencil-fill"></i>
                     Escribir reseña
+                </button>
+
+                <button sec:authorize="!isAuthenticated()"
+                        class="btn-pill btn-review"
+                        onclick="window.location.href='/login'">
+                    Inicia sesión para reseñar
                 </button>
             </div>
 
@@ -422,66 +430,67 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
-                <form th:action="@{/reviews}" method="post">
+                <div sec:authorize="isAuthenticated()">
+                    <form th:action="@{/reviews}" method="post">
 
-                    <div class="modal-body">
+                        <div class="modal-body">
 
-                        <input type="hidden" name="mediaId" th:value="${movie.id}" />
-                        <input type="hidden" name="mediaType" value="movie">
-                        <!-- RATING -->
-                        <div class="review-field">
-                            <label>¿Qué nota le das?</label>
+                            <input type="hidden" name="mediaId" th:value="${movie.id}" />
+                            <input type="hidden" name="mediaType" value="movie">
+                            <!-- RATING -->
+                            <div class="review-field">
+                                <label>¿Qué nota le das?</label>
 
-                            <div class="star-rating">
+                                <div class="star-rating">
 
-                                <input type="hidden" name="rating" class="rating-input" required>
+                                    <input type="hidden" name="rating" class="rating-input" required>
 
-                                <i class="bi bi-star star" data-value="1"></i>
-                                <i class="bi bi-star star" data-value="2"></i>
-                                <i class="bi bi-star star" data-value="3"></i>
-                                <i class="bi bi-star star" data-value="4"></i>
-                                <i class="bi bi-star star" data-value="5"></i>
-                                <i class="bi bi-star star" data-value="6"></i>
-                                <i class="bi bi-star star" data-value="7"></i>
-                                <i class="bi bi-star star" data-value="8"></i>
-                                <i class="bi bi-star star" data-value="9"></i>
-                                <i class="bi bi-star star" data-value="10"></i>
-                                <span class="rating-value">0/10</span>
+                                    <i class="bi bi-star star" data-value="1"></i>
+                                    <i class="bi bi-star star" data-value="2"></i>
+                                    <i class="bi bi-star star" data-value="3"></i>
+                                    <i class="bi bi-star star" data-value="4"></i>
+                                    <i class="bi bi-star star" data-value="5"></i>
+                                    <i class="bi bi-star star" data-value="6"></i>
+                                    <i class="bi bi-star star" data-value="7"></i>
+                                    <i class="bi bi-star star" data-value="8"></i>
+                                    <i class="bi bi-star star" data-value="9"></i>
+                                    <i class="bi bi-star star" data-value="10"></i>
+                                    <span class="rating-value">0/10</span>
+                                </div>
+
+                            </div>
+
+                            <!-- COMMENT -->
+                            <div class="review-field">
+                                <label>Tu opinión</label>
+
+                                <textarea name="comment"
+                                          class="form-control custom-textarea"
+                                          rows="4"
+                                          placeholder="Comparte tu opinión sobre la película..."
+                                          required></textarea>
                             </div>
 
                         </div>
 
-                        <!-- COMMENT -->
-                        <div class="review-field">
-                            <label>Tu opinión</label>
+                        <!-- FOOTER -->
+                        <div class="modal-footer">
 
-                            <textarea name="comment"
-                                      class="form-control custom-textarea"
-                                      rows="4"
-                                      placeholder="Comparte tu opinión sobre la película..."
-                                      required></textarea>
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal">
+                                Cancelar
+                            </button>
+
+                            <button type="submit"
+                                    class="btn btn-trailer btn-review">
+                                Publicar
+                            </button>
+
                         </div>
 
-                    </div>
-
-                    <!-- FOOTER -->
-                    <div class="modal-footer">
-
-                        <button type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal">
-                            Cancelar
-                        </button>
-
-                        <button type="submit"
-                                class="btn btn-trailer btn-review">
-                            Publicar
-                        </button>
-
-                    </div>
-
-                </form>
-
+                    </form>
+                </div>
             </div>
         </div>
     </div>
