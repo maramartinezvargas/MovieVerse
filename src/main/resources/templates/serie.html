@@ -383,7 +383,9 @@
 
                     <h3 th:text="${related.title}"></h3>
 
-                    <p th:text="${#strings.listJoin(related.genres, ' · ')}"></p>
+                    <p class="card-genres"
+                       th:text="${#strings.listJoin(related.genres, ' · ')}">
+                    </p>
                 </div>
             </a>
 

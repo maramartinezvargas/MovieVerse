@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthController {
@@ -27,8 +28,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerSubmit(@ModelAttribute User user) {
-        userService.register(user
-        return "redirect:/login";
+    public String register(@ModelAttribute User user,
+                           @RequestParam String confirmPassword,
+                           Model model) {
+
+        if (!user.getPassword().equals(confirmPassword)) {
+            model.addAttribute("error", "Las contraseñas no coinciden"
+            return "register";
+        }
+
+        try {
+            userService.register(user
+            return "redirect:/login";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage()
+            return "register";
+        }
     }
 }

@@ -79,9 +79,9 @@ public class TmdbService {
                 .filter(item -> {
                     if (item.getTitle() == null) return false;
                     String title = normalize(item.getTitle()
-                    return Arrays.stream(words).allMatch(title::contains
+                    return Arrays.stream(words).anyMatch(title::contains
                 })
-                .limit(10)
+                .limit(50)
                 .toList(
     }
 
@@ -951,13 +951,15 @@ public class TmdbService {
         }
     }
 
-    // Quitar tildes para mejorar los resultados de búsqueda
+    // Quitar tildes, carácteres especiales y normalizar a minúsculas para mejorar la búsqueda (ej: "Amélie" → "amelie")
     private String normalize(String text) {
         if (text == null) return "";
+
+        text = text.toLowerCase( // normalizar a minúsculas
+
         return Normalizer.normalize(text, Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "")
-                .replaceAll("[^a-z0-9\\s]", "")
-                .toLowerCase()
+                .replaceAll("\\p{M}", "") // quitar tildes
+                .replaceAll("[^a-z0-9\\s]", "") // quitar caracteres especiales (dejando solo letras, números y espacios)
                 .trim(
     }
 

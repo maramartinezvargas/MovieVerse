@@ -114,6 +114,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ==================================================
+         Login      */
+
+    const password = document.getElementById("password"
+    const confirmPassword = document.getElementById("confirmPassword"
+
+    if (password && confirmPassword) {
+
+        function validatePassword() {
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity("Las contraseñas no coinciden"
+            } else {
+                confirmPassword.setCustomValidity(""
+            }
+        }
+
+        password.addEventListener("input", validatePassword
+
+        confirmPassword.addEventListener("input", () => {
+            validatePassword(
+            confirmPassword.reportValidity(
+        }
+
+        confirmPassword.addEventListener("blur", validatePassword
+    }
+
+    /* ==================================================
        TRAILER MODAL */
 
     const modalEl = document.getElementById("trailerModal"
@@ -299,3 +325,5 @@ function updateReadMoreButtons() {
         }
     }
 }
+
+

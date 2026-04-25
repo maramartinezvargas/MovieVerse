@@ -19,9 +19,16 @@ public class UserService {
     }
 
     public void register(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword())
 
-        // Parámetros por defecto: Usuario estándar y activo
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("Nombre de usuario \"" + user.getUsername() + "\" ya existe"
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("La cuenta de correo \"" + user.getEmail() + "\" ya existe"
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword())
         user.setRole(Role.STANDARD
         user.setStatus(AccountStatus.ACTIVE
 
