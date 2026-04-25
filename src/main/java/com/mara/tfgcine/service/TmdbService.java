@@ -13,6 +13,7 @@ import com.mara.tfgcine.model.review.TmdbReview;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -71,13 +72,13 @@ public class TmdbService {
             }
         }
 
-        String normalizedQuery = query.toLowerCase().trim(
+        String normalizedQuery = normalize(query
         String[] words = normalizedQuery.split("\\s+"
 
         return list.stream()
                 .filter(item -> {
                     if (item.getTitle() == null) return false;
-                    String title = item.getTitle().toLowerCase(
+                    String title = normalize(item.getTitle()
                     return Arrays.stream(words).allMatch(title::contains
                 })
                 .limit(10)
@@ -948,6 +949,16 @@ public class TmdbService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    // Quitar tildes para mejorar los resultados de búsqueda
+    private String normalize(String text) {
+        if (text == null) return "";
+        return Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .replaceAll("[^a-z0-9\\s]", "")
+                .toLowerCase()
+                .trim(
     }
 
 
