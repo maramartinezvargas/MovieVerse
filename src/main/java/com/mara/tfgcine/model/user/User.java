@@ -23,11 +23,11 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private AccountStatus status;
 
     // Relación con reviews
@@ -36,43 +36,57 @@ public class User {
 
     public User() {}
 
+    // GETTERS & SETTERS
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Role getRole() {
         return role;
-    }
-
-    public AccountStatus getStatus() {
-        return status;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
     }
 
     public void setRole(Role role) {
         this.role = role;
     }
 
+    public AccountStatus getStatus() {
+        return status;
+    }
+
     public void setStatus(AccountStatus status) {
         this.status = status;
     }
 
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+    public List<Review> getReviews() {
+        return reviews;
     }
 }

@@ -4,21 +4,28 @@ import com.mara.tfgcine.model.user.AccountStatus;
 import com.mara.tfgcine.model.user.Role;
 import com.mara.tfgcine.model.user.User;
 import com.mara.tfgcine.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(User user) {
+    public void register(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())
+
+        // Parámetros por defecto: Usuario estándar y activo
         user.setRole(Role.STANDARD
         user.setStatus(AccountStatus.ACTIVE
-        return userRepository.save(user
+
+        userRepository.save(user
     }
 
     public User findByUsername(String username) {
@@ -42,5 +49,7 @@ public class UserService {
 
         return user;
     }
+
+
 
 }

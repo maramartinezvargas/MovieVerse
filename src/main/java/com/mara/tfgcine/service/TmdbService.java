@@ -885,12 +885,12 @@ public class TmdbService {
 
                 if (!"YouTube".equalsIgnoreCase(site)) continue;
 
-                // ✅ PRIORIDAD 1 → Trailer real
+                // PRIORIDAD 1 → Trailer real
                 if ("Trailer".equalsIgnoreCase(type)) {
                     return video.path("key").asText(
                 }
 
-                // 🟡 PRIORIDAD 2 → algo que tenga pinta de trailer
+                // PRIORIDAD 2 → algo que tenga pinta de trailer
                 if (fallback == null && name.contains("trailer")) {
                     fallback = video;
                 }

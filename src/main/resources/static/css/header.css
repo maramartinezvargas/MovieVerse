@@ -285,3 +285,158 @@
 .search-item[data-type="tv"] .search-type {
     color: #caacff;
 }
+
+/*  login user  ---------------------------------------------- */
+
+.user-menu {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* BOTÓN LOGIN */
+.btn-user {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 14px;
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.06
+    border: 1px solid rgba(255, 255, 255, 0.15
+
+    color: #f0dfc8;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.btn-user:hover {
+    background: rgba(255, 189, 89, 0.15
+    border-color: rgba(255, 189, 89, 0.4
+    color: #ffbd59;
+    transform: translateY(-1px
+}
+
+/* USER NAME (LOGUEADO) */
+.user-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 4px 8px;
+    border-radius: 8px;
+
+    color: #ffbd59;
+    font-weight: 500;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Hover elegante */
+.user-name:hover {
+    background: rgba(255, 189, 89, 0.12
+    box-shadow: 0 0 0 1px rgba(255, 189, 89, 0.25
+    transform: translateY(-1px
+}
+
+/* Chevron más sutil */
+.user-name i:last-child {
+    font-size: 0.7rem;
+    opacity: 0.7;
+}
+
+/* DROPDOWN */
+.dropdown-content {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 6px;
+
+    background: rgba(20, 20, 20, 0.95
+    backdrop-filter: blur(10px
+
+    border: 1px solid rgba(255,255,255,0.08
+    border-radius: 12px;
+
+    padding: 8px;
+    min-width: 160px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(5px
+    transition: all 0.2s ease;
+}
+
+.user-dropdown:hover .dropdown-content,
+.dropdown-content:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0
+}
+
+/* LOGOUT */
+.btn-logout {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    width: 100%;
+    padding: 8px 10px;
+
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+
+    color: #f0dfc8;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 189, 89, 0.12
+    color: #ffbd59;
+}
+
+/* Iconos dentro del botón login */
+.btn-user i {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    color: #ffc76b;
+}
+
+
+/* Alineación fina con el resto del nav */
+.main-nav a,
+.user-name {
+    display: flex;
+    align-items: center;
+}
+
+/* Login en movil */
+@media (max-width: 900px) {
+
+    .search-container {
+        order: 1;
+    }
+
+    .btn-user,
+    .user-dropdown {
+        order: 2;
+    }
+
+    .main-nav a:not(.btn-user) {
+        order: 3;
+    }
+}

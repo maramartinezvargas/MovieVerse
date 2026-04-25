@@ -1,11 +1,12 @@
-<header class="main-header" th:fragment="header">
+<header class="main-header" th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
 
     <div class="container header-container">
-    <a href="/" class="logo">
-            <img src="/img/mverse-logo.png" alt="MovieVerse">
+        <a href="/" class="logo">
+            <img th:src="@{/img/mverse-logo.png}" alt="MovieVerse">
         </a>
 
         <nav class="main-nav" id="main-nav">
+
             <div class="search-container">
                 <div class="search-box">
                     <i class="bi bi-search"></i>
@@ -14,10 +15,34 @@
 
                 <div id="search-results" class="search-results hidden"></div>
             </div>
+
             <a href="/peliculas">Películas</a>
             <a href="/series">Series</a>
             <a href="/tendencias">Tendencias</a>
             <a href="/estrenos">Próximos estrenos</a>
+
+            <!-- NO logueado -->
+            <a sec:authorize="!isAuthenticated()" href="/login" class="btn-user">
+                <i class="bi bi-person"></i> Login
+            </a>
+
+            <!-- Logueado -->
+            <div sec:authorize="isAuthenticated()" class="user-dropdown">
+                <span class="user-name">
+                    <i class="bi bi-person-circle"></i>
+                    <span sec:authentication="name"></span>
+                    <i class="bi bi-chevron-down"></i>
+                </span>
+
+                <div class="dropdown-content">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn-logout">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+
         </nav>
 
         <button class="burger" id="burger-btn" aria-label="Abrir menú">
