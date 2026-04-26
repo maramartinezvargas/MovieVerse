@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+<div th:fragment="reviewModal(mediaId, mediaType)"
+     th:id="'reviewModal-' + ${mediaId}"
+     class="modal fade review-modal"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-pencil-fill"></i>
+                    Escribir reseña
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- USUARIO LOGUEADO -->
+            <div sec:authorize="isAuthenticated()">
+
+                <form th:action="@{/reviews}" method="post">
+
+                    <input type="hidden" name="mediaId" th:value="${mediaId}" />
+                    <input type="hidden" name="mediaType" th:value="${mediaType}" />
+
+                    <div class="modal-body">
+
+                        <!-- RATING -->
+                        <div class="review-field">
+                            <label>¿Qué nota le das?</label>
+
+                            <div class="star-rating">
+                                <input type="hidden" name="rating" class="rating-input" required>
+
+                                <i class="bi bi-star star" data-value="1"></i>
+                                <i class="bi bi-star star" data-value="2"></i>
+                                <i class="bi bi-star star" data-value="3"></i>
+                                <i class="bi bi-star star" data-value="4"></i>
+                                <i class="bi bi-star star" data-value="5"></i>
+                                <i class="bi bi-star star" data-value="6"></i>
+                                <i class="bi bi-star star" data-value="7"></i>
+                                <i class="bi bi-star star" data-value="8"></i>
+                                <i class="bi bi-star star" data-value="9"></i>
+                                <i class="bi bi-star star" data-value="10"></i>
+
+                                <span class="rating-value">0/10</span>
+                            </div>
+                        </div>
+
+                        <!-- COMMENT -->
+                        <div class="review-field">
+                            <label>Tu opinión</label>
+
+                            <textarea name="comment"
+                                      class="form-control custom-textarea"
+                                      rows="4"
+                                      placeholder="Comparte tu opinión..."
+                                      required></textarea>
+                        </div>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-trailer btn-review">
+                            Publicar
+                        </button>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- USUARIO NO LOGUEADO -->
+            <div sec:authorize="!isAuthenticated()"
+                 class="modal-body text-center">
+
+                <p>Inicia sesión para poder escribir una reseña.</p>
+
+                <a th:href="@{/login(redirect=${currentUrl})}"
+                   class="btn-pill btn-trailer btn-review">
+                    <i class="bi bi-person"></i> Iniciar sesión
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

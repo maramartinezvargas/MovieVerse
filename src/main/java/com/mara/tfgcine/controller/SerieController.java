@@ -8,6 +8,7 @@ import com.mara.tfgcine.service.TmdbService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class SerieController {
     }
 
     @GetMapping("/series/{id}")
-    public String serieDetails(@PathVariable int id, Model model) throws Exception {
+    public String serieDetails(@PathVariable int id, Model model, HttpServletRequest request) throws Exception {
 
         // Serie principal
         TvSeries series = tmdbService.getSerieDetails(id
@@ -66,6 +67,7 @@ public class SerieController {
         model.addAttribute("localReviewCount", localReviewCount
         model.addAttribute("avgRating", avgRating
         model.addAttribute("reviewCount", reviews.size()
+        model.addAttribute("currentUrl", request.getRequestURI()
 
         return "serie";
     }

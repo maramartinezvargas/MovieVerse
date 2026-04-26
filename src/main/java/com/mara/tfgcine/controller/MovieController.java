@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class MovieController {
 
     // Detalles película
     @GetMapping("/peliculas/{id}")
-    public String movieDetails(@PathVariable int id, Model model) throws Exception {
+    public String movieDetails(@PathVariable int id, Model model, HttpServletRequest request) throws Exception {
 
         Movie movie = tmdbService.getMovieDetails(id
         model.addAttribute("movie", movie
@@ -64,12 +65,9 @@ public class MovieController {
                 .count(
 
         model.addAttribute("localReviewCount", localReviewCount
-
         model.addAttribute("avgRating", avgRating
         model.addAttribute("reviewCount", reviews.size()
-
-
-
+        model.addAttribute("currentUrl", request.getRequestURI()
         return "movie";
     }
 

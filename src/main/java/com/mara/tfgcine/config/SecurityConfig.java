@@ -24,6 +24,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
+                        // Rutas públicas (acceso sin autenticación)
                         .requestMatchers(
                                 "/",
                                 "/login",
@@ -36,12 +37,31 @@ public class SecurityConfig {
                                 "/peliculas/**",
                                 "/series/**"
                         ).permitAll()
+
+                        // Rutas protegidas (solo para usuarios autenticados)
+                        .requestMatchers("/reviews/**").authenticated()
+
+                        // Cualquier otra ruta requiere autenticación
                         .anyRequest().authenticated()
                 )
 
                 .formLogin(form -> form
+                        // Personalizar la página de login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+
+                        // Personalizar el comportamiento después del login exitoso
+                        .successHandler((request, response, authentication) -> {
+
+                            String redirect = request.getParameter("redirect"
+
+                            if (redirect != null && !redirect.isEmpty() && redirect.startsWith("/")) {
+                                response.sendRedirect(redirect
+                            } else {
+                                response.sendRedirect("/"
+                            }
+
+                        })
+
                         .permitAll()
                 )
 
