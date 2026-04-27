@@ -283,7 +283,7 @@ public class TmdbClient {
     public String getTvCredits(int tvId) {
 
         String url = baseUrl +
-                "/tv/" + tvId + "/credits" +
+                "/tv/" + tvId + "/aggregate_credits" +
                 "?api_key=" + apiKey;
 
         return restTemplate.getForObject(url, String.class

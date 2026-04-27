@@ -9,12 +9,10 @@ import com.mara.tfgcine.model.media.Media;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.model.media.TvSeries;
-import com.mara.tfgcine.model.review.TmdbReview;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -556,7 +554,7 @@ public class TmdbService {
     }
 
     /* Cast ---------------------------------------------------------------------------- */
-    public List<CastMember> getCast(int movieId) {
+    public List<CastMember> getMovieCast(int movieId) {
 
         try {
             String json = tmdbClient.getMovieCredits(movieId
@@ -566,7 +564,7 @@ public class TmdbService {
 
             List<CastMember> castList = new ArrayList<>(
 
-            int limit = Math.min(castArray.size(), 15
+            int limit = Math.min(castArray.size(), 25
 
             for (int i = 0; i < limit; i++) {
 
@@ -707,14 +705,18 @@ public class TmdbService {
 
             List<CastMember> castList = new ArrayList<>(
 
-            int limit = Math.min(castArray.size(), 15
+            int limit = Math.min(castArray.size(), 25
 
             for (int i = 0; i < limit; i++) {
 
                 JsonNode actor = castArray.get(i
-
                 String name = actor.path("name").asText(
-                String character = actor.path("character").asText(
+                JsonNode roles = actor.path("roles"
+
+                String character = "";
+                if (roles.isArray() && roles.size() > 0) {
+                    character = roles.get(0).path("character").asText(
+                }
 
                 String profilePath = actor.path("profile_path").asText(null
 

@@ -35,7 +35,7 @@ public class MovieController {
         model.addAttribute("movie", movie
 
         model.addAttribute("relatedMovies", tmdbService.getRelatedMovies(id)
-        model.addAttribute("cast", tmdbService.getCast(id)
+        model.addAttribute("cast", tmdbService.getMovieCast(id)
 
         List<Provider> providers = tmdbService.getProvidersForMovie(id
         model.addAttribute("providers", providers
