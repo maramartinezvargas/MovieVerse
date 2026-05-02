@@ -18,10 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const button = document.getElementById('load-more-btn'
     const grid = document.getElementById('series-grid'
 
-    const yearSelect = document.getElementById('filter-year'
-    const genreSelect = document.getElementById('filter-genre'
-    const sortSelect = document.getElementById('filter-sort'
-
     const ratingInput = document.getElementById('filter-rating'
     const votesInput = document.getElementById('filter-votes'
 
@@ -34,6 +30,72 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!button || !grid) return;
 
     const loadedIds = new Set(
+
+    /* ================= DROPDOWN GENÉRICO ================= */
+
+    function initDropdown({ target, onChange }) {
+
+        const selected = document.getElementById(`${target}-selected`
+        const options = document.getElementById(`${target}-options`
+
+        if (!selected || !options) return;
+
+        selected.addEventListener("click", () => {
+            options.classList.toggle("hidden"
+        }
+
+        options.querySelectorAll(".dropdown-option").forEach(option => {
+            option.addEventListener("click", () => {
+
+                // actualizar texto (más robusto)
+                const icon = selected.querySelector("i"
+                selected.innerHTML = `${option.textContent} `;
+                if (icon) selected.appendChild(icon
+
+                // active state
+                options.querySelectorAll(".dropdown-option")
+                    .forEach(o => o.classList.remove("active")
+
+                option.classList.add("active"
+
+                options.classList.add("hidden"
+
+                onChange(option.dataset.value
+            }
+        }
+
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(`[data-target="${target}"]`)) {
+                options.classList.add("hidden"
+            }
+        }
+    }
+
+    /* ================= INIT DROPDOWNS ================= */
+
+    initDropdown({
+        target: "genre",
+        onChange: (value) => {
+            currentGenre = value;
+            resetAndLoad(
+        }
+    }
+
+    initDropdown({
+        target: "year",
+        onChange: (value) => {
+            currentYear = value;
+            resetAndLoad(
+        }
+    }
+
+    initDropdown({
+        target: "sort",
+        onChange: (value) => {
+            currentSort = value || DEFAULTS.sort;
+            resetAndLoad(
+        }
+    }
 
     /* ================= TOGGLE FILTROS ================= */
 
@@ -83,28 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (votesValue) votesValue.textContent = DEFAULTS.votes;
     }
 
-    /* ================= FILTROS ================= */
-
-    if (yearSelect) {
-        yearSelect.addEventListener('change', () => {
-            currentYear = yearSelect.value;
-            resetAndLoad(
-        }
-    }
-
-    if (genreSelect) {
-        genreSelect.addEventListener('change', () => {
-            currentGenre = genreSelect.value;
-            resetAndLoad(
-        }
-    }
-
-    if (sortSelect) {
-        sortSelect.addEventListener('change', () => {
-            currentSort = sortSelect.value;
-            resetAndLoad(
-        }
-    }
+    /* ================= SLIDERS ================= */
 
     if (ratingInput) {
         ratingInput.addEventListener('input', () => {
@@ -132,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentYear) url += `&year=${currentYear}`;
         if (currentGenre) url += `&genre=${currentGenre}`;
         if (currentSort) url += `&sort=${currentSort}`;
-
         if (minRating > 0) url += `&minRating=${minRating}`;
         if (minVotes > 0) url += `&minVotes=${minVotes}`;
 
@@ -148,6 +188,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         closeFilters(
         loadSeries(
+    }
+
+    if (resetButton) {
+        resetButton.addEventListener('click', () => {
+
+            currentPage = 1;
+            currentYear = '';
+            currentGenre = '';
+            currentSort = DEFAULTS.sort;
+            minRating = DEFAULTS.rating;
+            minVotes = DEFAULTS.votes;
+
+            grid.innerHTML = '';
+            loadedIds.clear(
+
+            closeFilters(
+            loadSeries(
+        }
     }
 
     /* ================= LOAD ================= */
@@ -207,40 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', async () => {
         currentPage++;
         await loadSeries(
-    }
-
-    /* ================= RESET BUTTON ================= */
-
-    if (resetButton) {
-        resetButton.addEventListener('click', () => {
-
-            currentPage = 1;
-            currentYear = '';
-            currentGenre = '';
-            currentSort = DEFAULTS.sort;
-            minRating = DEFAULTS.rating;
-            minVotes = DEFAULTS.votes;
-
-            if (yearSelect) yearSelect.value = '';
-            if (genreSelect) genreSelect.value = '';
-            if (sortSelect) sortSelect.value = DEFAULTS.sort;
-
-            if (ratingInput) {
-                ratingInput.value = DEFAULTS.rating;
-                if (ratingValue) ratingValue.textContent = DEFAULTS.rating;
-            }
-
-            if (votesInput) {
-                votesInput.value = DEFAULTS.votes;
-                if (votesValue) votesValue.textContent = DEFAULTS.votes;
-            }
-
-            grid.innerHTML = '';
-            loadedIds.clear(
-
-            closeFilters(
-            loadSeries(
-        }
     }
 
 }

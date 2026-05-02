@@ -240,9 +240,9 @@
 
 .filter-select label {
     font-size: 0.7rem;
-    opacity: 0.6;
-    color: #ffbd59;
+    color: #ffc76b;
     letter-spacing: 0.3px;
+    margin-left: 0.5rem;
 }
 
 .filters-bar select {
@@ -292,6 +292,11 @@
     color: #f0dfc8;
 }
 
+.filter-select label:empty {
+    visibility: hidden;
+}
+
+
 /* ================= SELECT CUSTOM LOOK ================= */
 
 .filters-bar select {
@@ -311,10 +316,7 @@
 
     transition: all 0.2s ease;
 
-    /* flecha custom */
-    background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffbd59' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>"
-    background-repeat: no-repeat;
-    background-position: right 8px center;
+
 }
 
 /* hover */
@@ -333,6 +335,89 @@
 .filters-bar select option {
     background: #1a1a1a;
     color: #f0dfc8;
+}
+
+/* PRUEBA PERSONALIZADA FILTRO GENERO */
+/* ================= CUSTOM DROPDOWN ================= */
+
+.custom-dropdown {
+    position: relative;
+    min-width: 140px;
+}
+
+/* botón */
+.dropdown-selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: rgba(255,255,255,0.08
+    border: 1px solid rgba(255,255,255,0.15
+    border-radius: 999px;
+
+    padding: 0.45rem 0.8rem;
+    font-size: 0.85rem;
+    color: #f0dfc8;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dropdown-selected:hover {
+    background: rgba(255,255,255,0.15
+    border-color: rgba(255,189,89,0.4
+}
+
+/* dropdown */
+.dropdown-options {
+    position: absolute;
+    top: 110%;
+    width: 100%;
+
+    background: #141414;
+    border-radius: 12px;
+
+    max-height: 220px;
+    overflow-y: auto;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6
+    z-index: 100;
+
+    padding: 5px 0;
+}
+
+/* opción */
+.dropdown-option {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    color: #f0dfc8;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.dropdown-option:hover {
+    background: #2a2a2a;
+}
+
+/* seleccionada */
+.dropdown-option.active {
+    background: rgba(255,189,89,0.15
+    color: #ffbd59;
+}
+
+/* scroll bonito */
+.dropdown-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3
+    border-radius: 10px;
+}
+
+/* hidden */
+.hidden {
+    display: none;
 }
 
 /* ================= RESPONSIVE ================= */

@@ -25,42 +25,61 @@
                 <!-- fila 1 -->
                 <div class="filters-row">
 
-                    <div class="filter-select">
-                        <label for="filter-year">Año</label>
-                        <select id="filter-year">
-                            <option value="">Todos</option>
-                            <option th:each="year : ${years}"
-                                    th:value="${year}"
-                                    th:text="${year}">
-                            </option>
-                        </select>
+                    <div class="filter-select custom-dropdown" data-target="year">
+                        <label>Año</label>
+
+                        <div class="dropdown-selected" id="year-selected">
+                            Todos
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+
+                        <div class="dropdown-options hidden" id="year-options">
+                            <div class="dropdown-option" data-value="">Todos</div>
+
+                            <div class="dropdown-option"
+                                 th:each="year : ${years}"
+                                 th:attr="data-value=${year}"
+                                 th:text="${year}">
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="filter-select">
-                        <label for="filter-genre">Género</label>
-                        <select id="filter-genre">
-                            <option value="">Todos</option>
-                            <option th:each="entry : ${genres}"
-                                    th:value="${entry.key}"
-                                    th:text="${entry.value}">
-                            </option>
-                        </select>
+                    <div class="filter-select custom-dropdown" data-target="genre">
+                        <label>Género</label>
+
+                        <div class="dropdown-selected" id="genre-selected">
+                            Todos
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+
+                        <div class="dropdown-options hidden" id="genre-options">
+                            <div class="dropdown-option" data-value="">Todos</div>
+
+                            <div class="dropdown-option"
+                                 th:each="entry : ${genres}"
+                                 th:attr="data-value=${entry.key}"
+                                 th:text="${entry.value}">
+                            </div>
+                        </div>
                     </div>
 
                 </div>
 
                 <!-- fila 2 -->
-                <div class="filters-row">
-                    <div class="filter-select">
-                        <label for="filter-sort">Ordenar por</label>
-                        <select id="filter-sort">
-                            <option value="">Predeterminado</option>
-                            <option value="popularity.desc">Popularidad actual</option>
-                            <option value="vote_average.desc">Mejor valoradas</option>
-                            <option value="vote_count.desc">Más votadas</option>
-                            <option value="first_air_date.desc">Más recientes</option>
-                            <option value="first_air_date.asc">Más antiguas</option>
-                        </select>
+                <div class="filter-select custom-dropdown" data-target="sort">
+                    <label>Ordenar por</label>
+
+                    <div class="dropdown-selected" id="sort-selected">
+                        Popularidad
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+
+                    <div class="dropdown-options hidden" id="sort-options">
+                        <div class="dropdown-option" data-value="popularity.desc">Popularidad</div>
+                        <div class="dropdown-option" data-value="vote_average.desc">Mejor valoradas</div>
+                        <div class="dropdown-option" data-value="vote_count.desc">Más votadas</div>
+                        <div class="dropdown-option" data-value="first_air_date.desc">Más recientes</div>
+                        <div class="dropdown-option" data-value="first_air_date.asc">Más antiguas</div>
                     </div>
                 </div>
 
@@ -88,10 +107,14 @@
 
                 <!-- reset -->
                 <div class="filters-row">
-                    <button id="reset-filters" class="btn-pill-ui">
-                        <i class="bi bi-arrow-counterclockwise"></i>
-                        Resetear
-                    </button>
+                    <div class="filter-select">
+                        <label style="visibility: hidden;">Reset</label>
+
+                        <button id="reset-filters" class="btn-pill-ui">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                            Resetear filtros
+                        </button>
+                    </div>
                 </div>
 
             </div>
