@@ -1,4 +1,4 @@
-.movie-hero {
+.media-hero {
     min-height: 60vh;
 
     background-image:
@@ -10,7 +10,7 @@
             rgba(19,19,19,1),
             rgba(19,19,19,0)
             ),
-            var(--movie-bg
+            var(--media-bg
 
     background-position: 60% 10%;
     background-size: 110%;
@@ -21,7 +21,7 @@
 
 /* LAYOUT */
 
-.movie-layout {
+.media-layout {
     display: flex;
     gap: 60px;
     align-items: center;
@@ -30,7 +30,7 @@
 
 /* POSTER */
 
-.movie-poster {
+.media-poster {
     width: 280px;
     border-radius: 12px;
     box-shadow:
@@ -39,14 +39,15 @@
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.movie-poster:hover {
+.media-poster:hover {
     transform: translateY(-4px) scale(1.01
     box-shadow: 0 20px 45px rgba(0,0,0,0.7
 }
 
+
 /* TITLE */
 
-.movie-hero-title {
+.media-hero-title {
     font-size: clamp(1.6rem, 5vw, 2.4rem
     font-weight: 700;
     margin-bottom: 0.8rem;
@@ -54,7 +55,7 @@
 
 /* META */
 
-.movie-meta {
+.media-meta {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -68,7 +69,7 @@
 
 /* GENRES */
 
-.movie-genres {
+.media-genres {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -77,20 +78,20 @@
 
 /* OVERVIEW */
 
-.movie-overview {
+.media-overview {
    /* max-width: 800px*/;
 }
 
 /* ACTIONS */
 
-.movie-actions {
+.media-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 1.2rem;
 }
 
-.movie-actions .btn-pill {
+.media-actions .btn-pill {
     white-space: nowrap;
 }
 
@@ -100,7 +101,7 @@
 }
 
 /* Proveedores de streaming */
-.movie-providers {
+.media-providers {
     margin-top: 16px;
 }
 
@@ -165,7 +166,7 @@
 }
 
 /* Datos detalle ---------------------------------------------------------------- */
-.movie-details-section {
+.media-details-section {
     padding: 2rem;
     margin-bottom: 40px;
     border-radius: 16px;
@@ -174,7 +175,7 @@
     border: 1px solid rgba(255,255,255,0.05
 }
 
-.movie-details-section .section-title i {
+.media-details-section .section-title i {
     color: #ffc76b;
 }
 
@@ -184,7 +185,7 @@
     margin-bottom: 1.5rem;
 }
 
-.movie-details-grid {
+.media-details-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)
     gap: 1.2rem 2rem;
@@ -906,7 +907,7 @@
 
 @media (max-width: 768px) {
 
-    .movie-hero {
+    .media-hero {
         min-height: 70vh;
 
         background-image:
@@ -914,30 +915,30 @@
                 rgba(19,19,19,0.6),
                 rgba(19,19,19,1)
                 ),
-                var(--movie-bg
+                var(--media-bg
 
         background-size: cover;
         background-position: center top;
     }
 
-    .movie-layout {
+    .media-layout {
         flex-direction: column;
         text-align: center;
         gap: 25px;
     }
 
-    .movie-poster {
+    .media-poster {
         width: 280px;
     }
 
-    .movie-info {
+    .media-info {
        /* max-width: 800px;*/
         margin: 0 auto;
     }
 
     .movie-meta-top,
-    .movie-genres,
-    .movie-actions {
+    .media-genres,
+    .media-actions {
         justify-content: center;
     }
 
@@ -951,11 +952,11 @@
 }
 
 @media (max-width: 480px) {
-    .movie-actions {
+    .media-actions {
         gap: 8px;
     }
 
-    .movie-actions .btn-pill {
+    .media-actions .btn-pill {
         font-size: 0.85rem;
         padding: 6px 10px;
     }

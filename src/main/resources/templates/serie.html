@@ -8,23 +8,23 @@
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 
 <!-- Hero -->
-<section class="movie-hero"
+<section class="media-hero"
          th:if="${series.backdropPath != null}"
-         th:style="|--movie-bg: url('${series.backdropPath}')|">
+         th:style="|--media-bg: url('${series.backdropPath}')|">
 
     <div class="container">
-        <div class="movie-layout">
+        <div class="media-layout">
 
-            <img class="movie-poster"
+            <img class="media-poster"
                  th:src="${series.posterPath}"
                  th:alt="${series.title}">
 
-            <div class="movie-info">
+            <div class="media-info">
 
-                <h1 class="movie-hero-title"
+                <h1 class="media-hero-title"
                     th:text="${series.title}"></h1>
 
-                <div class="movie-meta">
+                <div class="media-meta">
 
                     <!-- Línea 1 -->
                     <div class="movie-meta-top">
@@ -47,7 +47,7 @@
                     </div>
 
                     <!-- Géneros -->
-                    <div class="movie-genres">
+                    <div class="media-genres">
                         <span class="genre"
                               th:each="genre : ${series.genres}"
                               th:text="${genre}">
@@ -56,12 +56,12 @@
 
                 </div>
 
-                <p class="movie-overview"
+                <p class="media-overview"
                    th:text="${series.overview}">
                 </p>
 
                 <!-- Acciones -->
-                <div class="movie-actions">
+                <div class="media-actions">
 
                     <button class="btn-pill btn-action open-trailer"
                             th:if="${series.trailerKey != null}"
@@ -86,7 +86,7 @@
                 </div>
 
                 <!-- Providers -->
-                <div class="movie-providers"
+                <div class="media-providers"
                      th:if="${providers != null and !#lists.isEmpty(providers)}">
 
                     <span class="providers-label">Disponible en:</span>
@@ -113,12 +113,12 @@
 </section>
 
 <!-- Detalles -->
-<section class="movie-details-section">
+<section class="media-details-section">
     <div class="container">
 
         <h2 class="section-title">Información de la serie</h2>
 
-        <div class="movie-details-grid">
+        <div class="media-details-grid">
 
             <div class="detail-item" th:if="${directors != null}">
                 <span class="label"><i class="bi bi-camera-reels"></i> Creador</span>
@@ -209,7 +209,7 @@
     </div>
 </section>
 
-<!-- RESEÑAS (igual que movie, solo cambia movie→series donde toca) -->
+<!-- RESEÑAS -->
 <section class="reviews-section" th:if="${reviews != null}">
     <div class="container">
 
