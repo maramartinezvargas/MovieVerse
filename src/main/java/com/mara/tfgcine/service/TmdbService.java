@@ -63,11 +63,12 @@ public class TmdbService {
             String mediaType = node.path("media_type").asText(
 
             if ("movie".equals(mediaType)) {
-                list.add(createMovieFromNode(node, node.path("id").asInt(), true)
-            }
+                Media m = createMovieFromNode(node, node.path("id").asInt(), true
+                if (hasVisual(m)) list.add(m
 
-            if ("tv".equals(mediaType)) {
-                list.add(createTvFromNode(node, node.path("id").asInt())
+            } else if ("tv".equals(mediaType)) {
+                Media tv = createTvFromNode(node, node.path("id").asInt()
+                if (hasVisual(tv)) list.add(tv
             }
         }
 
@@ -91,6 +92,12 @@ public class TmdbService {
                 })
                 .limit(50)
                 .toList(
+    }
+
+    // Comprobar si tiene poster el titulo para priorizar resultados visuales en el buscador
+    private boolean hasVisual(Media m) {
+        return (m.getPosterPath() != null && !m.getPosterPath().isBlank())
+                || (m.getBackdropPath() != null && !m.getBackdropPath().isBlank()
     }
 
     private int score(String title, String[] words, String fullQuery) {
@@ -498,6 +505,11 @@ public class TmdbService {
         tv.setVoteAverage(node.path("vote_average").asDouble()
         tv.setVoteCount(node.path("vote_count").asInt()
         tv.setGenres(extractGenres(node, false)
+
+        // fallback para series sin poster pero con backdrop, así no salen vacías en el listado
+        if (!node.path("backdrop_path").isNull()) {
+            tv.setBackdropPath(BACKDROP + node.path("backdrop_path").asText()
+        }
 
         return tv;
     }

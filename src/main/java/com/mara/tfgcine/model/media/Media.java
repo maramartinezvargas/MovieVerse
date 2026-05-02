@@ -13,6 +13,7 @@ public abstract class Media {
     private String mediaType;
     private String overview;
     private String releaseDate;
+    protected String backdropPath;
 
     // Getters ----------------------------------------------------------------------------------------
 
@@ -52,6 +53,11 @@ public abstract class Media {
         return releaseDate;
     }
 
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+
     // Setters ------------------------------------------------------------------------------
 
     public void setId(int id) {
@@ -88,6 +94,10 @@ public abstract class Media {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
     // Otros métodos ------------------------------------------------------------------------------

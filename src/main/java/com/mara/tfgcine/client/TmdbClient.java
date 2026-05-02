@@ -27,6 +27,7 @@ public class TmdbClient {
         this.restTemplate = restTemplate;
     }
 
+    // BÚSQUEDAS -------------------------------------------------------------------------------------------------*/
     public String searchMulti(String query) {
 
         String url = baseUrl + "/search/multi"
