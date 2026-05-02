@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -72,5 +73,48 @@ public class SerieController {
         return "serie";
     }
 
+    /* ================= EXPLORAR SERIES ================= */
+
+    @GetMapping("/series")
+    public String explorarSeries(@RequestParam(defaultValue = "1") int page, Model model) throws Exception {
+
+        List<TvSeries> series = new ArrayList<>(
+
+        for (int i = 1; i <= page; i++) {
+            series.addAll(tmdbService.discoverSeriesWithPoster(i)
+        }
+
+        model.addAttribute("series", series
+        model.addAttribute("currentPage", page
+        model.addAttribute("genres", tmdbService.getTvGenresMap()
+
+        List<Integer> years = new ArrayList<>(
+        int currentYear = java.time.Year.now().getValue(
+
+        for (int i = currentYear; i >= 1900; i--) {
+            years.add(i
+        }
+
+        model.addAttribute("years", years
+
+        return "series"; // 👈 IMPORTANTE (html nuevo)
+    }
+
+
+    /* ================= API SERIES ================= */
+
+    @GetMapping("/api/series")
+    @ResponseBody
+    public List<TvSeries> getSeriesPage(
+            @RequestParam int page,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer genre,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Integer minVotes
+    ) throws Exception {
+
+        return tmdbService.discoverSeriesFiltered(page, year, genre, sort, minRating, minVotes
+    }
 
 }

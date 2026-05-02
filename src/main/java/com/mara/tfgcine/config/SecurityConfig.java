@@ -24,17 +24,25 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas públicas (acceso sin autenticación)
                         .requestMatchers(
                                 "/",
                                 "/login",
                                 "/register",
+
+                                // estáticos
                                 "/css/**",
                                 "/js/**",
                                 "/img/**",
+
+                                // APIs públicas
                                 "/api/**",
                                 "/api/search",
+                                "/api/peliculas",
+
+                                // contenido público
+                                "/peliculas",
                                 "/peliculas/**",
+                                "/series",
                                 "/series/**"
                         ).permitAll()
 

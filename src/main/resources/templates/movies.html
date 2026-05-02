@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head('Explorar películas')"></head>
+
+<body class="explorer-theme">
+
+<header th:replace="fragments/header :: header"></header>
+
+<div class="explorer-header">
+    <div class="container explorer-topbar">
+
+        <div class="explorer-title-row">
+            <h1>Explorar películas</h1>
+
+            <!-- botón filtrar -->
+            <button id="toggle-filters" class="btn-filter btn-pill-ui">
+                <i class="bi bi-funnel-fill"></i>
+                Filtrar
+            </button>
+        </div>
+
+        <div id="filters-container" class="filters-container">
+            <div class="filters-bar">
+
+                <!-- fila 1 -->
+                <div class="filters-row">
+
+                    <div class="filter-select">
+                        <label for="filter-year">Año</label>
+                        <select id="filter-year">
+                            <option value="">Todos</option>
+                            <option th:each="year : ${years}"
+                                    th:value="${year}"
+                                    th:text="${year}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="filter-select">
+                        <label for="filter-genre">Género</label>
+                        <select id="filter-genre">
+                            <option value="">Todos</option>
+                            <option th:each="entry : ${genres}"
+                                    th:value="${entry.key}"
+                                    th:text="${entry.value}">
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- fila 2 -->
+                <div class="filters-row">
+
+                    <div class="filter-select">
+                        <label for="filter-sort">Ordenar por</label>
+                        <select id="filter-sort">
+                            <option value="">Predeterminado</option>
+                            <option value="popularity.desc">Popularidad actual</option>
+                            <option value="vote_average.desc">Mejor valoradas</option>
+                            <option value="vote_count.desc">Más votadas</option>
+                            <option value="primary_release_date.desc">Más recientes</option>
+                            <option value="primary_release_date.asc">Más antiguas</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- fila 3 -->
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label for="filter-rating">
+                            <i class="bi bi-star-fill"></i>
+                            Puntuación: <span id="rating-value">0</span>
+                        </label>
+                        <input type="range" id="filter-rating" min="0" max="10" step="0.5">
+                    </div>
+                </div>
+
+                <!-- fila 4 -->
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label for="filter-votes">
+                            <i class="bi bi-people-fill"></i>
+                            Votos: <span id="votes-value">0</span>
+                        </label>
+                        <input type="range" id="filter-votes" min="100" max="5000" step="100">
+                    </div>
+                </div>
+
+                <!-- fila 5 -->
+                <div class="filters-row">
+                    <!-- botón reset -->
+                    <button id="reset-filters" class="btn-reset btn-pill-ui">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        Resetear
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<main class="container explorer-page">
+
+    <div id="movies-grid" class="movies-grid">
+        <div class="movie-card" th:each="movie : ${movies}">
+            <a th:href="@{'/peliculas/' + ${movie.id}}">
+                <img th:src="${movie.posterPath}" alt="poster">
+            </a>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <button id="load-more-btn" class="btn-pill btn-action">
+            <i class="bi bi-arrow-down-circle"></i>
+            Mostrar más
+        </button>
+    </div>
+
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+<script th:src="@{/js/movies.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

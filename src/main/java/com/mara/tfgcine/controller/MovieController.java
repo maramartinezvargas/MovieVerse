@@ -6,14 +6,13 @@ import com.mara.tfgcine.service.ReviewService;
 import com.mara.tfgcine.service.TmdbService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class MovieController {
@@ -85,4 +84,56 @@ public class MovieController {
 
         return "redirect:/peliculas/" + mediaId;
     }
+
+    /* Explorar peliculas ------------------------------------------------------------------------------------------- */
+    @GetMapping("/peliculas")
+    public String explorarPeliculas(@RequestParam(defaultValue = "1") int page, Model model) throws Exception {
+
+        List<Movie> movies = new ArrayList<>(
+
+        for (int i = 1; i <= page; i++) {
+            movies.addAll(tmdbService.discoverMoviesWithPoster(i)
+        }
+
+        model.addAttribute("movies", movies
+        model.addAttribute("currentPage", page
+        model.addAttribute("genres", tmdbService.getMovieGenresMap()
+
+        List<Integer> years = new ArrayList<>(
+        int currentYear = java.time.Year.now().getValue(
+
+        for (int i = currentYear; i >= 1900; i--) {
+            years.add(i
+        }
+
+        model.addAttribute("years", years
+
+        return "movies";
+    }
+
+    // API para cargar más películas (paginación infinita - "Mostrar más") - Filtrando solo las que tienen poster
+    @GetMapping("/api/peliculas")
+    @ResponseBody
+    public List<Movie> getMoviesPage(
+            @RequestParam int page,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer genre,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Integer minVotes,
+            @RequestParam(required = false) Set<Integer> loadedIds
+    ) throws Exception {
+
+        List<Movie> movies = tmdbService.discoverMoviesFiltered(page, year, genre, sort, minRating, minVotes
+
+        if (loadedIds != null) {
+            movies = movies.stream()
+                    .filter(m -> !loadedIds.contains(m.getId()))
+                    .toList(
+        }
+
+        return movies;
+    }
+
+
 }

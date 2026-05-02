@@ -52,7 +52,7 @@
 
                         <!-- TRAILER -->
                         <button
-                                class="btn-pill btn-trailer open-trailer"
+                                class="btn-pill btn-action open-trailer"
                                 th:if="${movie.trailerKey != null}"
                                 th:attr="data-trailer=${movie.trailerKey}"
                                 data-bs-toggle="modal"
@@ -227,7 +227,7 @@
                 <h2 class="section-title">Reseñas</h2>
 
                 <!-- SIEMPRE visible -->
-                <button class="btn-pill btn-trailer btn-review"
+                <button class="btn-pill btn-action btn-review"
                         data-bs-toggle="modal"
                         th:data-bs-target="${'#reviewModal-' + movie.id}">
                     <i class="bi bi-pencil-fill"></i>
@@ -361,7 +361,7 @@
                     <div class="reviews-load-more"
                          th:if="${#lists.size(reviews) > 1}">
 
-                        <button id="toggle-reviews-btn" class="btn-pill btn-trailer">
+                        <button id="toggle-reviews-btn" class="btn-pill btn-action">
                             <i class="bi bi-chevron-down"></i>
                             Ver más reseñas
                         </button>

@@ -10,7 +10,7 @@ body {
     padding: 0 1rem;
 }
 
-.bi-star-fill {
+.bi-star-fill, .bi-people-fill{
     color: #ffbd59;
 }
 
@@ -135,13 +135,13 @@ body {
     cursor: pointer;
 }
 
-.btn-trailer {
+.btn-action {
     background: rgba(255, 189, 89, 0.18
     color: #ffbd59;
     border: 1px solid rgba(255, 189, 89, 0.5
 }
 
-.btn-trailer:hover {
+.btn-action:hover {
     background: rgba(255, 189, 89, 0.3
     transform: translateY(-1px
 }

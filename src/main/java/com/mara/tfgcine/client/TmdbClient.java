@@ -165,18 +165,103 @@ public class TmdbClient {
         return restTemplate.getForObject(url, String.class
     }
 
-    public String discoverMovies() {
+    public String discoverMovies(int page) {
 
         String url = baseUrl + "/discover/movie"
                 + "?api_key=" + apiKey
                 + "&language=" + language
-                + "&sort_by=vote_average.desc"
-                + "&vote_count.gte=2000"
+                + "&sort_by=popularity.desc"
                 + "&region=ES"
-                + "&page=2";
-
+                + "&page=" + page;
 
         return restTemplate.getForObject(url, String.class
+    }
+
+    public String discoverMoviesFiltered(int page, Integer year, Integer genre, String sort, Double minRating, Integer minVotes) {
+
+        String today = java.time.LocalDate.now().toString(
+
+        StringBuilder url = new StringBuilder(baseUrl + "/discover/movie")
+                .append("?api_key=").append(apiKey)
+                .append("&language=").append(language)
+                .append("&region=ES")
+                .append("&page=").append(page)
+                .append("&primary_release_date.lte=").append(today
+
+        // filtros base
+        if (year != null) {
+            url.append("&primary_release_year=").append(year
+        }
+
+        if (genre != null) {
+            url.append("&with_genres=").append(genre
+        }
+
+        // mínimos base (SIEMPRE)
+        double rating = (minRating != null) ? minRating : 0;
+        int votes = (minVotes != null) ? minVotes : 0;
+
+        int finalVotes = votes;
+        double finalRating = rating;
+
+        if (sort != null && !sort.isBlank()) {
+
+            url.append("&sort_by=").append(sort
+
+            switch (sort) {
+
+                case "vote_average.desc" -> {
+                    finalVotes = Math.max(votes, 2000
+                    finalRating = Math.max(rating, 6.5
+                }
+
+                case "primary_release_date.desc" -> {
+                    finalVotes = Math.max(votes, 50
+                }
+
+                case "popularity.desc" -> {
+                    finalVotes = Math.max(votes, 100
+                }
+            }
+        }
+
+        // SOLO UNA VEZ
+        url.append("&vote_average.gte=").append(finalRating
+        url.append("&vote_count.gte=").append(finalVotes
+
+        return restTemplate.getForObject(url.toString(), String.class
+    }
+
+    public String discoverSeriesFiltered(int page, Integer year, Integer genre, String sort, Double minRating, Integer minVotes) {
+
+        String today = java.time.LocalDate.now().toString(
+
+        StringBuilder url = new StringBuilder(baseUrl + "/discover/tv")
+                .append("?api_key=").append(apiKey)
+                .append("&language=").append(language)
+                .append("&region=ES")
+                .append("&page=").append(page)
+                .append("&first_air_date.lte=").append(today
+
+        if (year != null) {
+            url.append("&first_air_date_year=").append(year
+        }
+
+        if (genre != null) {
+            url.append("&with_genres=").append(genre
+        }
+
+        double rating = (minRating != null) ? minRating : 0;
+        int votes = (minVotes != null) ? minVotes : 0;
+
+        if (sort != null && !sort.isBlank()) {
+            url.append("&sort_by=").append(sort
+        }
+
+        url.append("&vote_average.gte=").append(rating
+        url.append("&vote_count.gte=").append(votes
+
+        return restTemplate.getForObject(url.toString(), String.class
     }
 
     public String getMovieImages(int movieId) {

@@ -8,18 +8,14 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
     margin-bottom: 2rem;
+
     overscroll-behavior-x: contain;
     overscroll-behavior-y: auto;
-    touch-action: pan-x;
+
     -webkit-overflow-scrolling: touch;
-}
-@media (max-width: 768px) {
-    .carousel {
-        /* en móviles permitir overscroll para que la página pueda scrollar verticalmente
-           cuando el gesto es vertical (evita bloquear la experiencia táctil) */
-        overscroll-behavior: auto;
-        touch-action: auto; /* permitir scroll nativo en móviles */
-    }
+
+    touch-action: manipulation;
+    overscroll-behavior-x: contain;
 }
 
 .carousel-card {
@@ -35,14 +31,13 @@
     text-decoration: none;
     color: inherit;
     display: block;
+    touch-action: manipulation;
 }
 
-/* Asegurar que elementos internos hereden color y no parezcan enlaces */
 .carousel-card h3,
 .carousel-card .card-meta span,
 .carousel-card .card-genres {
-    /*color: inherit;*/
-    text-decoration: none;
+    text-decoration: none; /* Suprimir subrayado de los enlaces cuandos se hace hover */
 }
 
 .carousel-card:hover {
@@ -127,3 +122,4 @@
     justify-content: center;
     z-index: 2;
 }
+

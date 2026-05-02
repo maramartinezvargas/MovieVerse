@@ -16,10 +16,8 @@
                 <div id="search-results" class="search-results hidden"></div>
             </div>
 
-            <a href="/peliculas">Películas</a>
-            <a href="/series">Series</a>
-            <a href="/tendencias">Tendencias</a>
-            <a href="/estrenos">Próximos estrenos</a>
+            <a th:href="@{/peliculas}">Películas</a>
+            <a th:href="@{/series}">Series</a>
 
             <!-- NO logueado -->
             <a sec:authorize="!isAuthenticated()" href="/login" class="btn-user">

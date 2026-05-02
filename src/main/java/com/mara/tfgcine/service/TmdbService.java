@@ -11,6 +11,7 @@ import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.model.media.TvSeries;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.Normalizer;
 import java.time.OffsetDateTime;
@@ -134,8 +135,39 @@ public class TmdbService {
         return processMovieResults(tmdbClient.getNowPlayingMovies(), true
     }
 
-    public List<Movie> discoverMovies() throws Exception {
-        return processMovieResults(tmdbClient.discoverMovies(), true
+    public List<Movie> discoverMovies(int page) throws Exception {
+        return processMovieResults(tmdbClient.discoverMovies(page), true
+    }
+
+    public List<Movie> discoverMoviesFiltered(int page, Integer year, Integer genre, String sort, Double minRating, Integer minVotes) throws Exception {
+
+        String json = tmdbClient.discoverMoviesFiltered(page, year, genre, sort, minRating, minVotes
+
+        return processMovieResults(json, true).stream()
+                .filter(m -> m.getPosterPath() != null && !m.getPosterPath().isBlank())
+                .toList(
+    }
+
+    public List<TvSeries> discoverSeriesFiltered(
+            int page,
+            Integer year,
+            Integer genre,
+            String sort,
+            Double minRating,
+            Integer minVotes
+    ) throws Exception {
+
+        String json = tmdbClient.discoverSeriesFiltered(page, year, genre, sort, minRating, minVotes
+
+        return processTvResults(json).stream()
+                .filter(s -> s.getPosterPath() != null && !s.getPosterPath().isBlank())
+                .toList(
+    }
+
+    public List<TvSeries> discoverSeriesWithPoster(int page) throws Exception {
+        return processTvResults(tmdbClient.getTrendingNowTv()).stream()
+                .filter(s -> s.getPosterPath() != null && !s.getPosterPath().isBlank())
+                .toList(
     }
 
     public List<Movie> getBestMoviesThisYear() throws Exception {
@@ -152,6 +184,22 @@ public class TmdbService {
 
         return movies;
     }
+
+    // Filtrar películas sin poster para mejorar la experiencia visual en la página de exploración
+    public List<Movie> discoverMoviesWithPoster(int page) throws Exception {
+        return discoverMovies(page).stream()
+                .filter(m -> m.getPosterPath() != null && !m.getPosterPath().isBlank())
+                .toList(
+    }
+
+    public Map<Integer, String> getMovieGenresMap() {
+        return movieGenreMap;
+    }
+
+    public Map<Integer, String> getTvGenresMap() {
+        return tvGenreMap;
+    }
+
 
     /* Series ---------------------------------------------------------------------------- */
 
@@ -196,6 +244,8 @@ public class TmdbService {
     public List<Media> getComfortMovies() throws Exception {
         return new ArrayList<>(processMovieResults(tmdbClient.getComfortMovies(), true)
     }
+
+
 
     /* Featured (Pelicula que sale en Hero / home)---------------------------------------------------- */
 
@@ -900,6 +950,8 @@ public class TmdbService {
             return Collections.emptyList(
         }
     }
+
+
 
     /* Método genérico para obtener trailer tanto de película como de serie */
     private String getTrailerKey(int id, boolean isMovie) {
