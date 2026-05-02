@@ -90,7 +90,7 @@ public abstract class Media {
         this.releaseDate = releaseDate;
     }
 
-    // Métodos -------------------------------------------------------------------------------
+    // Otros métodos ------------------------------------------------------------------------------
 
     public String getVoteAverageFormatted() {
         return String.format("%.1f", voteAverage
@@ -111,5 +111,9 @@ public abstract class Media {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public int getStars() {
+        return Math.min(10, (int) Math.round(this.voteAverage)
     }
 }

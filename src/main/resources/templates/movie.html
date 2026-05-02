@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/head :: head(${movie.title})"></head>
+<head th:replace="~{fragments/head :: head(${movie.title})}"></head>
 
 <body>
 
@@ -258,13 +258,16 @@
 
                         <div class="reviews-count"> En TMDB</div>
 
-                        <div class="reviews-stars">
+                        <div class="reviews-stars"
+                             th:with="stars=${movie.stars}">
+
                             <i class="bi bi-star-fill"
-                               th:each="i : ${#numbers.sequence(1, T(java.lang.Math).round(movie.voteAverage))}">
-                            </i>
+                               th:each="i : ${#numbers.sequence(1, stars)}"></i>
+
                             <i class="bi bi-star"
-                               th:each="i : ${#numbers.sequence(T(java.lang.Math).round(movie.voteAverage)+1, 10)}">
-                            </i>
+                               th:if="${stars < 10}"
+                               th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+
                         </div>
                     </div>
 
@@ -327,13 +330,15 @@
                             <!-- DERECHA -->
                             <div class="review-meta-right">
 
-                                <div class="review-stars" th:if="${review.rating != null}"
+                                <div class="review-stars"
+                                     th:if="${review.rating != null}"
                                      th:with="stars=${T(java.lang.Math).floor(review.rating)}">
 
                                     <i class="bi bi-star-fill"
                                        th:each="i : ${#numbers.sequence(1, stars)}"></i>
 
                                     <i class="bi bi-star"
+                                       th:if="${stars < 10}"
                                        th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
 
                                     <span class="review-rating"

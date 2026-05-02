@@ -305,7 +305,7 @@ function updateReadMoreButtons() {
         const label = button.querySelector(".label"
         const icon = button.querySelector("i"
 
-        // 🔥 mantener estado visual correcto
+        // mantener estado visual correcto
         if (text.classList.contains("expanded")) {
             label.textContent = "Leer menos";
             icon.classList.replace("bi-chevron-down", "bi-chevron-up"
@@ -313,7 +313,7 @@ function updateReadMoreButtons() {
             return; // ← IMPORTANTE: no recalcular nada más
         }
 
-        // 🔥 detectar si el texto está truncado (line-clamp hack)
+        // detectar si el texto está truncado (line-clamp hack)
         const isClamped = text.scrollHeight > text.clientHeight + 1;
 
         if (!isClamped) {
