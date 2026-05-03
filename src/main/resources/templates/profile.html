@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/head :: head('Perfil')"></head>
+
+<body>
+
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<!-- HERO PERFIL -->
+<section class="media-hero profile-hero">
+
+    <div class="container">
+        <div class="media-layout">
+
+            <!-- Avatar -->
+            <div class="profile-avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
+
+            <!-- Info -->
+            <div class="media-info">
+
+                <h1 class="media-hero-title"
+                    th:text="${user.username}"></h1>
+
+                <div class="media-meta">
+
+                    <div class="movie-meta-top">
+                        <span class="release-date"
+                              th:text="${user.email}">
+                        </span>
+                    </div>
+
+                    <div class="media-genres">
+                        <span class="genre" th:text="${user.role}"></span>
+                    </div>
+
+                </div>
+
+                <!-- Stats -->
+                <div class="media-actions profile-stats">
+
+                    <div class="stat-box">
+                        <span class="stat-number"
+                              th:text="${#lists.size(user.reviews)}"></span>
+                        <span class="stat-label">Reviews</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Favoritos</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- LISTAS -->
+<section class="carousel-section">
+    <div class="container">
+
+        <div class="section-header">
+            <h2 class="section-title">Mis listas</h2>
+        </div>
+
+        <div th:if="${#lists.isEmpty(lists)}" class="no-reviews">
+            <p class="no-reviews-text">
+                Aún no tienes listas creadas.
+            </p>
+        </div>
+
+        <div class="carousel"
+             th:if="${!#lists.isEmpty(lists)}">
+
+            <div class="carousel-card list-card"
+                 th:each="list : ${lists}">
+
+                <div class="card-meta">
+
+                    <h3 th:text="${list.name}"></h3>
+
+                    <p class="card-genres"
+                       th:text="${list.type != null ? list.type : 'Lista'}">
+                    </p>
+
+                    <span>
+                        <i class="bi bi-collection"></i>
+                        <span th:text="${#lists.size(list.items)} + ' items'"></span>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+    <div class="container">
+
+        <div class="reviews-header">
+            <h2 class="section-title">Mis reviews</h2>
+        </div>
+
+        <div th:if="${#lists.isEmpty(user.reviews)}" class="no-reviews">
+            <p class="no-reviews-text">
+                Aún no has escrito ninguna review.
+            </p>
+        </div>
+
+        <div class="reviews-list"
+             th:if="${!#lists.isEmpty(user.reviews)}">
+
+            <div class="review-card"
+                 th:each="review : ${user.reviews}">
+
+                <div class="review-top">
+
+                    <div class="review-user-info">
+
+                        <div class="review-avatar avatar-placeholder">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <div>
+                            <div class="review-name">
+                                <span class="review-username"
+                                      th:text="'@' + ${user.username}"></span>
+
+                                <span class="user-badge badge-local">
+                                    Usuario MovieVerse
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="review-meta-right">
+
+                        <div class="review-stars"
+                             th:if="${review.rating != null}"
+                             th:with="stars=${T(java.lang.Math).floor(review.rating)}">
+
+                            <i class="bi bi-star-fill"
+                               th:each="i : ${#numbers.sequence(1, stars)}"></i>
+
+                            <i class="bi bi-star"
+                               th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+
+                            <span class="review-rating"
+                                  th:text="${review.rating}"></span>
+                        </div>
+
+                        <div class="review-date"
+                             th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <p class="review-text"
+                   th:text="${review.comment}"></p>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+<script th:src="@{/js/main.js}"></script>
+
+</body>
+</html>

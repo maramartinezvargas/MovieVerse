@@ -33,11 +33,17 @@
                 </span>
 
                 <div class="dropdown-content">
+
+                    <a th:href="@{/perfil}" class="dropdown-item">
+                        <i class="bi bi-person"></i> Mi perfil
+                    </a>
+
                     <form th:action="@{/logout}" method="post">
                         <button type="submit" class="btn-logout">
                             <i class="bi bi-box-arrow-right"></i> Logout
                         </button>
                     </form>
+
                 </div>
             </div>
 

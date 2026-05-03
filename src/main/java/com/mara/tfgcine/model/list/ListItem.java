@@ -12,7 +12,7 @@ public class ListItem {
     private Long id;
 
     @Column(name = "media_id")
-    private int mediaId;
+    private Long mediaId;
 
     @Column(name = "added_at")
     private LocalDateTime addedAt;
