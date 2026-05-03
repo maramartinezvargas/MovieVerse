@@ -13,7 +13,6 @@
         <div class="explorer-title-row">
             <h1>Explorar películas</h1>
 
-            <!-- botón filtrar -->
             <button id="toggle-filters" class="btn-filter btn-pill-ui">
                 <i class="bi bi-funnel-fill"></i>
                 Filtrar
@@ -30,8 +29,7 @@
                         <label>Año</label>
 
                         <div class="dropdown-selected" id="year-selected">
-                            Todos
-                            <i class="bi bi-chevron-down"></i>
+                            Todos <i class="bi bi-chevron-down"></i>
                         </div>
 
                         <div class="dropdown-options hidden" id="year-options">
@@ -49,8 +47,7 @@
                         <label>Género</label>
 
                         <div class="dropdown-selected" id="genre-selected">
-                            Todos
-                            <i class="bi bi-chevron-down"></i>
+                            Todos <i class="bi bi-chevron-down"></i>
                         </div>
 
                         <div class="dropdown-options hidden" id="genre-options">
@@ -71,13 +68,11 @@
                     <label>Ordenar por</label>
 
                     <div class="dropdown-selected" id="sort-selected">
-                        Popularidad
-                        <i class="bi bi-chevron-down"></i>
+                        Popularidad <i class="bi bi-chevron-down"></i>
                     </div>
 
                     <div class="dropdown-options hidden" id="sort-options">
-                        <div class="dropdown-option" data-value="">Predeterminado</div>
-                        <div class="dropdown-option" data-value="popularity.desc">Popularidad actual</div>
+                        <div class="dropdown-option active" data-value="popularity.desc">Popularidad</div>
                         <div class="dropdown-option" data-value="vote_average.desc">Mejor valoradas</div>
                         <div class="dropdown-option" data-value="vote_count.desc">Más votadas</div>
                         <div class="dropdown-option" data-value="primary_release_date.desc">Más recientes</div>
@@ -85,10 +80,10 @@
                     </div>
                 </div>
 
-                <!-- fila 3 -->
+                <!-- rating -->
                 <div class="filters-row">
                     <div class="filter-group">
-                        <label for="filter-rating">
+                        <label>
                             <i class="bi bi-star-fill"></i>
                             Puntuación: <span id="rating-value">0</span>
                         </label>
@@ -96,18 +91,18 @@
                     </div>
                 </div>
 
-                <!-- fila 4 -->
+                <!-- votos -->
                 <div class="filters-row">
                     <div class="filter-group">
-                        <label for="filter-votes">
+                        <label>
                             <i class="bi bi-people-fill"></i>
                             Votos: <span id="votes-value">0</span>
                         </label>
-                        <input type="range" id="filter-votes" min="100" max="5000" step="100">
+                        <input type="range" id="filter-votes" min="0" max="5000" step="100">
                     </div>
                 </div>
 
-                <!-- fila 5 -->
+                <!-- reset -->
                 <div class="filters-row">
                     <div class="filter-select">
                         <label style="visibility: hidden;">Reset</label>
@@ -144,7 +139,10 @@
 </main>
 
 <footer th:replace="fragments/footer :: footer"></footer>
+
+<script th:src="@{/js/explorer.js}"></script>
 <script th:src="@{/js/movies.js}"></script>
 <script th:src="@{/js/main.js}"></script>
+
 </body>
 </html>
