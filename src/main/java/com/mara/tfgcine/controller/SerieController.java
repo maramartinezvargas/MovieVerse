@@ -1,10 +1,13 @@
 package com.mara.tfgcine.controller;
 
+import com.mara.tfgcine.model.dto.ReviewDTO;
 import com.mara.tfgcine.model.media.TvSeries;
 import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.service.ReviewService;
 import com.mara.tfgcine.service.TmdbService;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +53,31 @@ public class SerieController {
         model.addAttribute("composer", crew.get("composer")
         model.addAttribute("cinematography", crew.get("cinematography")
 
-        // Reviews (igual que en movies)
-        var reviews = reviewService.getAllReviews((long) id, "tv"
+        List<ReviewDTO> reviews = reviewService.getAllReviews((long) id, "tv"
+
+        // REORDENAR: review del usuario arriba
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(
+
+        if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+
+            String username = auth.getName(
+
+            List<ReviewDTO> userReview = reviews.stream()
+                    .filter(r -> username.equals(r.getUsername()))
+                    .toList(
+
+            List<ReviewDTO> others = reviews.stream()
+                    .filter(r -> !username.equals(r.getUsername()))
+                    .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                    .toList(
+
+            List<ReviewDTO> finalList = new ArrayList<>(
+            finalList.addAll(userReview
+            finalList.addAll(others
+
+            reviews = finalList;
+        }
+
         model.addAttribute("reviews", reviews
 
         double avgRating = reviews.stream()
@@ -97,7 +123,7 @@ public class SerieController {
 
         model.addAttribute("years", years
 
-        return "series"; // 👈 IMPORTANTE (html nuevo)
+        return "series";
     }
 
 

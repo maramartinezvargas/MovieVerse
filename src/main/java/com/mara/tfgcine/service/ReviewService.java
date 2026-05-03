@@ -3,8 +3,11 @@ package com.mara.tfgcine.service;
 import com.mara.tfgcine.model.dto.ReviewDTO;
 import com.mara.tfgcine.model.review.Review;
 import com.mara.tfgcine.model.review.TmdbReview;
+import com.mara.tfgcine.model.user.User;
 import com.mara.tfgcine.repository.ReviewRepository;
+import com.mara.tfgcine.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -17,10 +20,14 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final TmdbService tmdbService;
+    private final UserRepository userRepository;
 
-    public ReviewService(ReviewRepository reviewRepository, TmdbService tmdbService) {
+    public ReviewService(ReviewRepository reviewRepository,
+                         TmdbService tmdbService,
+                         UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.tmdbService = tmdbService;
+        this.userRepository = userRepository;
     }
 
     // Obtener todas las reviews (locales + TMDB) para una película o serie concreta, ordenadas por fecha (más recientes primero)
@@ -92,19 +99,25 @@ public class ReviewService {
         return dto;
     }
 
-    public void createReview(Long mediaId, String comment, Integer rating, String mediaType) {
+    public void createReview(String username,
+                             Long mediaId,
+                             String comment,
+                             Integer rating,
+                             String mediaType) {
+
+        User user = userRepository.findByUsername(username
+
+        if (reviewRepository.existsByUserUsernameAndMediaIdAndMediaType(username, mediaId, mediaType)) {
+            throw new IllegalStateException("duplicate"
+        }
 
         Review review = new Review(
-
+        review.setUser(user
         review.setMediaId(mediaId
-        review.setMediaType(mediaType // CLAVE
+        review.setMediaType(mediaType
         review.setComment(comment
         review.setRating(rating
         review.setCreatedAt(LocalDateTime.now()
-
-        // usuario (deberia ir aqui el usuario real, pero de momento null)
-        //User user = userService.getCurrentUser(
-        review.setUser(null
 
         reviewRepository.save(review
     }

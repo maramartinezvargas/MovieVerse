@@ -228,6 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedValue = value;
                 ratingInput.value = value;
                 setSelected(value
+                rating.classList.remove("rating-error"
 
                 if (ratingText) {
                     ratingText.textContent = `${value}/10`;

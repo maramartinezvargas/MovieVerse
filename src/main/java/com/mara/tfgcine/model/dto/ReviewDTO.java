@@ -1,6 +1,7 @@
 package com.mara.tfgcine.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class ReviewDTO {
 
@@ -58,5 +59,18 @@ public class ReviewDTO {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReviewDTO)) return false;
+        ReviewDTO that = (ReviewDTO) o;
+        return Objects.equals(comment, that.comment
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(comment
     }
 }

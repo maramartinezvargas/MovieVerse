@@ -18,8 +18,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         """)
     List<Review> findByMediaIdAndMediaType(@Param("mediaId") Long mediaId,
                                            @Param("mediaType") String mediaType
+
     List<Review> findByMediaId(@Param("mediaId") Long mediaId
 
     List<Review> findByUserId(Long userId
 
+    boolean existsByUserUsernameAndMediaIdAndMediaType(String username, Long mediaId, String mediaType
 }

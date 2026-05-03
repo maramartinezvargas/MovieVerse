@@ -85,4 +85,6 @@ public class Review {
     public void setMediaType(String mediaType) {
         this.mediaType = mediaType;
     }
+
+
 }

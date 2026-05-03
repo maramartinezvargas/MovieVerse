@@ -351,6 +351,7 @@ public class TmdbClient {
         String url = baseUrl +
                 "/movie/" + movieId + "/reviews" +
                 "?api_key=" + apiKey;
+                //+ "&language=es-ES";
 
         return restTemplate.getForObject(url, String.class
     }

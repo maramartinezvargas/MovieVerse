@@ -1,9 +1,12 @@
 package com.mara.tfgcine.controller;
 
+import com.mara.tfgcine.model.dto.ReviewDTO;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.service.ReviewService;
 import com.mara.tfgcine.service.TmdbService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +23,11 @@ public class MovieController {
     private final TmdbService tmdbService;
     private final ReviewService reviewService;
 
-    // Constructor con ambas dependencias
     public MovieController(TmdbService tmdbService, ReviewService reviewService) {
         this.tmdbService = tmdbService;
         this.reviewService = reviewService;
     }
 
-    // Detalles película
     @GetMapping("/peliculas/{id}")
     public String movieDetails(@PathVariable int id, Model model, HttpServletRequest request) throws Exception {
 
@@ -39,7 +40,6 @@ public class MovieController {
         List<Provider> providers = tmdbService.getProvidersForMovie(id
         model.addAttribute("providers", providers
 
-        // Datos detalle
         Map<String, String> crew = tmdbService.getMovieCrewInfo(id
 
         model.addAttribute("directors", crew.get("directors")
@@ -47,15 +47,36 @@ public class MovieController {
         model.addAttribute("composer", crew.get("composer")
         model.addAttribute("cinematography", crew.get("cinematography")
 
-        // Obtener reviews (locales + TMDB)
-        var reviews = reviewService.getAllReviews((long) id, "movie"
+        // Reviews (reordenar para que la review del usuario logueado aparezca arriba)
+        List<ReviewDTO> reviews = reviewService.getAllReviews((long) id, "movie"
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(
+
+        if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+
+            String username = auth.getName(
+
+            List<ReviewDTO> userReview = reviews.stream()
+                    .filter(r -> username.equals(r.getUsername()))
+                    .toList(
+
+            List<ReviewDTO> others = reviews.stream()
+                    .filter(r -> !username.equals(r.getUsername()))
+                    .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                    .toList(
+
+            List<ReviewDTO> finalList = new ArrayList<>(
+            finalList.addAll(userReview
+            finalList.addAll(others
+
+            reviews = finalList;
+        }
+
         model.addAttribute("reviews", reviews
 
-        // Calcular rating promedio
         double avgRating = reviews.stream()
                 .filter(r -> r.getRating() != null)
                 .filter(r -> "LOCAL".equals(r.getSource()))
-                .mapToDouble(r -> r.getRating())
+                .mapToDouble(ReviewDTO::getRating)
                 .average()
                 .orElse(0.0
 
@@ -67,25 +88,10 @@ public class MovieController {
         model.addAttribute("avgRating", avgRating
         model.addAttribute("reviewCount", reviews.size()
         model.addAttribute("currentUrl", request.getRequestURI()
+
         return "movie";
     }
 
-    @PostMapping("/reviews")
-    public String createReview(@RequestParam Long mediaId,
-                               @RequestParam String comment,
-                               @RequestParam Integer rating,
-                               @RequestParam String mediaType) {
-
-        reviewService.createReview(mediaId, comment, rating, mediaType
-
-        if ("tv".equals(mediaType)) {
-            return "redirect:/series/" + mediaId;
-        }
-
-        return "redirect:/peliculas/" + mediaId;
-    }
-
-    /* Explorar peliculas ------------------------------------------------------------------------------------------- */
     @GetMapping("/peliculas")
     public String explorarPeliculas(@RequestParam(defaultValue = "1") int page, Model model) throws Exception {
 
@@ -111,7 +117,6 @@ public class MovieController {
         return "movies";
     }
 
-    // API para cargar más películas (paginación infinita - "Mostrar más") - Filtrando solo las que tienen poster
     @GetMapping("/api/peliculas")
     @ResponseBody
     public List<Movie> getMoviesPage(
@@ -134,6 +139,4 @@ public class MovieController {
 
         return movies;
     }
-
-
 }

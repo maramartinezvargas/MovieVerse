@@ -11,7 +11,6 @@ import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.model.media.TvSeries;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.Normalizer;
 import java.time.OffsetDateTime;
@@ -965,7 +964,7 @@ public class TmdbService {
 
 
 
-    /* Método genérico para obtener trailer tanto de película como de serie */
+    /* Obtener trailer tanto de película como de serie */
     private String getTrailerKey(int id, boolean isMovie) {
 
         try {
@@ -1067,7 +1066,7 @@ public class TmdbService {
     }
 
 
-    // Método genérico para añadir proveedores de cualquier categoría (flatrate, buy, rent, free, ads)
+    // Añadir proveedores de cualquier categoría evitando duplicados (a veces un mismo proveedor aparece en varias categorías, como flatrate y buy)
     private void addProviders(List<Provider> list, JsonNode array, Set<Integer> seen){
         if (array != null && array.isArray()) {
             for (JsonNode p : array) {
