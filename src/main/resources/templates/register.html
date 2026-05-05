@@ -37,7 +37,7 @@
                            required>
                 </div>
 
-                <!-- PASSWORD -->
+                <!-- PASSWORD - Con validación de complejidad -->
                 <div class="input-group">
                     <i class="bi bi-lock"></i>
                     <input type="password"
@@ -45,7 +45,12 @@
                            id="password"
                            placeholder="Contraseña"
                            required
-                           minlength="4">
+                           minlength="8"
+                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$"
+                           title="Debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo">
+                </div>
+                <div id="passwordHelp" class="auth-hint">
+                    Debe tener al menos 8 caracteres, incluyendo mayúscula, minúscula, número y símbolo.
                 </div>
 
                 <!-- CONFIRM PASSWORD -->

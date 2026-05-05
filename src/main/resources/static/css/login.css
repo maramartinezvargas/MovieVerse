@@ -188,3 +188,27 @@ input:-webkit-autofill:focus {
 .input-group {
     overflow: hidden;
 }
+
+/* Mensaje de requisitos de contraseña */
+.auth-hint {
+    font-size: 0.75rem;
+    color: rgba(240, 223, 200, 0.6
+
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+    padding-left: 4px;
+
+    line-height: 1.3;
+
+    opacity: 0.85;
+    transition: all 0.2s ease;
+}
+
+.input-group:focus-within + .auth-hint {
+    color: #ffbd59;
+    opacity: 1;
+}
+
+#password:invalid + .auth-hint {
+    color: #ff5050;
+}
