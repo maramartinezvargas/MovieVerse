@@ -76,9 +76,16 @@
                         </button>
 
                         <!-- LIKE -->
-                        <button class="btn-pill btn-details btn-like">
-                            <i class="bi bi-heart"></i>
-                            Me gusta
+                        <button id="likeBtn"
+                                class="btn-pill btn-details btn-like"
+                                th:classappend="${liked} ? ' liked'"
+                                th:data-media-id="${movie.id}"
+                                data-media-type="MOVIE">
+
+                            <i class="bi"
+                               th:classappend="${liked} ? ' bi-heart-fill' : ' bi-heart'"></i>
+
+                            <span id="likeCount" th:text="${totalLikes}">0</span>
                         </button>
 
                         <!-- LISTA -->
@@ -440,6 +447,7 @@
     <script th:src="@{/js/carousel.js}"></script>
     <script th:src="@{/js/main.js}"></script>
     <script th:src="@{/js/reviews.js}"></script>
+    <script th:src="@{/js/likes.js}"></script>
 </body>
 
 <!-- Modal trailer -->

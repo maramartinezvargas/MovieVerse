@@ -1,10 +1,14 @@
 package com.mara.tfgcine.controller;
 
 import com.mara.tfgcine.model.dto.ReviewDTO;
+import com.mara.tfgcine.model.like.MediaType;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.Provider;
+import com.mara.tfgcine.model.user.User;
+import com.mara.tfgcine.service.LikeService;
 import com.mara.tfgcine.service.ReviewService;
 import com.mara.tfgcine.service.TmdbService;
+import com.mara.tfgcine.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,10 +26,18 @@ public class MovieController {
 
     private final TmdbService tmdbService;
     private final ReviewService reviewService;
+    private final LikeService likeService;
+    private final UserService userService;
 
-    public MovieController(TmdbService tmdbService, ReviewService reviewService) {
+    public MovieController(TmdbService tmdbService,
+                           ReviewService reviewService,
+                           LikeService likeService,
+                           UserService userService) {
+
         this.tmdbService = tmdbService;
         this.reviewService = reviewService;
+        this.likeService = likeService;
+        this.userService = userService;
     }
 
     @GetMapping("/peliculas/{id}")
@@ -88,6 +100,24 @@ public class MovieController {
         model.addAttribute("avgRating", avgRating
         model.addAttribute("reviewCount", reviews.size()
         model.addAttribute("currentUrl", request.getRequestURI()
+
+
+        //Likes y estado de like/dislike del usuario
+        boolean liked = false;
+        int totalLikes = likeService.countLikes((long) id, MediaType.MOVIE
+
+        Authentication authLike = SecurityContextHolder.getContext().getAuthentication(
+
+        if (authLike != null && authLike.isAuthenticated() && !authLike.getName().equals("anonymousUser")) {
+
+            String username = authLike.getName(
+            User user = userService.findByUsername(username
+
+            liked = likeService.hasUserLiked(user, (long) id, MediaType.MOVIE
+        }
+
+        model.addAttribute("liked", liked
+        model.addAttribute("totalLikes", totalLikes
 
         return "movie";
     }

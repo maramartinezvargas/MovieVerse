@@ -33,6 +33,9 @@ public class ReviewService {
     // Obtener todas las reviews (locales + TMDB) para una película o serie concreta, ordenadas por fecha (más recientes primero)
     public List<ReviewDTO> getAllReviews(Long mediaId, String mediaType) {
 
+        // Normalizo el mediaType para evitar problemas de mayúsculas/minúsculas
+        mediaType = mediaType.toUpperCase(
+
         List<ReviewDTO> local = reviewRepository
                 .findByMediaIdAndMediaType(mediaId, mediaType)
                 .stream()
@@ -41,7 +44,7 @@ public class ReviewService {
 
         List<ReviewDTO> tmdb;
 
-        if ("tv".equals(mediaType)) {
+        if ("TV".equals(mediaType)) {
             tmdb = tmdbService.getSerieReviews(mediaId
         } else {
             tmdb = tmdbService.getReviews(mediaId
@@ -111,10 +114,11 @@ public class ReviewService {
             throw new IllegalStateException("duplicate"
         }
 
+
         Review review = new Review(
         review.setUser(user
         review.setMediaId(mediaId
-        review.setMediaType(mediaType
+        review.setMediaType(mediaType.toUpperCase() // Normalizado para evitar problemas de mayúsculas/minúsculas
         review.setComment(comment
         review.setRating(rating
         review.setCreatedAt(LocalDateTime.now()

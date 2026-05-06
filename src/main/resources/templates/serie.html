@@ -85,9 +85,16 @@
                         Ver tráiler
                     </button>
 
-                    <button class="btn-pill btn-details btn-like">
-                        <i class="bi bi-heart"></i>
-                        Me gusta
+                    <button id="likeBtn"
+                            class="btn-pill btn-details btn-like"
+                            th:classappend="${liked} ? ' liked'"
+                            th:data-media-id="${series.id}"
+                            data-media-type="TV">
+
+                        <i class="bi"
+                           th:classappend="${liked} ? ' bi-heart-fill' : ' bi-heart'"></i>
+
+                        <span id="likeCount" th:text="${totalLikes}">0</span>
                     </button>
 
                     <button class="btn-pill btn-details">
@@ -422,7 +429,7 @@
 <script th:src="@{/js/carousel.js}"></script>
 <script th:src="@{/js/main.js}"></script>
 <script th:src="@{/js/reviews.js}"></script>
-
+<script th:src="@{/js/likes.js}"></script>
 </body>
 
 <!-- Modal tráiler -->

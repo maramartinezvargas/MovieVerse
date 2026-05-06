@@ -100,6 +100,19 @@
     border-color: rgba(255, 107, 107, 0.4
 }
 
+.btn-like.liked {
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.4
+}
+
+.btn-like.liked i {
+    color: #ff6b6b;
+}
+
+.btn-like {
+    transition: all 0.2s ease;
+}
+
 /* Proveedores de streaming */
 .media-providers {
     margin-top: 16px;
