@@ -6,6 +6,8 @@ import com.mara.tfgcine.model.user.User;
 import com.mara.tfgcine.repository.LikeRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +39,7 @@ public class LikeService {
             like.setUser(user
             like.setMediaId(mediaId
             like.setMediaType(mediaType
+            like.setCreatedAt(LocalDateTime.now()
 
             likeRepository.save(like
             return true;
@@ -56,4 +59,16 @@ public class LikeService {
     public int countLikes(Long mediaId, MediaType mediaType) {
         return likeRepository.countByMediaIdAndMediaType(mediaId, mediaType
     }
+
+    /**
+     * Obtener todos los likes de un usuario
+     */
+    public List<Like> getUserLikes(User user) {
+        return likeRepository.findByUserOrderByCreatedAtDesc(user
+    }
+
+    /**
+     * Obtener todos los likes de un usuario ordenados por fecha de creación (más recientes primero)
+     */
+
 }

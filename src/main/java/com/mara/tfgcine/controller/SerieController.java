@@ -110,7 +110,7 @@ public class SerieController {
 
         // Likes (para mostrar el estado del botón de like)
         boolean liked = false;
-        int totalLikes = likeService.countLikes((long) id, MediaType.TV
+        int totalLikes = likeService.countLikes((long) id, MediaType.SERIE
 
         Authentication authLike = SecurityContextHolder.getContext().getAuthentication(
 
@@ -119,7 +119,7 @@ public class SerieController {
             String username = authLike.getName(
             User user = userService.findByUsername(username
 
-            liked = likeService.hasUserLiked(user, (long) id, MediaType.TV
+            liked = likeService.hasUserLiked(user, (long) id, MediaType.SERIE
         }
 
         model.addAttribute("liked", liked

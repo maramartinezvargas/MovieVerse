@@ -1,10 +1,14 @@
 package com.mara.tfgcine.controller;
 
+import com.mara.tfgcine.model.dto.LikedMediaDTO;
+import com.mara.tfgcine.model.like.Like;
+import com.mara.tfgcine.model.like.MediaType;
 import com.mara.tfgcine.model.list.MediaList;
+import com.mara.tfgcine.model.media.Movie;
+import com.mara.tfgcine.model.media.TvSeries;
 import com.mara.tfgcine.model.user.User;
-import com.mara.tfgcine.service.MediaListService;
-import com.mara.tfgcine.service.ReviewService;
-import com.mara.tfgcine.service.UserService;
+import java.util.List;
+import com.mara.tfgcine.service.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,17 +26,23 @@ public class UserController {
     private final UserService userService;
     private final MediaListService mediaListService;
     private final ReviewService reviewService;
+    private final LikeService likeService;
+    private final TmdbService tmdbService;
 
     public UserController(UserService userService,
                           MediaListService mediaListService,
-                          ReviewService reviewService) {
+                          ReviewService reviewService,
+                          LikeService likeService,
+                          TmdbService tmdbService) {
         this.userService = userService;
         this.mediaListService = mediaListService;
         this.reviewService = reviewService;
+        this.likeService = likeService;
+        this.tmdbService = tmdbService;
     }
 
     @GetMapping("/perfil")
-    public String profile(Model model, Authentication auth) {
+    public String profile(Model model, Authentication auth) throws Exception {
 
         String username = auth.getName(
 
@@ -41,6 +52,41 @@ public class UserController {
 
         model.addAttribute("user", user
         model.addAttribute("lists", lists
+        List<Like> likes = likeService.getUserLikes(user
+
+        List<LikedMediaDTO> likedMedia = new ArrayList<>(
+
+        for (Like like : likes) {
+
+            LikedMediaDTO dto = new LikedMediaDTO(
+
+            dto.setMediaId(like.getMediaId()
+            dto.setMediaType(like.getMediaType().name()
+            dto.setCreatedAt(like.getCreatedAt()
+
+            if (like.getMediaType() == MediaType.MOVIE) {
+
+                Movie movie = tmdbService.getMovieDetails(
+                        like.getMediaId().intValue()
+                
+
+                dto.setTitle(movie.getTitle()
+                dto.setPosterPath(movie.getPosterPath()
+
+            } else {
+
+                TvSeries serie = tmdbService.getSerieDetails(
+                        like.getMediaId().intValue()
+                
+
+                dto.setTitle(serie.getTitle()
+                dto.setPosterPath(serie.getPosterPath()
+            }
+
+            likedMedia.add(dto
+        }
+
+        model.addAttribute("likedMedia", likedMedia
 
         return "profile";
     }

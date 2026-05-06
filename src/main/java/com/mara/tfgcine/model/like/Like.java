@@ -3,6 +3,8 @@ package com.mara.tfgcine.model.like;
 import com.mara.tfgcine.model.user.User;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "likes")
 public class Like {
@@ -20,6 +22,9 @@ public class Like {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     // Getters and Setters
 
@@ -53,5 +58,13 @@ public class Like {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

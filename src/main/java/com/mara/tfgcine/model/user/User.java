@@ -1,5 +1,6 @@
 package com.mara.tfgcine.model.user;
 
+import com.mara.tfgcine.model.like.Like;
 import com.mara.tfgcine.model.review.Review;
 import jakarta.persistence.*;
 
@@ -33,6 +34,10 @@ public class User {
     // Relación con reviews
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews;
+
+    // Relación de likes (me gusta)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Like> likes;
 
     public User() {}
 
@@ -89,4 +94,8 @@ public class User {
     public List<Review> getReviews() {
         return reviews;
     }
+
+    public List<Like> getLikes() {return likes;}
+
+    public void setLikes(List<Like> likes) {this.likes = likes;}
 }

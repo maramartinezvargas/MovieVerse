@@ -89,12 +89,15 @@
                             class="btn-pill btn-details btn-like"
                             th:classappend="${liked} ? ' liked'"
                             th:data-media-id="${series.id}"
-                            data-media-type="TV">
+                            th:data-authenticated="${#authorization.expression('isAuthenticated()')}"
+                            data-media-type="SERIE">
 
                         <i class="bi"
                            th:classappend="${liked} ? ' bi-heart-fill' : ' bi-heart'"></i>
 
                         <span id="likeCount" th:text="${totalLikes}">0</span>
+
+                        <span>Me gusta</span>
                     </button>
 
                     <button class="btn-pill btn-details">
@@ -420,7 +423,7 @@
 </section>
 
 <!-- Modal review -->
-<th:block th:replace="fragments/review-modal :: reviewModal(${series.id}, 'tv')"></th:block>
+<th:block th:replace="fragments/review-modal :: reviewModal(${series.id}, 'serie')"></th:block>
 
 <!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>

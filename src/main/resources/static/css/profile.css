@@ -130,3 +130,31 @@
 .list-card:hover {
     transform: translateY(-4px
 }
+
+.liked-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: #ffc76b;
+}
+
+.profile-liked-icon {
+    font-size: inherit;
+    color: inherit;
+    line-height: 1;
+}
+
+.profile-liked-text {
+    margin: 0;
+    font-size: inherit;
+    color: inherit;
+    line-height: 1;
+}
+
+.movie-meta-top i{
+    color: #ffbd59;
+}

@@ -1,3 +1,4 @@
+USE movieverse;
 
 -- RESET COMPLETO BD --------------------------------------------------------------
 
@@ -8,6 +9,7 @@ DROP TABLE IF EXISTS media_lists;
 DROP TABLE IF EXISTS reports;
 DROP TABLE IF EXISTS moderation_actions;
 DROP TABLE IF EXISTS audit_logs;
+DROP TABLE IF EXISTS likes;
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS users;
 
@@ -28,6 +30,7 @@ CREATE TABLE reviews (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     media_id BIGINT NOT NULL,
+    media_type VARCHAR(20) NOT NULL,
     rating INT NOT NULL,
     comment TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -81,6 +84,19 @@ CREATE TABLE reports (
         ON DELETE SET NULL
 
 
+CREATE TABLE likes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    media_id BIGINT NOT NULL,
+    media_type VARCHAR(20) NOT NULL,
+    user_id BIGINT NOT NULL,
+
+    CONSTRAINT fk_like_user FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT unique_like UNIQUE (user_id, media_id, media_type)
+
+
 CREATE TABLE moderation_actions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
@@ -122,28 +138,22 @@ CREATE TABLE audit_logs (
         ON DELETE CASCADE
 
 
--- =====================================
--- DATOS DE PRUEBA
--- =====================================
+-- DATOS DE PRUEBA ----------------------------------------------------------------------------------------------------
 
--- password = "1234"
--- hash BCrypt válido para Spring Security
+-- Usuarios prueba | password = "1234"
 INSERT INTO users (username, email, password) VALUES
 ('mara', 'mara@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'),
 ('cinefan', 'cinefan@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'),
 ('critic', 'critic@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'
 
--- =====================
-
--- reviews para Dune (438631)
-
-INSERT INTO reviews (comment, rating, created_at, media_id, user_id) VALUES
-('Gran dirección y fotografía, pero se siente incompleta.', 8, '2025-03-12 18:20:00', 438631, 1),
-('Muy buena, aunque cuesta seguir el lore si no conoces el libro.', 7, '2024-06-10 21:15:00', 438631, 2),
-('Visualmente impecable, historia demasiado pausada.', 7, '2023-04-05 19:40:00', 438631, 3),
-('Buen casting y ambientación, pero esperaba más ritmo.', 6, '2022-08-01 17:10:00', 438631, 1),
-('Una experiencia audiovisual increíble.', 9, '2022-05-14 22:05:00', 438631, 2),
-('Muy fiel al libro, pero no es para todo el mundo.', 8, '2022-02-10 20:30:00', 438631, 3),
-('Buen inicio de saga, aunque se queda corta como película independiente.', 7, '2021-12-05 16:50:00', 438631, 1),
-('Espectacular en pantalla grande, imprescindible verla en cine.', 9, '2021-11-10 21:00:00', 438631, 2),
-('Muy ambiciosa, pero algo fría emocionalmente.', 6, '2021-10-25 18:00:00', 438631, 3
+-- Reviews prueba | para Dune (438631)
+INSERT INTO reviews (comment, rating, created_at, media_id, media_type, user_id) VALUES
+('Gran dirección y fotografía, pero se siente incompleta.', 8, '2025-03-12 18:20:00', 438631, 'MOVIE', 1),
+('Muy buena, aunque cuesta seguir el lore si no conoces el libro.', 7, '2024-06-10 21:15:00', 438631, 'MOVIE', 2),
+('Visualmente impecable, historia demasiado pausada.', 7, '2023-04-05 19:40:00', 438631, 'MOVIE', 3),
+('Buen casting y ambientación, pero esperaba más ritmo.', 6, '2022-08-01 17:10:00', 438631, 'MOVIE', 1),
+('Una experiencia audiovisual increíble.', 9, '2022-05-14 22:05:00', 438631, 'MOVIE', 2),
+('Muy fiel al libro, pero no es para todo el mundo.', 8, '2022-02-10 20:30:00', 438631, 'MOVIE', 3),
+('Buen inicio de saga, aunque se queda corta como película independiente.', 7, '2021-12-05 16:50:00', 438631, 'MOVIE', 1),
+('Espectacular en pantalla grande, imprescindible verla en cine.', 9, '2021-11-10 21:00:00', 438631, 'MOVIE', 2),
+('Muy ambiciosa, pero algo fría emocionalmente.', 6, '2021-10-25 18:00:00', 438631, 'MOVIE', 3

@@ -80,12 +80,15 @@
                                 class="btn-pill btn-details btn-like"
                                 th:classappend="${liked} ? ' liked'"
                                 th:data-media-id="${movie.id}"
+                                th:data-authenticated="${#authorization.expression('isAuthenticated()')}"
                                 data-media-type="MOVIE">
 
                             <i class="bi"
                                th:classappend="${liked} ? ' bi-heart-fill' : ' bi-heart'"></i>
 
                             <span id="likeCount" th:text="${totalLikes}">0</span>
+
+                            <span>Me gusta</span>
                         </button>
 
                         <!-- LISTA -->

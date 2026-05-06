@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/head :: head('Perfil')"></head>
-
+<link rel="stylesheet" th:href="@{/css/profile.css}">
 <body>
 
 <th:block th:replace="fragments/header :: header"></th:block>
@@ -24,11 +24,12 @@
             <div class="media-info">
 
                 <h1 class="media-hero-title"
-                    th:text="${user.username}"></h1>
+                    th:text="'@'+${user.username}"></h1>
 
                 <div class="media-meta">
 
                     <div class="movie-meta-top">
+                        <i class="bi bi-envelope profile-email-icon"></i>
                         <span class="release-date"
                               th:text="${user.email}">
                         </span>
@@ -46,12 +47,13 @@
                     <div class="stat-box">
                         <span class="stat-number"
                               th:text="${#lists.size(user.reviews)}"></span>
-                        <span class="stat-label">Reviews</span>
+                        <span class="stat-label">Reseñas</span>
                     </div>
 
                     <div class="stat-box">
-                        <span class="stat-number">0</span>
-                        <span class="stat-label">Favoritos</span>
+                        <span class="stat-number"
+                              th:text="${#lists.size(likedMedia)}"></span>
+                        <span class="stat-label">Me gusta</span>
                     </div>
 
                 </div>
@@ -60,6 +62,8 @@
         </div>
     </div>
 </section>
+
+
 <!-- LISTAS -->
 <section class="carousel-section">
     <div class="container">
@@ -102,12 +106,80 @@
     </div>
 </section>
 
+<section class="carousel-section">
+
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Me gusta
+                <span th:text="'('+${#lists.size(likedMedia)}+')'"></span>
+            </h2>
+
+            <div class="carousel-controls">
+                <button class="carousel-btn prev">‹</button>
+                <button class="carousel-btn next">›</button>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(likedMedia)}"
+             class="no-reviews">
+
+            <p class="no-reviews-text">
+                Aún no has dado me gusta a ningún título.
+            </p>
+
+        </div>
+
+        <div class="carousel"
+             th:if="${!#lists.isEmpty(likedMedia)}">
+
+            <a th:each="item : ${likedMedia}"
+
+               th:href="${item.mediaType == 'MOVIE'}
+                    ? @{/peliculas/{id}(id=${item.mediaId})}
+                    : @{/series/{id}(id=${item.mediaId})}"
+
+               class="carousel-card">
+
+                <img th:src="${item.posterPath}"
+                     th:alt="${item.title}">
+
+                <div class="card-meta">
+
+                    <h3 th:text="${item.title}"></h3>
+
+                    <p class="card-genres"
+                       th:text="${item.mediaType == 'MOVIE'}
+                            ? 'Película'
+                            : 'Serie'">
+                                    </p>
+                    <div class="liked-date">
+
+                        <i class="bi bi-heart-fill profile-liked-icon"></i>
+
+                        <p class="profile-liked-text"
+                           th:text="'Te gustó el ' +
+                            ${#temporals.format(item.createdAt, 'dd MMM yyyy')}">
+                        </p>
+
+                    </div>
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
 <!-- REVIEWS -->
 <section class="reviews-section">
     <div class="container">
 
         <div class="reviews-header">
-            <h2 class="section-title">Mis reviews</h2>
+            <h2 class="section-title">Mis reseñas
+                <span th:text="'('+${#lists.size(user.reviews)}+')'"></span>
+            </h2>
         </div>
 
         <div th:if="${#lists.isEmpty(user.reviews)}" class="no-reviews">
@@ -180,6 +252,7 @@
 <footer th:replace="fragments/footer :: footer"></footer>
 
 <script th:src="@{/js/main.js}"></script>
+<Script th:src="@{/js/carousel.js}"></Script>
 
 </body>
 </html>

@@ -61,7 +61,7 @@
     font-weight: 400;
 }
 
-.card-meta span {
+.card-meta > span {
     font-size: 0.85rem;
     color: #ffbd59;
 }

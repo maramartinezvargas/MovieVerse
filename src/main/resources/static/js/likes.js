@@ -6,21 +6,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const mediaId = likeBtn.dataset.mediaId;
     const mediaType = likeBtn.dataset.mediaType;
+    const isAuthenticated = likeBtn.dataset.authenticated === "true";
 
     const likeCount = document.getElementById("likeCount"
     const icon = likeBtn.querySelector("i"
 
-    // CSRF (Spring Security)
-    const csrfToken = document.querySelector("input[name='_csrf']").value;
+    // CSRF opcional
+    const csrfInput = document.querySelector("input[name='_csrf']"
+    const csrfToken = csrfInput ? csrfInput.value : null;
 
     likeBtn.addEventListener("click", async () => {
 
+        // usuario no autenticado
+        if (!isAuthenticated) {
+
+            showFlashMessage(
+                "error",
+                "Inicia sesión para dar me gusta."
+            
+
+            return;
+        }
+
         try {
+
             const response = await fetch(`/likes/toggle`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "X-CSRF-TOKEN": csrfToken
+                    ...(csrfToken && { "X-CSRF-TOKEN": csrfToken })
                 },
                 body: new URLSearchParams({
                     mediaId: mediaId,
@@ -30,20 +44,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json(
 
-            // usuario no logueado
-            if (data.error) {
-                alert("Tienes que iniciar sesión"
-                return;
-            }
-
-            // cambiar icono "me gusta"
+            // cambiar icono
             if (data.liked) {
+
                 icon.classList.remove("bi-heart"
                 icon.classList.add("bi-heart-fill"
-                likeBtn.classList.add("liked" //
+
+                likeBtn.classList.add("liked"
+
             } else {
+
                 icon.classList.remove("bi-heart-fill"
                 icon.classList.add("bi-heart"
+
                 likeBtn.classList.remove("liked"
             }
 
@@ -51,9 +64,47 @@ document.addEventListener("DOMContentLoaded", () => {
             likeCount.textContent = data.totalLikes;
 
         } catch (error) {
+
             console.error("Error en like:", error
+
+            showFlashMessage(
+                "error",
+                "Ha ocurrido un error al procesar el like."
+            
         }
 
+    }
+
+    function showFlashMessage(type, message) {
+
+        const flashContainer = document.querySelector(".flash-container"
+
+        if (!flashContainer) return;
+
+        const existingFlash = flashContainer.querySelector(".flash-alert"
+
+        if (existingFlash) {
+            existingFlash.remove(
+        }
+
+        const flash = document.createElement("div"
+
+        flash.className = `flash-alert ${type}`;
+
+        flash.innerHTML = `
+            <span>${message}</span>
+            <button class="flash-close">&times;</button>
+        `;
+
+        flashContainer.appendChild(flash
+
+        flash.querySelector(".flash-close").addEventListener("click", () => {
+            flash.remove(
+        }
+
+        setTimeout(() => {
+            flash.remove(
+        }, 4000
     }
 
 }
