@@ -65,7 +65,7 @@ public class SerieController {
         model.addAttribute("composer", crew.get("composer")
         model.addAttribute("cinematography", crew.get("cinematography")
 
-        List<ReviewDTO> reviews = reviewService.getAllReviews((long) id, "tv"
+        List<ReviewDTO> reviews = reviewService.getAllReviews((long) id, "SERIE"
 
         // REORDENAR: review del usuario arriba
         Authentication auth = SecurityContextHolder.getContext().getAuthentication(

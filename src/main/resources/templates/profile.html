@@ -10,15 +10,15 @@
 <th:block th:replace="fragments/header :: header"></th:block>
 
 <!-- HERO PERFIL -->
-<section class="media-hero profile-hero">
+<section class="profile-hero">
 
     <div class="container">
         <div class="media-layout">
 
             <!-- Avatar -->
-            <div class="profile-avatar">
+            <!--<div class="profile-avatar">
                 <i class="bi bi-person-circle"></i>
-            </div>
+            </div>-->
 
             <!-- Info -->
             <div class="media-info">
@@ -63,6 +63,80 @@
     </div>
 </section>
 
+<section class="carousel-section">
+
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Te han gustado
+                <span th:text="'('+${#lists.size(likedMedia)}+')'"></span>
+            </h2>
+
+            <div class="carousel-controls">
+                <button class="carousel-btn prev">‹</button>
+                <button class="carousel-btn next">›</button>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(likedMedia)}"
+             class="no-reviews">
+
+            <p class="no-reviews-text">
+                Aún no has dado me gusta a ningún título.
+            </p>
+
+        </div>
+
+        <div class="carousel"
+             th:if="${!#lists.isEmpty(likedMedia)}">
+
+            <a th:each="item : ${likedMedia}"
+
+               th:href="${item.mediaType == 'MOVIE'}
+                    ? @{/peliculas/{id}(id=${item.mediaId})}
+                    : @{/series/{id}(id=${item.mediaId})}"
+
+               class="carousel-card">
+
+                <img th:src="${item.posterPath}"
+                     th:alt="${item.title}">
+
+                <div class="card-meta">
+
+                    <span class="card-rating">
+                        <i class="bi bi-star-fill"></i>
+
+                        <span
+                                th:text="${#numbers.formatDecimal(item.voteAverage, 1, 1)}">
+                        </span>
+                    </span>
+
+                    <h3 th:text="${item.title}"></h3>
+
+                    <p class="card-genres media-type"
+                       th:text="${item.mediaType == 'MOVIE'}
+                            ? 'Película'
+                            : 'Serie'">
+                    </p>
+                    <div class="liked-date">
+
+                        <i class="bi bi-heart-fill profile-liked-icon"></i>
+
+                        <p class="profile-liked-text"
+                           th:text="'Te gustó el ' +
+                            ${#temporals.format(item.createdAt, 'dd MMM yyyy')}">
+                        </p>
+
+                    </div>
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
 
 <!-- LISTAS -->
 <section class="carousel-section">
@@ -104,72 +178,6 @@
         </div>
 
     </div>
-</section>
-
-<section class="carousel-section">
-
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Me gusta
-                <span th:text="'('+${#lists.size(likedMedia)}+')'"></span>
-            </h2>
-
-            <div class="carousel-controls">
-                <button class="carousel-btn prev">‹</button>
-                <button class="carousel-btn next">›</button>
-            </div>
-        </div>
-
-        <div th:if="${#lists.isEmpty(likedMedia)}"
-             class="no-reviews">
-
-            <p class="no-reviews-text">
-                Aún no has dado me gusta a ningún título.
-            </p>
-
-        </div>
-
-        <div class="carousel"
-             th:if="${!#lists.isEmpty(likedMedia)}">
-
-            <a th:each="item : ${likedMedia}"
-
-               th:href="${item.mediaType == 'MOVIE'}
-                    ? @{/peliculas/{id}(id=${item.mediaId})}
-                    : @{/series/{id}(id=${item.mediaId})}"
-
-               class="carousel-card">
-
-                <img th:src="${item.posterPath}"
-                     th:alt="${item.title}">
-
-                <div class="card-meta">
-
-                    <h3 th:text="${item.title}"></h3>
-
-                    <p class="card-genres"
-                       th:text="${item.mediaType == 'MOVIE'}
-                            ? 'Película'
-                            : 'Serie'">
-                                    </p>
-                    <div class="liked-date">
-
-                        <i class="bi bi-heart-fill profile-liked-icon"></i>
-
-                        <p class="profile-liked-text"
-                           th:text="'Te gustó el ' +
-                            ${#temporals.format(item.createdAt, 'dd MMM yyyy')}">
-                        </p>
-
-                    </div>
-                </div>
-
-            </a>
-
-        </div>
-
-    </div>
-
 </section>
 
 <!-- REVIEWS -->

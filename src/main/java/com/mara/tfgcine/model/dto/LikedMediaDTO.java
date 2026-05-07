@@ -10,6 +10,7 @@ public class LikedMediaDTO {
     private String title;
     private String posterPath;
     private LocalDateTime createdAt;
+    private Double voteAverage;
 
     public Long getMediaId() {
         return mediaId;
@@ -49,5 +50,13 @@ public class LikedMediaDTO {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(Double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 }

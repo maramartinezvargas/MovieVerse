@@ -87,8 +87,9 @@ CREATE TABLE reports (
 CREATE TABLE likes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     media_id BIGINT NOT NULL,
-    media_type VARCHAR(20) NOT NULL,
+    media_type ENUM('MOVIE','SERIE'),
     user_id BIGINT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_like_user FOREIGN KEY (user_id)
         REFERENCES users(id)
@@ -96,6 +97,10 @@ CREATE TABLE likes (
 
     CONSTRAINT unique_like UNIQUE (user_id, media_id, media_type)
 
+
+
+CREATE INDEX idx_likes_user_created
+ON likes(user_id, created_at DESC
 
 CREATE TABLE moderation_actions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

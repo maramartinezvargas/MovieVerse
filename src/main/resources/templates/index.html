@@ -71,19 +71,19 @@
             </div>
         </div>
 
-        <div class="carousel" id="top-tv-carousel">
-            <a th:href="@{/series/{id}(id=${show.id})}" class="carousel-card"
-               th:each="show, iterStat : ${tvShows}">
+        <div class="carousel">
+            <a th:href="@{/series/{id}(id=${serie.id})}" class="carousel-card"
+               th:each="serie, iterStat : ${tvShows}">
                 <div class="rank-badge" th:text="${iterStat.count}"></div>
-                <img th:src="${show.posterPath}" th:alt="${show.title}">
+                <img th:src="${serie.posterPath}" th:alt="${serie.title}">
                 <div class="card-meta">
                     <span>
                         <i class="bi bi-star-fill"></i>
-                        <span class="rating-value" th:text="${show.voteAverageFormatted}"></span>
+                        <span th:text="${serie.voteAverageFormatted}"></span>
                     </span>
-                    <h3 th:text="${show.title}"></h3>
+                    <h3 th:text="${serie.title}"></h3>
                     <p class="card-genres"
-                       th:text="${#strings.listJoin(show.genres, ' · ')}"></p>
+                       th:text="${#strings.listJoin(serie.genres, ' · ')}"></p>
                 </div>
             </a>
         </div>

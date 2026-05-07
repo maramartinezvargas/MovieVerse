@@ -72,6 +72,7 @@ public class UserController {
 
                 dto.setTitle(movie.getTitle()
                 dto.setPosterPath(movie.getPosterPath()
+                dto.setVoteAverage(movie.getVoteAverage()
 
             } else {
 
@@ -81,6 +82,7 @@ public class UserController {
 
                 dto.setTitle(serie.getTitle()
                 dto.setPosterPath(serie.getPosterPath()
+                dto.setVoteAverage(serie.getVoteAverage()
             }
 
             likedMedia.add(dto
@@ -113,7 +115,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", "¡Ups! Ya has reseñado este título antes."
         }
 
-        return "tv".equals(mediaType)
+        return MediaType.SERIE.name().equalsIgnoreCase(mediaType)
                 ? "redirect:/series/" + mediaId
                 : "redirect:/peliculas/" + mediaId;
     }

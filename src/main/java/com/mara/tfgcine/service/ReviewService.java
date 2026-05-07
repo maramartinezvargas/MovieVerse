@@ -44,10 +44,13 @@ public class ReviewService {
 
         List<ReviewDTO> tmdb;
 
-        if ("TV".equals(mediaType)) {
-            tmdb = tmdbService.getSerieReviews(mediaId
-        } else {
-            tmdb = tmdbService.getReviews(mediaId
+        switch (mediaType.toUpperCase()) {
+
+            case "SERIE" -> tmdb = tmdbService.getSerieReviews(mediaId
+
+            case "MOVIE" -> tmdb = tmdbService.getReviews(mediaId
+
+            default -> throw new IllegalArgumentException("Tipo inválido: " + mediaType
         }
 
         return Stream.concat(local.stream(), tmdb.stream())
@@ -110,10 +113,11 @@ public class ReviewService {
 
         User user = userRepository.findByUsername(username
 
+        mediaType = mediaType.toUpperCase(
+
         if (reviewRepository.existsByUserUsernameAndMediaIdAndMediaType(username, mediaId, mediaType)) {
             throw new IllegalStateException("duplicate"
         }
-
 
         Review review = new Review(
         review.setUser(user
