@@ -51,4 +51,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    /*Reviews en profile.html  ----------------------------------------------------------------------- */
+    function toggleReview(button) {
+
+        const reviewText =
+            button.closest(".review-card")
+                .querySelector(".review-text"
+
+        reviewText.classList.toggle("expanded"
+
+        const expanded =
+            reviewText.classList.contains("expanded"
+
+        button.querySelector(".label").textContent =
+            expanded ? "Leer menos" : "Leer más";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const toggleBtn =
+            document.getElementById("toggle-reviews-btn"
+
+        if (!toggleBtn) return;
+
+        const hiddenReviews =
+            document.querySelectorAll(".hidden-review"
+
+        let expanded = false;
+
+        toggleBtn.addEventListener("click", () => {
+
+            expanded = !expanded;
+
+            hiddenReviews.forEach(review => {
+                review.style.display =
+                    expanded ? "block" : "none";
+            }
+
+            toggleBtn.innerHTML = expanded
+                ? '<i class="bi bi-chevron-up"></i> Ver menos reseñas'
+                : '<i class="bi bi-chevron-down"></i> Ver más reseñas';
+        }
+
+    }
+
+
 }

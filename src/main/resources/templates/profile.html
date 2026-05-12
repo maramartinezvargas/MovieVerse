@@ -181,26 +181,32 @@
 </section>
 
 <!-- REVIEWS -->
+<!-- REVIEWS -->
 <section class="reviews-section">
     <div class="container">
 
         <div class="reviews-header">
-            <h2 class="section-title">Mis reseñas
-                <span th:text="'('+${#lists.size(user.reviews)}+')'"></span>
+            <h2 class="section-title">
+                Mis reseñas
+                <span th:text="'(' + ${#lists.size(user.reviews)} + ')'"></span>
             </h2>
         </div>
 
-        <div th:if="${#lists.isEmpty(user.reviews)}" class="no-reviews">
+        <div th:if="${#lists.isEmpty(user.reviews)}"
+             class="no-reviews">
+
             <p class="no-reviews-text">
                 Aún no has escrito ninguna review.
             </p>
+
         </div>
 
         <div class="reviews-list"
              th:if="${!#lists.isEmpty(user.reviews)}">
 
             <div class="review-card"
-                 th:each="review : ${user.reviews}">
+                 th:each="review, iterStat : ${user.reviews}"
+                 th:classappend="${iterStat.index > 1} ? ' hidden-review'">
 
                 <div class="review-top">
 
@@ -212,12 +218,14 @@
 
                         <div>
                             <div class="review-name">
+
                                 <span class="review-username"
                                       th:text="'@' + ${user.username}"></span>
 
                                 <span class="user-badge badge-local">
                                     Usuario MovieVerse
                                 </span>
+
                             </div>
                         </div>
 
@@ -237,6 +245,7 @@
 
                             <span class="review-rating"
                                   th:text="${review.rating}"></span>
+
                         </div>
 
                         <div class="review-date"
@@ -250,6 +259,29 @@
                 <p class="review-text"
                    th:text="${review.comment}"></p>
 
+                <div class="review-footer">
+
+                    <button class="read-more-btn"
+                            onclick="toggleReview(this)">
+
+                        <span class="label">Leer más</span>
+                        <i class="bi bi-chevron-down"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- BOTÓN VER MÁS -->
+            <div class="reviews-load-more"
+                 th:if="${#lists.size(user.reviews) > 3}">
+
+                <button id="toggle-reviews-btn" class="btn-pill btn-action">
+                    <i class="bi bi-chevron-down"></i>
+                    Ver más reseñas
+                </button>
+
             </div>
 
         </div>
@@ -260,7 +292,7 @@
 <footer th:replace="fragments/footer :: footer"></footer>
 
 <script th:src="@{/js/main.js}"></script>
-<Script th:src="@{/js/carousel.js}"></Script>
-
+<script th:src="@{/js/carousel.js}"></script>
+<script th:src="@{/js/reviews.js}"></script>
 </body>
 </html>

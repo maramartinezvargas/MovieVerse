@@ -19,9 +19,9 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     // Contar el número de likes para un titulo específico
     int countByMediaIdAndMediaType(Long mediaId, MediaType mediaType
 
-    // Obtener todos los likes de un usuario
-    List<Like> findByUser(User user
-
     // Obtener todos los likes de un usuario ordenados por fecha de creación (más recientes primero)
     List<Like> findByUserOrderByCreatedAtDesc(User user
+
+    // Obtener todos los likes de un usuario
+    List<Like> findByUser(User user
 }

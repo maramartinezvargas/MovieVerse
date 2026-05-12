@@ -101,7 +101,6 @@ public class MovieController {
         model.addAttribute("reviewCount", reviews.size()
         model.addAttribute("currentUrl", request.getRequestURI()
 
-
         //Likes y estado de like/dislike del usuario
         boolean liked = false;
         int totalLikes = likeService.countLikes((long) id, MediaType.MOVIE

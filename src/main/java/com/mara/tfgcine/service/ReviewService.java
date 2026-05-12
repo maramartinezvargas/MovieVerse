@@ -38,27 +38,20 @@ public class ReviewService {
 
         List<ReviewDTO> local = reviewRepository
                 .findByMediaIdAndMediaType(mediaId, mediaType)
-                .stream()
-                .map(this::mapLocalReview)
+                .stream().map(this::mapLocalReview)
                 .toList(
 
         List<ReviewDTO> tmdb;
 
-        switch (mediaType.toUpperCase()) {
-
+        switch (mediaType) {
             case "SERIE" -> tmdb = tmdbService.getSerieReviews(mediaId
-
             case "MOVIE" -> tmdb = tmdbService.getReviews(mediaId
-
             default -> throw new IllegalArgumentException("Tipo inválido: " + mediaType
         }
 
         return Stream.concat(local.stream(), tmdb.stream())
-                .sorted(
-                        Comparator.comparing(
-                                ReviewDTO::getCreatedAt,
-                                Comparator.nullsLast(Comparator.naturalOrder())
-                        ).reversed()
+                .sorted(Comparator.comparing(ReviewDTO::getCreatedAt,
+                        Comparator.nullsLast(Comparator.naturalOrder())).reversed()
                 )
                 .toList(
     }
