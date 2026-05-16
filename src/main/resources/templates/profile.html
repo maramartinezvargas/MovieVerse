@@ -43,29 +43,45 @@
                 <!-- Stats -->
                 <div class="media-actions profile-stats">
 
-                    <div class="stat-box">
-                    <span class="stat-number"
-                          th:text="${#lists.size(user.reviews)}"></span>
+                    <button class="stat-box"
+                            onclick="document.getElementById('reviews-section')
+                            .scrollIntoView({ behavior: 'smooth' })">
+
+                        <span class="stat-number"
+                              th:text="${#lists.size(user.reviews)}"></span>
                         <span class="stat-label">Reseñas</span>
-                    </div>
 
-                    <div class="stat-box">
-                    <span class="stat-number"
-                          th:text="${#lists.size(likedMedia)}"></span>
+                    </button>
+
+                    <button class="stat-box"
+                            onclick="document.getElementById('liked-section')
+                            .scrollIntoView({ behavior: 'smooth' })">
+
+                        <span class="stat-number"
+                              th:text="${#lists.size(likedMedia)}"></span>
                         <span class="stat-label">Me gusta</span>
-                    </div>
 
-                    <div class="stat-box">
-                    <span class="stat-number"
-                          th:text="${#lists.size(watchedMedia)}"></span>
+                    </button>
+
+                    <button class="stat-box"
+                            onclick="document.getElementById('watched-section')
+                            .scrollIntoView({ behavior: 'smooth' })">
+
+                        <span class="stat-number"
+                              th:text="${#lists.size(watchedMedia)}"></span>
                         <span class="stat-label">Vistas</span>
-                    </div>
 
-                    <div class="stat-box">
+                    </button>
+
+                    <button class="stat-box"
+                            onclick="document.getElementById('watchlist-section')
+                            .scrollIntoView({ behavior: 'smooth' })">
+
                         <span class="stat-number"
                               th:text="${#lists.size(watchlistMedia)}"></span>
                         <span class="stat-label">Pendientes</span>
-                    </div>
+
+                    </button>
 
                 </div>
 
@@ -74,7 +90,7 @@
     </div>
 </section>
 
-<section class="carousel-section">
+<section class="carousel-section" id="liked-section">
 
     <div class="container">
         <div class="section-header">
@@ -148,8 +164,6 @@
 
 </section>
 
-
-<!-- LISTAS -->
 <!--<section class="carousel-section">
     <div class="container">
 
@@ -190,7 +204,7 @@
 
     </div>
 </section>-->
-<section class="carousel-section">
+<section class="carousel-section" id="watched-section">
 
     <div class="container">
 
@@ -271,7 +285,7 @@
 
 </section>
 
-<section class="carousel-section">
+<section class="carousel-section" id="watchlist-section">
 
     <div class="container">
 
@@ -353,7 +367,7 @@
 </section>
 
 <!-- REVIEWS -->
-<section class="reviews-section">
+<section class="reviews-section" id="reviews-section">
     <div class="container">
 
         <div class="reviews-header">
