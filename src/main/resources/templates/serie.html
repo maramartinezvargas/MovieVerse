@@ -101,13 +101,32 @@
                     </button>
 
                     <!-- Estado: visto / pendiente -->
-                    <div class="media-status-wrapper">
+                    <div class="media-status-wrapper"
+                         th:data-media-id="${series.id}"
+                         data-media-type="SERIE">
 
                         <button class="btn-pill btn-details btn-status"
                                 id="statusBtn">
 
-                            <i class="bi bi-bookmark-plus"></i>
-                            <span>Guardar</span>
+                            <!-- Icono dinámico -->
+
+                            <i th:if="${currentStatus == null}"
+                               class="bi bi-bookmark-plus">
+                            </i>
+
+                            <i th:if="${currentStatus != null and currentStatus.status.name() == 'WATCHED'}"
+                               class="bi bi-eye-fill">
+                            </i>
+
+                            <i th:if="${currentStatus != null and currentStatus.status.name() == 'WATCHLIST'}"
+                               class="bi bi-clock-fill">
+                            </i>
+
+                            <!-- Texto dinámico -->
+
+                            <span th:if="${currentStatus == null}">Guardar</span>
+                            <span th:if="${currentStatus != null and currentStatus.status.name() == 'WATCHED'}">Vista</span>
+                            <span th:if="${currentStatus != null and currentStatus.status.name() == 'WATCHLIST'}">Pendiente</span>
 
                         </button>
 

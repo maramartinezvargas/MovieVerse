@@ -11,7 +11,9 @@ DROP TABLE IF EXISTS moderation_actions;
 DROP TABLE IF EXISTS audit_logs;
 DROP TABLE IF EXISTS likes;
 DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS user_media_status;
 DROP TABLE IF EXISTS users;
+
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -101,9 +103,35 @@ CREATE TABLE likes (
     CONSTRAINT unique_like UNIQUE (user_id, media_id, media_type)
 
 
-
 CREATE INDEX idx_likes_user_created
 ON likes(user_id, created_at DESC
+
+CREATE TABLE user_media_status (
+
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id BIGINT NOT NULL,
+
+    media_id BIGINT NOT NULL,
+
+    media_type ENUM('MOVIE','SERIE') NOT NULL,
+
+    status ENUM('WATCHED','WATCHLIST') NOT NULL,
+
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_user_media_status_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT uq_user_media_status
+        UNIQUE (user_id, media_id, media_type)
+
+
+
+CREATE INDEX idx_user_media_status_user_created
+ON user_media_status(user_id, created_at DESC
 
 CREATE TABLE moderation_actions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

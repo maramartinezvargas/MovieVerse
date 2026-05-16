@@ -4,11 +4,9 @@ import com.mara.tfgcine.model.dto.ReviewDTO;
 import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.Provider;
+import com.mara.tfgcine.model.status.UserMediaStatus;
 import com.mara.tfgcine.model.user.User;
-import com.mara.tfgcine.service.LikeService;
-import com.mara.tfgcine.service.ReviewService;
-import com.mara.tfgcine.service.TmdbService;
-import com.mara.tfgcine.service.UserService;
+import com.mara.tfgcine.service.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -28,16 +26,19 @@ public class MovieController {
     private final ReviewService reviewService;
     private final LikeService likeService;
     private final UserService userService;
+    private final UserMediaStatusService userMediaStatusService;
 
     public MovieController(TmdbService tmdbService,
                            ReviewService reviewService,
                            LikeService likeService,
-                           UserService userService) {
+                           UserService userService,
+                           UserMediaStatusService userMediaStatusService) {
 
         this.tmdbService = tmdbService;
         this.reviewService = reviewService;
         this.likeService = likeService;
         this.userService = userService;
+        this.userMediaStatusService = userMediaStatusService;
     }
 
     @GetMapping("/peliculas/{id}")
@@ -117,6 +118,27 @@ public class MovieController {
 
         model.addAttribute("liked", liked
         model.addAttribute("totalLikes", totalLikes
+
+        // Estado de la película para el usuario (visto, por ver, ninguno)
+        UserMediaStatus currentStatus = null;
+
+        if (auth != null && auth.isAuthenticated()) {
+
+            User user =
+                    userService.findByUsername(
+                            auth.getName()
+                    
+
+            currentStatus = userMediaStatusService
+                            .getStatus(
+                                    user,
+                                    (long) movie.getId(),
+                                    MediaType.MOVIE
+                            )
+                            .orElse(null
+        }
+
+        model.addAttribute("currentStatus", currentStatus
 
         return "movie";
     }

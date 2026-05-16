@@ -1,11 +1,13 @@
 package com.mara.tfgcine.controller;
 
-import com.mara.tfgcine.model.dto.LikedMediaDTO;
+import com.mara.tfgcine.model.dto.ProfileMediaDTO;
 import com.mara.tfgcine.model.like.Like;
 import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.list.MediaList;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.TvSeries;
+import com.mara.tfgcine.model.status.MediaStatus;
+import com.mara.tfgcine.model.status.UserMediaStatus;
 import com.mara.tfgcine.model.user.User;
 import java.util.List;
 import com.mara.tfgcine.service.*;
@@ -29,17 +31,20 @@ public class UserController {
     private final ReviewService reviewService;
     private final LikeService likeService;
     private final TmdbService tmdbService;
+    private final UserMediaStatusService userMediaStatusService;
 
     public UserController(UserService userService,
                           MediaListService mediaListService,
                           ReviewService reviewService,
                           LikeService likeService,
-                          TmdbService tmdbService) {
+                          TmdbService tmdbService,
+                          UserMediaStatusService userMediaStatusService) {
         this.userService = userService;
         this.mediaListService = mediaListService;
         this.reviewService = reviewService;
         this.likeService = likeService;
         this.tmdbService = tmdbService;
+        this.userMediaStatusService = userMediaStatusService;
     }
 
     @GetMapping("/perfil")
@@ -55,11 +60,11 @@ public class UserController {
         model.addAttribute("lists", lists
         List<Like> likes = likeService.getUserLikes(user
 
-        List<LikedMediaDTO> likedMedia = new ArrayList<>(
+        List<ProfileMediaDTO> likedMedia = new ArrayList<>(
 
         for (Like like : likes) {
 
-            LikedMediaDTO dto = new LikedMediaDTO(
+            ProfileMediaDTO dto = new ProfileMediaDTO(
 
             dto.setMediaId(like.getMediaId()
             dto.setMediaType(like.getMediaType().name()
@@ -88,6 +93,37 @@ public class UserController {
 
             likedMedia.add(dto
         }
+
+        // Cargar listas de títulos vistos y por ver
+        List<ProfileMediaDTO> watchedMedia =
+                userMediaStatusService
+                        .getStatusesByType(
+                                user,
+                                MediaStatus.WATCHED
+                        )
+                        .stream()
+                        .map(this::mapStatusToDTO)
+                        .toList(
+
+        List<ProfileMediaDTO> watchlistMedia =
+                userMediaStatusService
+                        .getStatusesByType(
+                                user,
+                                MediaStatus.WATCHLIST
+                        )
+                        .stream()
+                        .map(this::mapStatusToDTO)
+                        .toList(
+
+        model.addAttribute(
+                "watchedMedia",
+                watchedMedia
+        
+
+        model.addAttribute(
+                "watchlistMedia",
+                watchlistMedia
+        
 
         model.addAttribute("likedMedia", likedMedia
 
@@ -142,6 +178,83 @@ public class UserController {
 
         model.addAttribute("profileReviews", profileReviews
         return "profile";
+    }
+
+    private ProfileMediaDTO mapStatusToDTO(UserMediaStatus mediaStatus
+    ) {
+
+        ProfileMediaDTO dto =
+                new ProfileMediaDTO(
+
+        dto.setMediaId(
+                mediaStatus.getMediaId()
+        
+
+        dto.setMediaType(
+                mediaStatus.getMediaType().name()
+        
+
+        dto.setCreatedAt(
+                mediaStatus.getCreatedAt()
+        
+
+        try {
+
+            if (mediaStatus.getMediaType()
+                    == MediaType.MOVIE) {
+
+                Movie movie =
+                        tmdbService.getMovieDetails(
+                                mediaStatus
+                                        .getMediaId()
+                                        .intValue()
+                        
+
+                dto.setTitle(
+                        movie.getTitle()
+                
+
+                dto.setPosterPath(
+                        movie.getPosterPath()
+                
+
+                dto.setVoteAverage(
+                        movie.getVoteAverage()
+                
+
+            } else {
+
+                TvSeries serie =
+                        tmdbService.getSerieDetails(
+                                mediaStatus
+                                        .getMediaId()
+                                        .intValue()
+                        
+
+                dto.setTitle(
+                        serie.getTitle()
+                
+
+                dto.setPosterPath(
+                        serie.getPosterPath()
+                
+
+                dto.setVoteAverage(
+                        serie.getVoteAverage()
+                
+
+            }
+
+        } catch (Exception e) {
+
+            dto.setTitle(
+                    "Título no disponible"
+            
+
+        }
+
+        return dto;
+
     }
 
     // Manejar creación de reviews

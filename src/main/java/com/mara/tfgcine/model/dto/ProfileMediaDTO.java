@@ -2,7 +2,7 @@ package com.mara.tfgcine.model.dto;
 
 import java.time.LocalDateTime;
 
-public class LikedMediaDTO {
+public class ProfileMediaDTO {
 
     private Long mediaId;
     private String mediaType;

@@ -1,4 +1,4 @@
-package com.mara.tfgcine.model.enums;
+package com.mara.tfgcine.model.status;
 
 public enum MediaStatus {
     WATCHED,

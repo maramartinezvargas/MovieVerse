@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="es"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="fragments/head :: head('Perfil')"></head>
 <link rel="stylesheet" th:href="@{/css/profile.css}">
@@ -45,15 +44,27 @@
                 <div class="media-actions profile-stats">
 
                     <div class="stat-box">
-                        <span class="stat-number"
-                              th:text="${#lists.size(user.reviews)}"></span>
+                    <span class="stat-number"
+                          th:text="${#lists.size(user.reviews)}"></span>
                         <span class="stat-label">Reseñas</span>
                     </div>
 
                     <div class="stat-box">
-                        <span class="stat-number"
-                              th:text="${#lists.size(likedMedia)}"></span>
+                    <span class="stat-number"
+                          th:text="${#lists.size(likedMedia)}"></span>
                         <span class="stat-label">Me gusta</span>
+                    </div>
+
+                    <div class="stat-box">
+                    <span class="stat-number"
+                          th:text="${#lists.size(watchedMedia)}"></span>
+                        <span class="stat-label">Vistas</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-number"
+                              th:text="${#lists.size(watchlistMedia)}"></span>
+                        <span class="stat-label">Pendientes</span>
                     </div>
 
                 </div>
@@ -139,7 +150,7 @@
 
 
 <!-- LISTAS -->
-<section class="carousel-section">
+<!--<section class="carousel-section">
     <div class="container">
 
         <div class="section-header">
@@ -178,9 +189,169 @@
         </div>
 
     </div>
+</section>-->
+<section class="carousel-section">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Ya has visto
+                <span th:text="'(' + ${#lists.size(watchedMedia)} + ')'"></span>
+            </h2>
+
+            <div class="carousel-controls">
+                <button class="carousel-btn prev">‹</button>
+                <button class="carousel-btn next">›</button>
+            </div>
+
+        </div>
+
+        <div th:if="${#lists.isEmpty(watchedMedia)}"
+             class="no-reviews">
+
+            <p class="no-reviews-text">
+                Aún no has marcado ningún título como visto.
+            </p>
+
+        </div>
+
+        <div class="carousel"
+             th:if="${!#lists.isEmpty(watchedMedia)}">
+
+            <a th:each="item : ${watchedMedia}"
+
+               th:href="${item.mediaType == 'MOVIE'}
+                    ? @{/peliculas/{id}(id=${item.mediaId})}
+                    : @{/series/{id}(id=${item.mediaId})}"
+
+               class="carousel-card">
+
+                <img th:src="${item.posterPath}"
+                     th:alt="${item.title}">
+
+                <div class="card-meta">
+
+                    <span class="card-rating">
+
+                        <i class="bi bi-star-fill"></i>
+
+                        <span th:text="${#numbers.formatDecimal(item.voteAverage, 1, 1)}">
+                        </span>
+
+                    </span>
+
+                    <h3 th:text="${item.title}"></h3>
+
+                    <p class="card-genres media-type"
+                       th:text="${item.mediaType == 'MOVIE'}
+                            ? 'Película'
+                            : 'Serie'">
+                    </p>
+
+                    <div class="liked-date">
+
+                        <i class="bi bi-eye-fill profile-liked-icon"></i>
+
+                        <p class="profile-liked-text"
+                           th:text="'Vista el ' +
+                            ${#temporals.format(item.createdAt, 'dd MMM yyyy')}">
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
 </section>
 
-<!-- REVIEWS -->
+<section class="carousel-section">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Tienes pendiente ver
+                <span th:text="'(' + ${#lists.size(watchlistMedia)} + ')'"></span>
+            </h2>
+
+            <div class="carousel-controls">
+                <button class="carousel-btn prev">‹</button>
+                <button class="carousel-btn next">›</button>
+            </div>
+
+        </div>
+
+        <div th:if="${#lists.isEmpty(watchlistMedia)}"
+             class="no-reviews">
+
+            <p class="no-reviews-text">
+                Aún no tienes títulos pendientes.
+            </p>
+
+        </div>
+
+        <div class="carousel"
+             th:if="${!#lists.isEmpty(watchlistMedia)}">
+
+            <a th:each="item : ${watchlistMedia}"
+
+               th:href="${item.mediaType == 'MOVIE'}
+                    ? @{/peliculas/{id}(id=${item.mediaId})}
+                    : @{/series/{id}(id=${item.mediaId})}"
+
+               class="carousel-card">
+
+                <img th:src="${item.posterPath}"
+                     th:alt="${item.title}">
+
+                <div class="card-meta">
+
+                    <span class="card-rating">
+
+                        <i class="bi bi-star-fill"></i>
+
+                        <span th:text="${#numbers.formatDecimal(item.voteAverage, 1, 1)}">
+                        </span>
+
+                    </span>
+
+                    <h3 th:text="${item.title}"></h3>
+
+                    <p class="card-genres media-type"
+                       th:text="${item.mediaType == 'MOVIE'}
+                            ? 'Película'
+                            : 'Serie'">
+                    </p>
+
+                    <div class="liked-date">
+
+                        <i class="bi bi-clock-fill profile-liked-icon"></i>
+
+                        <p class="profile-liked-text"
+                           th:text="'Añadida el ' +
+                            ${#temporals.format(item.createdAt, 'dd MMM yyyy')}">
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
 <!-- REVIEWS -->
 <section class="reviews-section">
     <div class="container">
