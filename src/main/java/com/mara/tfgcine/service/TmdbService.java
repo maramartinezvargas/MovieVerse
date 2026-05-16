@@ -341,15 +341,12 @@ public class TmdbService {
         if (!node.path("poster_path").isNull()) {
             m.setPosterPath(IMG + node.path("poster_path").asText()
         }
-
         if (!node.path("backdrop_path").isNull()) {
             m.setBackdropPath(BACKDROP + node.path("backdrop_path").asText()
         }
-
         m.setVoteAverage(node.path("vote_average").asDouble()
         m.setVoteCount(node.path("vote_count").asInt()
         m.setGenres(extractGenres(node, isMovie)
-
 
         return m;
     }
@@ -639,7 +636,7 @@ public class TmdbService {
                 if (profilePath != null && !profilePath.isBlank()) {
                     profilePath = "https://image.tmdb.org/t/p/w185" + profilePath;
                 } else {
-                    profilePath = null; // fallback controlado (lo manejas en Thymeleaf)
+                    profilePath = null; // fallback controlado (Se maneja en la vista con Thymleaf)
                 }
 
                 castList.add(new CastMember(name, character, profilePath)

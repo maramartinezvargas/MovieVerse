@@ -1,7 +1,9 @@
 package com.mara.tfgcine.service;
 
 import com.mara.tfgcine.model.like.Like;
-import com.mara.tfgcine.model.like.MediaType;
+import com.mara.tfgcine.model.media.MediaType;
+import com.mara.tfgcine.model.media.Movie;
+import com.mara.tfgcine.model.media.TvSeries;
 import com.mara.tfgcine.model.user.User;
 import com.mara.tfgcine.repository.LikeRepository;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,14 @@ import java.util.Optional;
 public class LikeService {
 
     private final LikeRepository likeRepository;
+    private final TmdbService tmdbService;
 
-    public LikeService(LikeRepository likeRepository) {
+    public LikeService(
+            LikeRepository likeRepository,
+            TmdbService tmdbService
+    ) {
         this.likeRepository = likeRepository;
+        this.tmdbService = tmdbService;
     }
 
     /**
@@ -32,16 +39,52 @@ public class LikeService {
                 .findByUserAndMediaIdAndMediaType(user, mediaId, mediaType
 
         if (existing.isPresent()) {
+
             likeRepository.delete(existing.get()
+
             return false;
+
         } else {
+
             Like like = new Like(
+
             like.setUser(user
             like.setMediaId(mediaId
             like.setMediaType(mediaType
             like.setCreatedAt(LocalDateTime.now()
 
+            try {
+
+                // Snapshot de datos TMDB
+                if (mediaType == MediaType.MOVIE) {
+
+                    Movie movie = tmdbService.getMovieDetails(mediaId.intValue()
+
+                    like.setTitle(movie.getTitle()
+                    like.setPosterPath(movie.getPosterPath()
+                    like.setVoteAverage(movie.getVoteAverage()
+
+                } else {
+
+                    TvSeries serie = tmdbService.getSerieDetails(mediaId.intValue()
+
+                    like.setTitle(serie.getTitle()
+                    like.setPosterPath(serie.getPosterPath()
+                    like.setVoteAverage(serie.getVoteAverage()
+                }
+
+            } catch (Exception e) {
+
+                e.printStackTrace(
+
+                // fallback mínimo para evitar problemas en en like si TMDB falla
+                like.setTitle("Contenido"
+                like.setPosterPath(null
+                like.setVoteAverage(0.0
+            }
+
             likeRepository.save(like
+
             return true;
         }
     }
@@ -50,14 +93,21 @@ public class LikeService {
      * Saber si el usuario ya ha dado like
      */
     public boolean hasUserLiked(User user, Long mediaId, MediaType mediaType) {
-        return likeRepository.existsByUserAndMediaIdAndMediaType(user, mediaId, mediaType
+        return likeRepository.existsByUserAndMediaIdAndMediaType(
+                user,
+                mediaId,
+                mediaType
+        
     }
 
     /**
      * Contar likes de un contenido
      */
     public int countLikes(Long mediaId, MediaType mediaType) {
-        return likeRepository.countByMediaIdAndMediaType(mediaId, mediaType
+        return likeRepository.countByMediaIdAndMediaType(
+                mediaId,
+                mediaType
+        
     }
 
     /**
@@ -66,9 +116,5 @@ public class LikeService {
     public List<Like> getUserLikes(User user) {
         return likeRepository.findByUserOrderByCreatedAtDesc(user
     }
-
-    /**
-     * Obtener todos los likes de un usuario ordenados por fecha de creación (más recientes primero)
-     */
 
 }

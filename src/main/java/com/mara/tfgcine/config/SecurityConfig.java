@@ -84,10 +84,10 @@ public class SecurityConfig {
                         .permitAll()
                 )
 
-                // Habilitar "Remember Me" con configuración personalizada
+                // "Remember Me" con configuración personalizada
                 .rememberMe(remember -> remember
-                        .key(rememberMeKey)
-                        .tokenValiditySeconds(7 * 24 * 60 * 60)
+                        .key(rememberMeKey) // Clave secreta para tokens (configurada en application.properties)
+                        .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 días
                         .userDetailsService(userDetailsService)
                 
 

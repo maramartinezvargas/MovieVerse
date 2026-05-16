@@ -1,7 +1,7 @@
 package com.mara.tfgcine.controller;
 
 import com.mara.tfgcine.model.dto.ReviewDTO;
-import com.mara.tfgcine.model.like.MediaType;
+import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.model.user.User;
@@ -60,7 +60,7 @@ public class MovieController {
         model.addAttribute("cinematography", crew.get("cinematography")
 
         // Reviews (reordenar para que la review del usuario logueado aparezca arriba)
-        List<ReviewDTO> reviews = reviewService.getAllReviews((long) id, "movie"
+        List<ReviewDTO> reviews = reviewService.getAllReviews((long) id, MediaType.MOVIE
         Authentication auth = SecurityContextHolder.getContext().getAuthentication(
 
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {

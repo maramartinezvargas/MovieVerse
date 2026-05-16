@@ -33,6 +33,7 @@ public class User {
 
     // Relación con reviews
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OrderBy("createdAt DESC") // Ordenar por fecha de creación descendente
     private List<Review> reviews;
 
     // Relación de likes (me gusta)

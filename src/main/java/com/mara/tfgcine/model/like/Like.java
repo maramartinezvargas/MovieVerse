@@ -1,5 +1,6 @@
 package com.mara.tfgcine.model.like;
 
+import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.user.User;
 import jakarta.persistence.*;
 
@@ -22,6 +23,12 @@ public class Like {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    private String title;
+
+    private String posterPath;
+
+    private Double voteAverage;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -64,7 +71,17 @@ public class Like {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public void setCreatedAt(LocalDateTime createdAt) {this.createdAt = createdAt;}
+
+    public String getTitle() {return title;}
+
+    public void setTitle(String title) {this.title = title;}
+
+    public String getPosterPath() {return posterPath;}
+
+    public void setPosterPath(String posterPath) {this.posterPath = posterPath;}
+
+    public Double getVoteAverage() {return voteAverage;}
+
+    public void setVoteAverage(Double voteAverage) {this.voteAverage = voteAverage;}
 }

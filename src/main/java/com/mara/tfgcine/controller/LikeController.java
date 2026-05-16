@@ -1,6 +1,6 @@
 package com.mara.tfgcine.controller;
 
-import com.mara.tfgcine.model.like.MediaType;
+import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.user.User;
 import com.mara.tfgcine.service.LikeService;
 import com.mara.tfgcine.service.UserService;

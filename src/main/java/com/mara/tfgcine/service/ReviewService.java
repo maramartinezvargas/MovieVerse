@@ -1,6 +1,7 @@
 package com.mara.tfgcine.service;
 
 import com.mara.tfgcine.model.dto.ReviewDTO;
+import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.review.Review;
 import com.mara.tfgcine.model.review.TmdbReview;
 import com.mara.tfgcine.model.user.User;
@@ -31,10 +32,7 @@ public class ReviewService {
     }
 
     // Obtener todas las reviews (locales + TMDB) para una película o serie concreta, ordenadas por fecha (más recientes primero)
-    public List<ReviewDTO> getAllReviews(Long mediaId, String mediaType) {
-
-        // Normalizo el mediaType para evitar problemas de mayúsculas/minúsculas
-        mediaType = mediaType.toUpperCase(
+    public List<ReviewDTO> getAllReviews(Long mediaId, MediaType mediaType) {
 
         List<ReviewDTO> local = reviewRepository
                 .findByMediaIdAndMediaType(mediaId, mediaType)
@@ -44,8 +42,8 @@ public class ReviewService {
         List<ReviewDTO> tmdb;
 
         switch (mediaType) {
-            case "SERIE" -> tmdb = tmdbService.getSerieReviews(mediaId
-            case "MOVIE" -> tmdb = tmdbService.getReviews(mediaId
+            case SERIE -> tmdb = tmdbService.getSerieReviews(mediaId
+            case MOVIE -> tmdb = tmdbService.getReviews(mediaId
             default -> throw new IllegalArgumentException("Tipo inválido: " + mediaType
         }
 
@@ -102,11 +100,9 @@ public class ReviewService {
                              Long mediaId,
                              String comment,
                              Integer rating,
-                             String mediaType) {
+                             MediaType mediaType) {
 
         User user = userRepository.findByUsername(username
-
-        mediaType = mediaType.toUpperCase(
 
         if (reviewRepository.existsByUserUsernameAndMediaIdAndMediaType(username, mediaId, mediaType)) {
             throw new IllegalStateException("duplicate"
@@ -115,7 +111,7 @@ public class ReviewService {
         Review review = new Review(
         review.setUser(user
         review.setMediaId(mediaId
-        review.setMediaType(mediaType.toUpperCase() // Normalizado para evitar problemas de mayúsculas/minúsculas
+        review.setMediaType(MediaType.valueOf(mediaType.name())
         review.setComment(comment
         review.setRating(rating
         review.setCreatedAt(LocalDateTime.now()

@@ -2,7 +2,7 @@ package com.mara.tfgcine.controller;
 
 import com.mara.tfgcine.model.dto.LikedMediaDTO;
 import com.mara.tfgcine.model.like.Like;
-import com.mara.tfgcine.model.like.MediaType;
+import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.list.MediaList;
 import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.TvSeries;
@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.mara.tfgcine.model.dto.ProfileReviewDTO;
+import com.mara.tfgcine.model.review.Review;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -90,6 +91,56 @@ public class UserController {
 
         model.addAttribute("likedMedia", likedMedia
 
+        // Cargar reseñas del usuario
+        List<ProfileReviewDTO> profileReviews = new ArrayList<>(
+
+        for (Review review : user.getReviews()) {
+
+            ProfileReviewDTO dto = new ProfileReviewDTO(
+
+            dto.setMediaId(review.getMediaId()
+            dto.setMediaType(review.getMediaType()
+
+            dto.setComment(review.getComment()
+            dto.setRating(review.getRating()
+
+            dto.setCreatedAt(review.getCreatedAt()
+
+            try {
+
+                if (review.getMediaType() == MediaType.MOVIE) {
+
+                    Movie movie = tmdbService.getMovieDetails(
+                            review.getMediaId().intValue()
+                    
+
+                    if (movie != null) {
+                        dto.setTitle(movie.getTitle()
+                        dto.setPosterPath(movie.getPosterPath()
+                    }
+
+                } else {
+
+                    TvSeries serie = tmdbService.getSerieDetails(
+                            review.getMediaId().intValue()
+                    
+
+                    if (serie != null) {
+                        dto.setTitle(serie.getTitle()
+                        dto.setPosterPath(serie.getPosterPath()
+                    }
+                }
+
+            } catch (Exception e) {
+
+                dto.setTitle("Título no disponible"
+
+            }
+
+            profileReviews.add(dto
+        }
+
+        model.addAttribute("profileReviews", profileReviews
         return "profile";
     }
 
@@ -98,7 +149,7 @@ public class UserController {
     public String createReview(@RequestParam Long mediaId,
                                @RequestParam String comment,
                                @RequestParam(required = false) Integer rating,
-                               @RequestParam String mediaType,
+                               @RequestParam MediaType mediaType,
                                Authentication auth,
                                RedirectAttributes redirectAttributes) {
 
@@ -115,7 +166,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", "¡Ups! Ya has reseñado este título antes."
         }
 
-        return MediaType.SERIE.name().equalsIgnoreCase(mediaType)
+        return mediaType == MediaType.SERIE
                 ? "redirect:/series/" + mediaId
                 : "redirect:/peliculas/" + mediaId;
     }

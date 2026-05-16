@@ -1,4 +1,4 @@
-package com.mara.tfgcine.model.like;
+package com.mara.tfgcine.model.media;
 
 public enum MediaType {
     MOVIE,

@@ -1,6 +1,7 @@
 package com.mara.tfgcine.model.review;
 
 import com.mara.tfgcine.model.user.User;
+import com.mara.tfgcine.model.media.MediaType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -25,8 +26,9 @@ public class Review {
     @Column(name = "media_id", nullable = false)
     private Long mediaId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "media_type", nullable = false)
-    private String mediaType;
+    private MediaType mediaType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -78,11 +80,11 @@ public class Review {
         this.user = user;
     }
 
-    public String getMediaType() {
+    public MediaType getMediaType() {
         return mediaType;
     }
 
-    public void setMediaType(String mediaType) {
+    public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
     }
 

@@ -1,7 +1,7 @@
 package com.mara.tfgcine.repository;
 
 import com.mara.tfgcine.model.like.Like;
-import com.mara.tfgcine.model.like.MediaType;
+import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

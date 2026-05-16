@@ -87,7 +87,10 @@ CREATE TABLE reports (
 CREATE TABLE likes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     media_id BIGINT NOT NULL,
-    media_type ENUM('MOVIE','SERIE'),
+    media_type ENUM('MOVIE','SERIE') NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    poster_path VARCHAR(255),
+    vote_average DOUBLE,
     user_id BIGINT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 

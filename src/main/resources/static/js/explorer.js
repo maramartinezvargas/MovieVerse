@@ -210,15 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 items.forEach((item, index) => {
-
                     if (loadedIds.has(String(item.id))) return;
                     loadedIds.add(String(item.id)
 
                     if (!item.posterPath) return;
 
                     const div = document.createElement('div'
-                    div.classList.add('movie-card'
 
+                    div.classList.add('movie-card'
                     div.innerHTML = `
                         <a href="${detailBasePath}/${item.id}">
                             <img src="${item.posterPath}" alt="poster">
