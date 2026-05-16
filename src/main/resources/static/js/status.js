@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const csrfInput = document.querySelector("input[name='_csrf']"
 
     const csrfToken = csrfInput ? csrfInput.value : null;
+    const isAuthenticated = document.body.dataset.authenticated === "true";
 
     const statusWrappers =
         document.querySelectorAll(".media-status-wrapper"
@@ -19,18 +20,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!button || !dropdown) return;
 
-        /* Abrir / cerrar dropdown */
-
+        /* Abrir / cerrar dropdown - Solo para usuarios autenticados */
         button.addEventListener("click", (e) => {
 
             e.stopPropagation(
 
-            statusWrappers.forEach(other => {
+            /* Usuario no autenticado */
+            if (!isAuthenticated) {
+                showFlashMessage(
+                    "error",
+                    "Inicia sesión para guardar títulos."
+                
+                return;
+            }
 
+            statusWrappers.forEach(other => {
                 if (other !== wrapper) {
                     other.classList.remove("open"
                 }
-
             }
 
             wrapper.classList.toggle("open"
@@ -142,5 +149,43 @@ function updateStatusButton(button, status) {
             "Pendiente";
         button.classList.add("watchlist"
     }
+
+}
+
+function showFlashMessage(type, message) {
+
+    const flashContainer =
+        document.querySelector(".flash-container"
+
+    if (!flashContainer) return;
+
+    const existingFlash =
+        flashContainer.querySelector(".flash-alert"
+
+    if (existingFlash) {
+        existingFlash.remove(
+    }
+
+    const flash =
+        document.createElement("div"
+
+    flash.className =
+        `flash-alert ${type}`;
+
+    flash.innerHTML = `
+        <span>${message}</span>
+        <button class="flash-close">&times;</button>
+    `;
+
+    flashContainer.appendChild(flash
+
+    flash.querySelector(".flash-close")
+        .addEventListener("click", () => {
+            flash.remove(
+        }
+
+    setTimeout(() => {
+        flash.remove(
+    }, 4000
 
 }

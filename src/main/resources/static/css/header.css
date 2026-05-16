@@ -354,26 +354,24 @@
 }
 
 /* DROPDOWN */
+/* DROPDOWN */
 .dropdown-content {
     position: absolute;
-    right: 0;
+    left: 50%;
     top: 100%;
+    transform: translateX(-50%) translateY(5px
     margin-top: 6px;
 
     background: rgba(20, 20, 20, 0.95
     backdrop-filter: blur(10px
-
     border: 1px solid rgba(255,255,255,0.08
     border-radius: 12px;
-
     padding: 8px;
     min-width: 160px;
 
     box-shadow: 0 10px 30px rgba(0,0,0,0.5
-
     opacity: 0;
     visibility: hidden;
-    transform: translateY(5px
     transition: all 0.2s ease;
 }
 
@@ -381,7 +379,7 @@
 .dropdown-content:hover {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0
+    transform: translateX(-50%) translateY(0
 }
 
 /* LOGOUT */
@@ -389,19 +387,16 @@
     display: flex;
     align-items: center;
     gap: 6px;
-
     width: 100%;
     padding: 8px 10px;
-
     background: transparent;
     border: none;
     border-radius: 8px;
-
     color: #f0dfc8;
     cursor: pointer;
-
     transition: all 0.2s ease;
 }
+
 
 .btn-logout:hover {
     background: rgba(255, 189, 89, 0.12
@@ -409,10 +404,13 @@
 }
 
 /* Iconos dentro del botón login */
-.btn-user i {
-    font-size: 1.1rem;
+
+.btn-logout i, .btn-user i{
+    font-size: 1rem;
     display: flex;
     align-items: center;
+    width: 16px;
+    justify-content: center;
     color: #ffc76b;
 }
 
@@ -439,4 +437,10 @@
     .main-nav a:not(.btn-user) {
         order: 3;
     }
+
+    .user-dropdown {
+        width: fit-content;
+        align-self: center;
+    }
+
 }

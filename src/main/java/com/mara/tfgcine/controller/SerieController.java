@@ -129,7 +129,10 @@ public class SerieController {
         // Estado de la película para el usuario (visto, por ver, ninguno)
         UserMediaStatus currentStatus = null;
 
-        if (auth != null && auth.isAuthenticated()) {
+        // Solo se carga el estado si el usuario está autenticado
+        if (auth != null
+                && auth.isAuthenticated()
+                && !auth.getName().equals("anonymousUser")) {
 
             User user =
                     userService.findByUsername(
