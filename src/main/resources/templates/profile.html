@@ -67,7 +67,7 @@
 
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Te han gustado
+            <h2 class="section-title">Te ha gustado
                 <span th:text="'('+${#lists.size(likedMedia)}+')'"></span>
             </h2>
 
@@ -202,84 +202,107 @@
         </div>
 
         <div class="reviews-list"
-             th:if="${!#lists.isEmpty(user.reviews)}">
+             th:if="${!#lists.isEmpty(profileReviews)}">
 
-            <div class="review-card"
-                 th:each="review, iterStat : ${user.reviews}"
+            <div class="profile-review-card"
+
+                 th:each="review, iterStat : ${profileReviews}"
+
                  th:classappend="${iterStat.index > 1} ? ' hidden-review'">
 
-                <div class="review-top">
+                <!-- POSTER -->
+                <!-- POSTER -->
+                <a class="profile-review-poster"
 
-                    <div class="review-user-info">
+                   th:href="${review.mediaType.name() == 'MOVIE'}
+                        ? @{/peliculas/{id}(id=${review.mediaId})}
+                        : @{/series/{id}(id=${review.mediaId})}">
 
-                        <div class="review-avatar avatar-placeholder">
-                            <i class="bi bi-person"></i>
-                        </div>
+                    <img th:if="${review.posterPath != null}"
+                         th:src="${review.posterPath}"
+                         th:alt="${review.title}">
 
-                        <div>
-                            <div class="review-name">
+                    <div th:if="${review.posterPath == null}"
+                         class="profile-review-no-poster">
 
-                                <span class="review-username"
-                                      th:text="'@' + ${user.username}"></span>
+                        <i class="bi bi-film"></i>
 
-                                <span class="user-badge badge-local">
-                                    Usuario MovieVerse
-                                </span>
+                    </div>
+
+                </a>
+
+                <!-- CONTENT -->
+                <div class="profile-review-content">
+
+                    <div class="profile-review-header">
+
+                        <a class="profile-review-title-link"
+
+                           th:href="${review.mediaType.name() == 'MOVIE'}
+                                ? @{/peliculas/{id}(id=${review.mediaId})}
+                                : @{/series/{id}(id=${review.mediaId})}">
+
+                            <h3 class="profile-review-title"
+                                th:text="${review.title}">
+                            </h3>
+
+                        </a>
+
+                        <div class="profile-review-meta">
+
+                            <div class="profile-review-stars"
+                                 th:if="${review.rating != null}"
+                                 th:with="stars=${review.rating}">
+
+                                <i class="bi bi-star-fill"
+                                   th:each="i : ${#numbers.sequence(1, stars)}"></i>
+
+                                <i class="bi bi-star"
+                                   th:if="${stars < 10}"
+                                   th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+
+                                <span th:text="${review.rating}"></span>
 
                             </div>
+
+                            <span class="profile-review-date"
+                                  th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
+                    </span>
+
                         </div>
 
                     </div>
 
-                    <div class="review-meta-right">
+                    <p class="profile-review-comment"
+                       th:text="${review.comment}">
+                    </p>
 
-                        <div class="review-stars"
-                             th:if="${review.rating != null}"
-                             th:with="stars=${T(java.lang.Math).floor(review.rating)}">
+                    <div class="profile-review-footer"
+                         th:if="${#strings.length(review.comment) > 180}">
+                        <button class="read-more-btn"
+                                onclick="toggleReview(event, this)">
 
-                            <i class="bi bi-star-fill"
-                               th:each="i : ${#numbers.sequence(1, stars)}"></i>
+                            <span class="label">Leer más</span>
+                            <i class="bi bi-chevron-down"></i>
 
-                            <i class="bi bi-star"
-                               th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
-
-                            <span class="review-rating"
-                                  th:text="${review.rating}"></span>
-
-                        </div>
-
-                        <div class="review-date"
-                             th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
-                        </div>
+                        </button>
 
                     </div>
-
-                </div>
-
-                <p class="review-text"
-                   th:text="${review.comment}"></p>
-
-                <div class="review-footer">
-
-                    <button class="read-more-btn"
-                            onclick="toggleReview(this)">
-
-                        <span class="label">Leer más</span>
-                        <i class="bi bi-chevron-down"></i>
-
-                    </button>
 
                 </div>
 
             </div>
 
-            <!-- BOTÓN VER MÁS -->
+            <!-- VER MÁS -->
             <div class="reviews-load-more"
-                 th:if="${#lists.size(user.reviews) > 2}">
+                 th:if="${#lists.size(profileReviews) > 2}">
 
-                <button id="toggle-reviews-btn" class="btn-pill btn-action">
+                <button id="toggle-reviews-btn"
+                        class="btn-pill btn-action">
+
                     <i class="bi bi-chevron-down"></i>
                     Ver más reseñas
+
                 </button>
 
             </div>

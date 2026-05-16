@@ -4,6 +4,11 @@ import com.mara.tfgcine.model.media.MediaType;
 
 import java.time.LocalDateTime;
 
+/**
+ * DTO para representar las reseñas en el perfil del usuario.
+ * Contiene información básica sobre la reseña, como el título del medio, el comentario, la calificación y la fecha de creación.
+ */
+
 public class ProfileReviewDTO {
 
     private Long mediaId;

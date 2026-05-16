@@ -1,3 +1,27 @@
+function toggleReview(event, button) {
+
+    event.preventDefault(
+    event.stopPropagation(
+
+    const reviewText =
+        button.closest(".profile-review-card, .review-card")
+            .querySelector(".profile-review-comment, .review-text"
+
+    reviewText.classList.toggle("expanded"
+
+    const expanded =
+        reviewText.classList.contains("expanded"
+
+    button.querySelector(".label").textContent =
+        expanded ? "Leer menos" : "Leer más";
+
+    const icon = button.querySelector("i"
+
+    if (icon) {
+        icon.classList.toggle("rotated"
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     /* Flash alerts */
@@ -7,9 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (flashAlerts.length) {
 
         document.querySelectorAll('.flash-close').forEach(btn => {
+
             btn.addEventListener('click', () => {
                 btn.closest('.flash-alert').remove(
             }
+
         }
 
         setTimeout(() => {
@@ -17,15 +43,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000
     }
 
-    /* Validación del formulario de reseñas */
+    /* Validación formulario reseñas */
 
     document.querySelectorAll(".review-modal form").forEach(form => {
 
         form.addEventListener("submit", (e) => {
 
-            const ratingInput = form.querySelector(".rating-input"
-            const ratingWrapper = form.querySelector(".star-rating"
-            const errorText = form.querySelector(".rating-error-text"
+            const ratingInput =
+                form.querySelector(".rating-input"
+
+            const ratingWrapper =
+                form.querySelector(".star-rating"
+
+            const errorText =
+                form.querySelector(".rating-error-text"
 
             if (!ratingInput.value) {
 
@@ -38,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 ratingWrapper.addEventListener("click", () => {
+
                     ratingWrapper.classList.remove("rating-error"
 
                     if (errorText) {
@@ -51,28 +83,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    /*Reviews en profile.html  ----------------------------------------------------------------------- */
-    function toggleReview(button) {
+    /* Mostrar "Leer más" solo si hay overflow */
 
-        const reviewText =
-            button.closest(".review-card")
-                .querySelector(".review-text"
+    /*document.querySelectorAll(".profile-review-comment").forEach(comment => {
 
-        reviewText.classList.toggle("expanded"
+        requestAnimationFrame(() => {
+            const footer =
+                comment.parentElement.querySelector(
+                    ".profile-review-footer"
+                
 
-        const expanded =
-            reviewText.classList.contains("expanded"
+            if (!footer) return;
 
-        button.querySelector(".label").textContent =
-            expanded ? "Leer menos" : "Leer más";
-    }
+            const needsClamp =
+                comment.scrollHeight > comment.clientHeight + 1;
 
-    document.addEventListener("DOMContentLoaded", () => {
+            if (!needsClamp) {
+                footer.style.display = "none";
+            }
+        }
+    }*/
 
-        const toggleBtn =
-            document.getElementById("toggle-reviews-btn"
+    /* Toggle ver más reseñas */
 
-        if (!toggleBtn) return;
+    const toggleBtn =
+        document.getElementById("toggle-reviews-btn"
+
+    if (toggleBtn) {
 
         const hiddenReviews =
             document.querySelectorAll(".hidden-review"
@@ -84,16 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
             expanded = !expanded;
 
             hiddenReviews.forEach(review => {
-                review.style.display =
-                    expanded ? "block" : "none";
+                review.classList.toggle("show-review"
             }
 
             toggleBtn.innerHTML = expanded
                 ? '<i class="bi bi-chevron-up"></i> Ver menos reseñas'
                 : '<i class="bi bi-chevron-down"></i> Ver más reseñas';
+
         }
 
     }
-
 
 }

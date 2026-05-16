@@ -355,7 +355,7 @@
 
                     <p class="review-text" th:text="${review.comment}"></p>
                     <div class="review-footer">
-                        <button class="read-more-btn" onclick="toggleReview(this)">
+                        <button class="read-more-btn" onclick="toggleReview(event, this)">
                             <span class="label">Leer más</span>
                             <i class="bi bi-chevron-down"></i>
                         </button>
