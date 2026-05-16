@@ -117,6 +117,121 @@
     transition: all 0.2s ease;
 }
 
+/* Botón de gestión de listas */
+
+.media-status-wrapper {
+    position: relative;
+}
+
+.status-dropdown {
+
+    position: absolute;
+
+    top: calc(100% + 10px
+    left: 0;
+
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+
+    z-index: 100;
+
+    animation: fadeSlide .18s ease;
+}
+
+.media-status-wrapper.open .status-dropdown {
+    display: flex;
+}
+
+.status-option {
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    width: max-content;
+
+    padding: 10px 16px;
+
+    border-radius: 999px;
+
+    border: 1px solid rgba(255,255,255,.10
+
+    background: rgba(255,255,255,.04
+
+    backdrop-filter: blur(12px
+
+    color: inherit;
+
+    font-size: .95rem;
+    font-weight: 500;
+    font-family: inherit;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition: transform .2s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
+}
+
+.status-option:hover {
+    transform: translateY(-1px
+    background: rgb(170, 124, 55, 0.15
+    border-color: rgb(170, 124, 55, 0.3
+}
+
+.status-option i {
+    font-size: .95rem;
+}
+
+.status-option i {
+    font-size: .9rem;
+    opacity: .9;
+}
+
+@keyframes fadeSlide {
+
+    from {
+        opacity: 0;
+        transform: translateY(-6px
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0
+    }
+}
+
+@media (max-width: 768px) {
+    .media-actions {
+        position: relative;
+        flex-wrap: wrap;
+    }
+
+    .media-status-wrapper {
+        position: relative;
+    }
+
+    .status-dropdown {
+        position: absolute;
+        top: calc(100% + 12px
+        right: 0;
+        left: auto;
+        bottom: auto;
+        transform: none;
+        align-items: flex-end;
+        width: max-content;
+        z-index: 200;
+        animation: fadeSlide .16s ease;
+    }
+
+    .status-option {
+        min-width: 220px;
+        justify-content: center;
+    }
+
+}
+
 /* Proveedores de streaming */
 .media-providers {
     margin-top: 16px;

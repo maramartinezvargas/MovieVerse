@@ -92,10 +92,41 @@
                         </button>
 
                         <!-- LISTA -->
-                        <button class="btn-pill btn-details">
+                        <!--<button class="btn-pill btn-details">
                             <i class="bi bi-plus-lg"></i>
                             Añadir a lista
-                        </button>
+                        </button>-->
+                        <div class="media-status-wrapper">
+
+                            <button class="btn-pill btn-details btn-status"
+                                    id="statusBtn">
+
+                                <i class="bi bi-bookmark-plus"></i>
+                                <span>Guardar</span>
+
+                            </button>
+
+                            <div class="status-dropdown">
+
+                                <button class="status-option"
+                                        data-status="WATCHED">
+
+                                    <i class="bi bi-eye"></i>
+                                    Marcar como vista
+
+                                </button>
+
+                                <button class="status-option"
+                                        data-status="WATCHLIST">
+
+                                    <i class="bi bi-clock"></i>
+                                    Añadir a pendientes
+
+                                </button>
+
+                            </div>
+
+                        </div>
 
                     </div>
                     <!-- Proveedores de streaming -->
@@ -452,6 +483,7 @@
     <script th:src="@{/js/main.js}"></script>
     <script th:src="@{/js/reviews.js}"></script>
     <script th:src="@{/js/likes.js}"></script>
+    <script th:src="@{/js/status.js}"></script>
 </body>
 
 <!-- Modal trailer -->
