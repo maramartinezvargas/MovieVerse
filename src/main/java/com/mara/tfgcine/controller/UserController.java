@@ -115,39 +115,25 @@ public class UserController {
                         .map(this::mapStatusToDTO)
                         .toList(
 
-        model.addAttribute(
-                "watchedMedia",
-                watchedMedia
-        
-
-        model.addAttribute(
-                "watchlistMedia",
-                watchlistMedia
-        
-
+        model.addAttribute("watchedMedia", watchedMedia
+        model.addAttribute("watchlistMedia", watchlistMedia
         model.addAttribute("likedMedia", likedMedia
 
         // Cargar reseñas del usuario
         List<ProfileReviewDTO> profileReviews = new ArrayList<>(
 
         for (Review review : user.getReviews()) {
-
             ProfileReviewDTO dto = new ProfileReviewDTO(
-
             dto.setId(review.getId() // Para poder eliminar la review desde el perfil
-
             dto.setMediaId(review.getMediaId()
             dto.setMediaType(review.getMediaType()
-
             dto.setComment(review.getComment()
             dto.setRating(review.getRating()
-
             dto.setCreatedAt(review.getCreatedAt()
 
             try {
 
                 if (review.getMediaType() == MediaType.MOVIE) {
-
                     Movie movie = tmdbService.getMovieDetails(
                             review.getMediaId().intValue()
                     
@@ -156,9 +142,7 @@ public class UserController {
                         dto.setTitle(movie.getTitle()
                         dto.setPosterPath(movie.getPosterPath()
                     }
-
                 } else {
-
                     TvSeries serie = tmdbService.getSerieDetails(
                             review.getMediaId().intValue()
                     
@@ -168,13 +152,9 @@ public class UserController {
                         dto.setPosterPath(serie.getPosterPath()
                     }
                 }
-
             } catch (Exception e) {
-
                 dto.setTitle("Título no disponible"
-
             }
-
             profileReviews.add(dto
         }
 
@@ -182,81 +162,31 @@ public class UserController {
         return "profile";
     }
 
-    private ProfileMediaDTO mapStatusToDTO(UserMediaStatus mediaStatus
-    ) {
-
-        ProfileMediaDTO dto =
-                new ProfileMediaDTO(
-
-        dto.setMediaId(
-                mediaStatus.getMediaId()
-        
-
-        dto.setMediaType(
-                mediaStatus.getMediaType().name()
-        
-
-        dto.setCreatedAt(
-                mediaStatus.getCreatedAt()
-        
+    private ProfileMediaDTO mapStatusToDTO(UserMediaStatus mediaStatus)
+    {
+        ProfileMediaDTO dto = new ProfileMediaDTO(
+        dto.setMediaId(mediaStatus.getMediaId()
+        dto.setMediaType(mediaStatus.getMediaType().name()
+        dto.setCreatedAt(mediaStatus.getCreatedAt()
 
         try {
 
-            if (mediaStatus.getMediaType()
-                    == MediaType.MOVIE) {
-
-                Movie movie =
-                        tmdbService.getMovieDetails(
-                                mediaStatus
-                                        .getMediaId()
-                                        .intValue()
-                        
-
-                dto.setTitle(
-                        movie.getTitle()
-                
-
-                dto.setPosterPath(
-                        movie.getPosterPath()
-                
-
-                dto.setVoteAverage(
-                        movie.getVoteAverage()
-                
-
+            if (mediaStatus.getMediaType() == MediaType.MOVIE) {
+                Movie movie = tmdbService.getMovieDetails(mediaStatus.getMediaId().intValue()
+                dto.setTitle(movie.getTitle()
+                dto.setPosterPath(movie.getPosterPath()
+                dto.setVoteAverage(movie.getVoteAverage()
             } else {
-
-                TvSeries serie =
-                        tmdbService.getSerieDetails(
-                                mediaStatus
-                                        .getMediaId()
-                                        .intValue()
-                        
-
-                dto.setTitle(
-                        serie.getTitle()
-                
-
-                dto.setPosterPath(
-                        serie.getPosterPath()
-                
-
-                dto.setVoteAverage(
-                        serie.getVoteAverage()
-                
-
+                TvSeries serie = tmdbService.getSerieDetails(mediaStatus.getMediaId().intValue()
+                dto.setTitle(serie.getTitle()
+                dto.setPosterPath(serie.getPosterPath()
+                dto.setVoteAverage(serie.getVoteAverage()
             }
 
         } catch (Exception e) {
-
-            dto.setTitle(
-                    "Título no disponible"
-            
-
+            dto.setTitle("Título no disponible"
         }
-
         return dto;
-
     }
 
     // Manejar creación de reviews
