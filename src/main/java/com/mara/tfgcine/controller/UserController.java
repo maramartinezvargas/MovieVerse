@@ -276,7 +276,7 @@ public class UserController {
 
         try {
             reviewService.createReview(username, mediaId, comment, rating, mediaType
-            redirectAttributes.addFlashAttribute("success", "¡Gracias por tu reseña!"
+            redirectAttributes.addFlashAttribute("successMessage", "¡Gracias por tu reseña!"
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", "¡Ups! Ya has reseñado este título antes."
         }

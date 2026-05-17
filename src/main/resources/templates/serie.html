@@ -8,15 +8,17 @@
 <th:block th:replace="~{fragments/header :: header}"></th:block>
 
 <div class="flash-container">
+
     <div th:if="${error}" class="flash-alert error">
         <span th:text="${error}"></span>
         <button class="flash-close">&times;</button>
     </div>
 
-    <div th:if="${success}" class="flash-alert success">
-        <span th:text="${success}"></span>
+    <div th:if="${successMessage}" class="flash-alert success">
+        <span th:text="${successMessage}"></span>
         <button class="flash-close">&times;</button>
     </div>
+
 </div>
 
 <!-- Hero -->

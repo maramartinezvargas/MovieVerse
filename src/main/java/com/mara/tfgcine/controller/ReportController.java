@@ -37,8 +37,7 @@ public class ReportController {
                                @RequestHeader(value = "Referer",
                                        required = false) String referer) {
 
-        Review review =
-                reviewRepository.findById(id).orElse(null
+        Review review = reviewRepository.findById(id).orElse(null
 
         if (review == null) {
             return "redirect:/";
@@ -68,7 +67,7 @@ public class ReportController {
         reportRepository.save(report
 
         redirectAttributes.addFlashAttribute(
-                "success",
+                "successMessage",
                 "Reseña reportada correctamente."
         
 
