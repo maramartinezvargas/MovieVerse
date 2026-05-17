@@ -64,16 +64,12 @@ CREATE TABLE list_items (
 
 CREATE TABLE reports (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-
     reporter_id BIGINT,
     review_id BIGINT,
     reported_user_id BIGINT,
-
     reason TEXT,
-
     status ENUM('PENDING','UNDER_REVIEW','RESOLVED','REJECTED')
         DEFAULT 'PENDING',
-
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (reporter_id) REFERENCES users(id)
@@ -109,25 +105,19 @@ ON likes(user_id, created_at DESC
 CREATE TABLE user_media_status (
 
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-
     user_id BIGINT NOT NULL,
-
     media_id BIGINT NOT NULL,
-
     media_type ENUM('MOVIE','SERIE') NOT NULL,
-
     status ENUM('WATCHED','WATCHLIST') NOT NULL,
-
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_user_media_status_user
-        FOREIGN KEY (user_id)
+    CONSTRAINT fk_user_media_status_user 
+		FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE,
-
+        
     CONSTRAINT uq_user_media_status
         UNIQUE (user_id, media_id, media_type)
-
 
 
 CREATE INDEX idx_user_media_status_user_created

@@ -16,7 +16,7 @@ public class Report {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private ReportStatus status;
+    private ReportStatus status = ReportStatus.PENDING;
 
     @Column(name = "reporter_id")
     private Long reporterId;
@@ -30,7 +30,19 @@ public class Report {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public Report() {}
+    public Report() {
+    }
+
+    // CreatedAt y Status se establecen automáticamente al persistir con valores predeterminados
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now(
+        }
+        if (status == null) {
+            status = ReportStatus.PENDING;
+        }
+    }
 
     public Long getId() {
         return id;

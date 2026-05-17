@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class ReviewDTO {
 
+    private Long id;
     private String username;
     private String comment;
     private Double rating;
@@ -60,6 +61,10 @@ public class ReviewDTO {
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
+
+    public Long getId() {return id;}
+
+    public void setId(Long id) {this.id = id;}
 
     @Override
     public boolean equals(Object o) {

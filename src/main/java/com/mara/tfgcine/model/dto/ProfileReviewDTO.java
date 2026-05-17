@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 public class ProfileReviewDTO {
 
+    private Long id;
     private Long mediaId;
     private MediaType mediaType;
 
@@ -79,5 +80,13 @@ public class ProfileReviewDTO {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

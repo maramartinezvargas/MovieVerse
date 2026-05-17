@@ -360,8 +360,8 @@
                 <!-- COLUMNA DERECHA -->
                 <div class="reviews-list">
 
-                    <div class="review-card"
-                         th:each="review, iterStat : ${reviews}"
+                    <th:block th:each="review, iterStat : ${reviews}">
+                        <div class="review-card"
                          th:classappend="${iterStat.index > 0} ? ' hidden-review'">
 
                         <div class="review-top">
@@ -416,8 +416,40 @@
                                 <div class="review-date"
                                      th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
                                 </div>
+                                <div class="review-actions">
 
+                                    <!-- REVIEW PROPIA -->
+                                    <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
+                                        <!-- DELETE -->
+                                        <form th:action="@{/reviews/delete/{id}(id=${review.id})}"
+                                              method="post">
+                                            <button type="submit"
+                                                    class="review-action-btn delete-review-btn">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+
+                                        <!-- EDIT -->
+                                        <button type="button"
+                                                class="review-action-btn"
+                                                data-bs-toggle="modal"
+                                                th:data-bs-target="'#editReviewModal-' + ${review.id}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </th:block>
+
+                                    <!-- REVIEW AJENA / REPORT -->
+                                    <button type="button"
+                                            class="review-action-btn report-review-btn"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#reportModal-' + ${review.id}"
+                                            th:if="${review.source == 'LOCAL'and #authentication.name != review.username}">
+                                        <i class="bi bi-flag"></i>
+                                    </button>
+
+                                </div>
                             </div>
+
 
                         </div>
 
@@ -430,6 +462,12 @@
                             </button>
                         </div>
                     </div>
+                        <th:block th:replace="~{fragments/report-modal :: reportModal(${review})}">
+                        </th:block>
+                        <th:block th:if="${review.source == 'LOCAL'and #authentication.name == review.username}">
+                            <th:block th:replace="~{fragments/review-modal :: reviewModal(${movie.id},'MOVIE',${review})}"></th:block>
+                        </th:block>
+                    </th:block>
                     <!-- BOTÓN VER MÁS -->
                     <div class="reviews-load-more"
                          th:if="${#lists.size(reviews) > 1}">
@@ -486,7 +524,7 @@
     </section>
 
     <!-- Modal review -->
-    <th:block th:replace="fragments/review-modal :: reviewModal(${movie.id}, 'MOVIE')"></th:block>
+    <th:block th:replace="~{fragments/review-modal :: reviewModal(${movie.id},'MOVIE', ${null})}"></th:block>
 
     <!-- Footer -->
     <footer th:replace="fragments/footer :: footer"></footer>

@@ -342,73 +342,106 @@
 
             <!-- DERECHA -->
             <div class="reviews-list">
+                <th:block th:each="review, iterStat : ${reviews}">
+                    <div class="review-card"
+                         th:classappend="${iterStat.index > 0} ? ' hidden-review'">
 
-                <div class="review-card"
-                     th:each="review, iterStat : ${reviews}"
-                     th:classappend="${iterStat.index > 0} ? ' hidden-review'">
+                        <div class="review-top">
 
-                    <div class="review-top">
+                            <div class="review-user-info">
 
-                        <div class="review-user-info">
+                                <div class="review-avatar">
+                                    <img th:if="${review.avatarUrl != null}"
+                                         th:src="${review.avatarUrl}"
+                                         th:alt="${review.username}">
+                                    <div class="review-avatar avatar-placeholder"
+                                         th:if="${review.avatarUrl == null}">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                </div>
 
-                            <div class="review-avatar">
-                                <img th:if="${review.avatarUrl != null}"
-                                     th:src="${review.avatarUrl}"
-                                     th:alt="${review.username}">
-                                <div class="review-avatar avatar-placeholder"
-                                     th:if="${review.avatarUrl == null}">
-                                    <i class="bi bi-person"></i>
+                                <div>
+                                    <div class="review-name">
+                                        <span class="review-username"
+                                              th:text="'@' + ${review.username}"></span>
+
+                                        <span class="user-badge"
+                                              th:classappend="${review.source == 'TMDB'} ? ' badge-tmdb' : ' badge-local'"
+                                              th:text="${review.source == 'TMDB'} ? 'Usuario TMDB' : 'Usuario MovieVerse'">
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="review-meta-right">
+
+                                <div class="review-stars"
+                                     th:if="${review.rating != null}"
+                                     th:with="stars=${T(java.lang.Math).floor(review.rating)}">
+
+                                    <i class="bi bi-star-fill"
+                                       th:each="i : ${#numbers.sequence(1, stars)}"></i>
+
+                                    <i class="bi bi-star"
+                                       th:if="${stars < 10}"
+                                       th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+
+                                    <span class="review-rating"
+                                          th:text="${review.rating}"></span>
+                                </div>
+
+                                <div class="review-date"
+                                     th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
+                                </div>
+                                <div class="review-actions">
+                                    <!-- REVIEW PROPIA -->
+                                    <th:block th:if="${review.source == 'LOCAL'and #authentication.name == review.username}">
+                                        <!-- DELETE -->
+                                        <form th:action="@{/reviews/delete/{id}(id=${review.id})}" method="post">
+                                            <button type="submit"
+                                                    class="review-action-btn delete-review-btn">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+
+                                        <!-- EDIT -->
+                                        <button type="button"
+                                                class="review-action-btn"
+                                                data-bs-toggle="modal"
+                                                th:data-bs-target="'#editReviewModal-' + ${review.id}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+
+                                    </th:block>
+
+                                    <!-- REVIEW AJENA -->
+                                    <button type="button"
+                                            class="review-action-btn report-review-btn"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#reportModal-' + ${review.id}"
+                                            th:if="${review.source == 'LOCAL'and #authentication.name != review.username}">
+                                        <i class="bi bi-flag"></i>
+                                    </button>
                                 </div>
                             </div>
-
-                            <div>
-                                <div class="review-name">
-                                    <span class="review-username"
-                                          th:text="'@' + ${review.username}"></span>
-
-                                    <span class="user-badge"
-                                          th:classappend="${review.source == 'TMDB'} ? ' badge-tmdb' : ' badge-local'"
-                                          th:text="${review.source == 'TMDB'} ? 'Usuario TMDB' : 'Usuario MovieVerse'">
-                                    </span>
-                                </div>
-                            </div>
-
                         </div>
-
-                        <div class="review-meta-right">
-
-                            <div class="review-stars"
-                                 th:if="${review.rating != null}"
-                                 th:with="stars=${T(java.lang.Math).floor(review.rating)}">
-
-                                <i class="bi bi-star-fill"
-                                   th:each="i : ${#numbers.sequence(1, stars)}"></i>
-
-                                <i class="bi bi-star"
-                                   th:if="${stars < 10}"
-                                   th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
-
-                                <span class="review-rating"
-                                      th:text="${review.rating}"></span>
-                            </div>
-
-                            <div class="review-date"
-                                 th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
-                            </div>
-
+                        <p class="review-text" th:text="${review.comment}"></p>
+                        <div class="review-footer">
+                            <button class="read-more-btn" onclick="toggleReview(event, this)">
+                                <span class="label">Leer más</span>
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
                         </div>
-
                     </div>
 
-                    <p class="review-text" th:text="${review.comment}"></p>
-                    <div class="review-footer">
-                        <button class="read-more-btn" onclick="toggleReview(event, this)">
-                            <span class="label">Leer más</span>
-                            <i class="bi bi-chevron-down"></i>
-                        </button>
-                    </div>
-
-                </div>
+                    <th:block th:replace="~{fragments/report-modal :: reportModal(${review})}">
+                    </th:block>
+                    <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
+                        <th:block th:replace="~{fragments/review-modal :: reviewModal(${series.id},'SERIE',${review})}">
+                        </th:block>
+                    </th:block>
+                    </th:block>
                 <div class="reviews-load-more"
                      th:if="${#lists.size(reviews) > 1}">
 
@@ -470,7 +503,7 @@
 </section>
 
 <!-- Modal review -->
-<th:block th:replace="fragments/review-modal :: reviewModal(${series.id}, 'SERIE')"></th:block>
+<th:block th:replace="~{fragments/review-modal :: reviewModal(${series.id},'SERIE',${null})}"></th:block>
 
 <!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>

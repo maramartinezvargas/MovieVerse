@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* ==================================================
-       NAV / BURGER */
+    /*NAV / BURGER -------------------------------------------------------------------------- */
 
     const burger = document.getElementById("burger-btn"
     const nav = document.getElementById("main-nav"
@@ -20,8 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ==================================================
-       SEARCH */
+    /* SEARCH -------------------------------------------------------------------------- */
 
     const input = document.getElementById("search-input"
     const resultsBox = document.getElementById("search-results"
@@ -113,8 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ==================================================
-         Login      */
+    /* Login -------------------------------------------------------------------------- */
 
     const password = document.getElementById("password"
     const confirmPassword = document.getElementById("confirmPassword"
@@ -139,8 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmPassword.addEventListener("blur", validatePassword
     }
 
-    /* ==================================================
-       TRAILER MODAL */
+    /* TRAILER MODAL -------------------------------------------------------------------------- */
 
     const modalEl = document.getElementById("trailerModal"
     const iframe = document.getElementById("trailerIframe"
@@ -166,9 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ==================================================
-       REVIEWS: TOGGLE LIST */
-
+    /* REVIEWS: TOGGLE LIST -------------------------------------------------------------------------- */
     const btn = document.getElementById("toggle-reviews-btn"
 
     if (btn) {
@@ -199,11 +193,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ==================================================
-       STAR RATING */
-
+    /* STAR RATING -------------------------------------------------------------------------- */
     document.querySelectorAll(".star-rating").forEach(rating => {
-
         const stars = rating.querySelectorAll(".star"
         const ratingInput = rating.querySelector(".rating-input"
         const ratingText = rating.querySelector(".rating-value"
@@ -263,18 +254,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
     }
-
-    /* ==================================================
-       INIT */
-
     updateReadMoreButtons(
 
 }
 
 
-/* ==================================================
-   REVIEW TEXT TOGGLE */
-
+/* REVIEW TEXT TOGGLE (leer más/menos) ------------------------------------------------------------------------ */
 function toggleReview(button) {
     const text = button.closest(".review-card").querySelector(".review-text"
     const label = button.querySelector(".label"
@@ -291,10 +276,7 @@ function toggleReview(button) {
     }
 }
 
-
-/* ==================================================
-   CONTROL BOTONES "LEER MÁS" */
-
+/* CONTROL BOTONES "LEER MÁS" */
 function updateReadMoreButtons() {
     document.querySelectorAll(".review-card").forEach(card => {
 

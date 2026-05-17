@@ -134,6 +134,8 @@ public class UserController {
 
             ProfileReviewDTO dto = new ProfileReviewDTO(
 
+            dto.setId(review.getId() // Para poder eliminar la review desde el perfil
+
             dto.setMediaId(review.getMediaId()
             dto.setMediaType(review.getMediaType()
 

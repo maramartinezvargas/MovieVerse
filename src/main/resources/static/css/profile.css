@@ -164,6 +164,39 @@
     scroll-margin-top: 110px;
 }
 
+/* Boton de borrar review */
+.review-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.review-actions form {
+    margin: 0;
+}
+
+.review-action-btn {
+    width: 30px;
+    height: 30px;
+    opacity: .7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    margin: 0 4px;
+    background: rgba(255,255,255,0.06
+    color: rgba(255,255,255,.7
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease, color .2s ease;
+}
+
+.review-action-btn:hover {
+    background: rgba(255,255,255,0.1
+    color: #ffc76b;
+    transform: scale(1.05
+}
+
 /* Sections */
 
 .list-card {
@@ -252,21 +285,17 @@
 }
 
 .profile-review-poster {
-    width: 85px;
-    min-width: 85px;
-
-    height: 125px;
-
+    width: 112px;
+    min-width: 112px;
+    height: 162px;
     overflow: hidden;
     border-radius: 12px;
-
     flex-shrink: 0;
-
     display: block;
 }
 
 .profile-review-poster:hover {
-    opacity: .9;
+    opacity: .95;
 }
 
 .profile-review-poster img {
@@ -284,6 +313,15 @@
 
 .profile-review-content {
     flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    min-width: 0;
+}
+
+.profile-review-main {
+    flex: 1;
     min-width: 0;
 }
 
@@ -291,10 +329,16 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+}
 
-    gap: 1rem;
-
-    margin-bottom: .9rem;
+.profile-review-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    min-width: 150px;
+    text-align: right;
+    flex-shrink: 0;
 }
 
 .profile-review-title {
@@ -314,21 +358,16 @@
 }
 
 .profile-review-comment {
-    color: rgba(255,255,255,.7
-
+    color: #f0dfc8;
     margin: 0 0 .35rem 0;
-
     line-height: 1.7;
-
     overflow: hidden;
-
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
-
     max-width: 100%;
-
     word-break: break-word;
+    font-size: .95rem;
 }
 
 .profile-review-comment.expanded {
@@ -340,19 +379,15 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-
     gap: 8px;
-
-    min-width: 140px;
+    text-align: right;
 }
 
 .profile-review-stars {
     display: flex;
     align-items: center;
     gap: 3px;
-
     font-size: 0.8rem;
-
     color: #ffc76b;
 }
 
@@ -413,7 +448,6 @@
 }
 
 .profile-review-footer .read-more-btn:hover {
-
     background: rgba(255, 199, 107, 0.3
 }
 
@@ -440,17 +474,66 @@
     display: flex !important;
 }
 
-/* Responsive */
+/* Mensajes de feedback para el usuario */
+.flash-alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    backdrop-filter: blur(14px
+    animation: fadeSlideIn .25s ease;
+}
 
+.flash-success {
+    background: rgba(40, 167, 69, 0.18
+    border: 1px solid rgba(40, 167, 69, 0.35
+    color: #9be7af;
+}
+
+.flash-close {
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    opacity: .8;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 10px)
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%
+    }
+}
+
+/* Responsive */
 @media (max-width: 600px) {
 
-    .profile-review-header {
+    .profile-review-card {
         flex-direction: column;
-        gap: 10px;
     }
 
-    .profile-review-meta {
-        align-items: flex-start;
+    .profile-review-content {
+        width: 100%;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .profile-review-side {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
     }
 
 }

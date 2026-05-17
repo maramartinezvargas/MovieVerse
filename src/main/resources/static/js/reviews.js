@@ -3,17 +3,14 @@ function toggleReview(event, button) {
     event.preventDefault(
     event.stopPropagation(
 
-    const reviewText =
-        button.closest(".profile-review-card, .review-card")
-            .querySelector(".profile-review-comment, .review-text"
+    const reviewText = button.closest(".profile-review-card, .review-card")
+                            .querySelector(".profile-review-comment, .review-text"
 
     reviewText.classList.toggle("expanded"
 
-    const expanded =
-        reviewText.classList.contains("expanded"
+    const expanded = reviewText.classList.contains("expanded"
 
-    button.querySelector(".label").textContent =
-        expanded ? "Leer menos" : "Leer más";
+    button.querySelector(".label").textContent = expanded ? "Leer menos" : "Leer más";
 
     const icon = button.querySelector("i"
 
@@ -25,22 +22,14 @@ function toggleReview(event, button) {
 document.addEventListener('DOMContentLoaded', () => {
 
     /* Flash alerts */
-
     const flashAlerts = document.querySelectorAll('.flash-alert'
-
     if (flashAlerts.length) {
-
         document.querySelectorAll('.flash-close').forEach(btn => {
-
             btn.addEventListener('click', () => {
                 btn.closest('.flash-alert').remove(
             }
-
         }
-
-        setTimeout(() => {
-            flashAlerts.forEach(el => el.remove()
-        }, 4000
+        setTimeout(() => {flashAlerts.forEach(el => el.remove()}, 4000
     }
 
     /* Validación formulario reseñas */
@@ -48,39 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll(".review-modal form").forEach(form => {
 
         form.addEventListener("submit", (e) => {
-
-            const ratingInput =
-                form.querySelector(".rating-input"
-
-            const ratingWrapper =
-                form.querySelector(".star-rating"
-
-            const errorText =
-                form.querySelector(".rating-error-text"
+            const ratingInput = form.querySelector(".rating-input"
+            const ratingWrapper = form.querySelector(".star-rating"
+            const errorText = form.querySelector(".rating-error-text"
 
             if (!ratingInput.value) {
 
                 e.preventDefault(
-
                 ratingWrapper.classList.add("rating-error"
 
-                if (errorText) {
-                    errorText.classList.add("visible"
-                }
+                if (errorText) {errorText.classList.add("visible"}
 
                 ratingWrapper.addEventListener("click", () => {
-
                     ratingWrapper.classList.remove("rating-error"
-
-                    if (errorText) {
-                        errorText.classList.remove("visible"
-                    }
-
+                    if (errorText) {errorText.classList.remove("visible"}
                 }, { once: true }
             }
-
         }
-
     }
 
     /* Mostrar "Leer más" solo si hay overflow */
@@ -132,4 +105,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    /* Inicializar estrellas en modales de edición */
+
+    document.querySelectorAll(".review-modal").forEach(modal => {
+
+        const ratingInput = modal.querySelector(".rating-input"
+        const stars = modal.querySelectorAll(".star"
+        const ratingValue = modal.querySelector(".rating-value"
+
+        if (!ratingInput || !stars.length) return;
+
+        const currentRating = parseInt(ratingInput.value
+
+        // Si no hay rating o es inválido, no hacemos nada (se mostrarán todas vacías)
+        console.log("rating actual:", ratingInput.value
+        if (isNaN(currentRating) || currentRating <= 0) return;
+
+        stars.forEach(star => {
+            const value = parseInt(star.dataset.value
+            star.className = value <= currentRating ? "bi bi-star-fill star" : "bi bi-star star";
+        }
+
+        if (ratingValue) {
+            ratingValue.textContent = `${currentRating}/10`;
+        }
+    }
 }

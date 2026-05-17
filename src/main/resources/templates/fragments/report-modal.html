@@ -1,0 +1,73 @@
+<div th:fragment="reportModal(review)"
+     class="modal fade report-modal"
+     th:id="'reportModal-' + ${review.id}"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form th:action="@{/reports/review/{id}(id=${review.id})}"
+                  method="post">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        <i class="bi bi-flag-fill"></i>
+                        Reportar reseña
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+                    <div class="report-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span>
+                            Usa esta opción solo para contenido ofensivo,
+                            spam o comportamiento inapropiado.
+                        </span>
+                    </div>
+
+                    <div class="review-field">
+                        <label>
+                            Motivo del reporte
+                        </label>
+                        <textarea name="reason"
+                                  class="form-control custom-textarea"
+                                  rows="5"
+                                  required
+                                  maxlength="250"
+                                  placeholder="Describe el problema de esta reseña..."></textarea>
+                    </div>
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-submit btn-report-submit"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-submit btn-report-submit">
+                        <i class="bi bi-flag-fill"></i>
+                        Enviar reporte
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>

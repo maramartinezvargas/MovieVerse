@@ -65,6 +65,7 @@ public class ReviewService {
             dto.setUsername("Usuario MovieVerse"
         }
 
+        dto.setId(review.getId() // Para poder eliminar la review localmente
         dto.setComment(review.getComment()
         dto.setRating((double) review.getRating()
         dto.setCreatedAt(review.getCreatedAt()

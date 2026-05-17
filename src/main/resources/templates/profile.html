@@ -8,6 +8,17 @@
 
 <th:block th:replace="fragments/header :: header"></th:block>
 
+<div th:if="${successMessage}"
+     class="flash-alert flash-success">
+
+    <span th:text="${successMessage}"></span>
+
+    <button class="flash-close">
+        <i class="bi bi-x-lg"></i>
+    </button>
+
+</div>
+
 <!-- HERO PERFIL -->
 <section class="profile-hero">
 
@@ -389,13 +400,10 @@
         <div class="reviews-list"
              th:if="${!#lists.isEmpty(profileReviews)}">
 
-            <div class="profile-review-card"
+            <th:block th:each="review, iterStat : ${profileReviews}">
+                <div class="profile-review-card"
+                     th:classappend="${iterStat.index > 1} ? ' hidden-review'">
 
-                 th:each="review, iterStat : ${profileReviews}"
-
-                 th:classappend="${iterStat.index > 1} ? ' hidden-review'">
-
-                <!-- POSTER -->
                 <!-- POSTER -->
                 <a class="profile-review-poster"
 
@@ -411,7 +419,6 @@
                          class="profile-review-no-poster">
 
                         <i class="bi bi-film"></i>
-
                     </div>
 
                 </a>
@@ -419,13 +426,14 @@
                 <!-- CONTENT -->
                 <div class="profile-review-content">
 
-                    <div class="profile-review-header">
+                    <!-- COLUMNA CENTRAL -->
+                    <div class="profile-review-main">
 
                         <a class="profile-review-title-link"
 
                            th:href="${review.mediaType.name() == 'MOVIE'}
-                                ? @{/peliculas/{id}(id=${review.mediaId})}
-                                : @{/series/{id}(id=${review.mediaId})}">
+                ? @{/peliculas/{id}(id=${review.mediaId})}
+                : @{/series/{id}(id=${review.mediaId})}">
 
                             <h3 class="profile-review-title"
                                 th:text="${review.title}">
@@ -433,51 +441,85 @@
 
                         </a>
 
-                        <div class="profile-review-meta">
+                        <p class="profile-review-comment"
+                           th:text="${review.comment}">
+                        </p>
 
-                            <div class="profile-review-stars"
-                                 th:if="${review.rating != null}"
-                                 th:with="stars=${review.rating}">
+                        <div class="profile-review-footer"
+                             th:if="${#strings.length(review.comment) > 180}">
 
-                                <i class="bi bi-star-fill"
-                                   th:each="i : ${#numbers.sequence(1, stars)}"></i>
+                            <button class="read-more-btn"
+                                    onclick="toggleReview(event, this)">
 
-                                <i class="bi bi-star"
-                                   th:if="${stars < 10}"
-                                   th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+                                <span class="label">Leer más</span>
+                                <i class="bi bi-chevron-down"></i>
 
-                                <span th:text="${review.rating}"></span>
-
-                            </div>
-
-                            <span class="profile-review-date"
-                                  th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
-                    </span>
+                            </button>
 
                         </div>
 
                     </div>
 
-                    <p class="profile-review-comment"
-                       th:text="${review.comment}">
-                    </p>
+                    <!-- COLUMNA DERECHA -->
+                    <div class="profile-review-side">
 
-                    <div class="profile-review-footer"
-                         th:if="${#strings.length(review.comment) > 180}">
-                        <button class="read-more-btn"
-                                onclick="toggleReview(event, this)">
+                        <div class="profile-review-stars"
+                             th:if="${review.rating != null}"
+                             th:with="stars=${review.rating}">
 
-                            <span class="label">Leer más</span>
-                            <i class="bi bi-chevron-down"></i>
+                            <i class="bi bi-star-fill"
+                               th:each="i : ${#numbers.sequence(1, stars)}"></i>
 
-                        </button>
+                            <i class="bi bi-star"
+                               th:if="${stars < 10}"
+                               th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+
+                            <span th:text="${review.rating}"></span>
+
+                        </div>
+
+                        <span class="profile-review-date"
+                              th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
+                        </span>
+
+                        <!-- Botones de editar y eliminar solo para el autor -->
+                        <div class="review-actions">
+                            <form th:action="@{/reviews/delete/{id}(id=${review.id})}"
+                                  method="post">
+
+                                <button type="submit"
+                                        class="review-action-btn delete-review-btn">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+                            </form>
+                            <button type="button"
+                                    class="review-action-btn"
+                                    data-bs-toggle="modal"
+                                    th:data-bs-target="'#editReviewModal-' + ${review.id}">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </button>
+
+                        </div>
 
                     </div>
 
                 </div>
-
             </div>
 
+            <!-- MODAL EDIT -->
+            <th:block th:replace="~{
+            fragments/review-modal :: reviewModal(
+                ${review.mediaId},
+                ${review.mediaType},
+                ${review}
+            )}">
+            </th:block>
+
+            </th:block>
             <!-- VER MÁS -->
             <div class="reviews-load-more"
                  th:if="${#lists.size(profileReviews) > 2}">
@@ -498,7 +540,7 @@
 </section>
 
 <footer th:replace="fragments/footer :: footer"></footer>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/main.js}"></script>
 <script th:src="@{/js/carousel.js}"></script>
 <script th:src="@{/js/reviews.js}"></script>

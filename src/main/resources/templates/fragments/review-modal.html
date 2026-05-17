@@ -5,8 +5,10 @@
 
 <body>
 
-<div th:fragment="reviewModal(mediaId, mediaType)"
-     th:id="'reviewModal-' + ${mediaId}"
+<div th:fragment="reviewModal(mediaId, mediaType, review)"
+     th:id="${review != null
+        ? 'editReviewModal-' + review.id
+        : 'reviewModal-' + mediaId}"
      class="modal fade review-modal"
      tabindex="-1">
 
@@ -17,7 +19,10 @@
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="bi bi-pencil-fill"></i>
-                    Escribir reseña
+                    <span th:text="${review != null
+                        ? 'Editar reseña'
+                        : 'Escribir reseña'}">
+                    </span>
                 </h5>
                 <button type="button"
                         class="btn-close"
@@ -27,7 +32,11 @@
             <!-- USUARIO LOGUEADO -->
             <div sec:authorize="isAuthenticated()">
 
-                <form th:action="@{/reviews}" method="post">
+                <!-- Si ya existe una reseña, precargar los datos. Si no, el formulario estará vacío para crear una nueva reseña -->
+                <form th:action="${review != null}
+                        ? @{/reviews/edit/{id}(id=${review.id})}
+                        : @{/reviews}"
+                      method="post">
 
                     <input type="hidden" name="mediaId" th:value="${mediaId}" />
                     <input type="hidden" name="mediaType" th:value="${mediaType}" />
@@ -39,7 +48,11 @@
                             <label>¿Qué nota le das?</label>
 
                             <div class="star-rating">
-                                <input type="hidden" name="rating" class="rating-input" required>
+                                <input type="hidden"
+                                       name="rating"
+                                       class="rating-input"
+                                       th:value="${review != null and review.rating != null ? review.rating : 0}"
+                                       required>
                                 <i class="bi bi-star star" data-value="1"></i>
                                 <i class="bi bi-star star" data-value="2"></i>
                                 <i class="bi bi-star star" data-value="3"></i>
@@ -62,6 +75,7 @@
                             <label>Tu opinión</label>
 
                             <textarea name="comment"
+                                      th:text="${review != null ? review.comment : ''}"
                                       class="form-control custom-textarea"
                                       rows="4"
                                       placeholder="Comparte tu opinión..."
@@ -82,7 +96,10 @@
 
                         <button type="submit"
                                 class="btn btn-action btn-review">
-                            Publicar
+                            <span th:text="${review != null}
+                                ? 'Guardar cambios'
+                                : 'Publicar'">
+                            </span>
                         </button>
 
                     </div>
