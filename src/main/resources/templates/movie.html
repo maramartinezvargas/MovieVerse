@@ -299,8 +299,13 @@
                         data-bs-toggle="modal"
                         th:data-bs-target="${'#reviewModal-' + movie.id}">
                     <i class="bi bi-pencil-fill"></i>
-                    <span sec:authorize="isAuthenticated()">Escribir reseña</span>
-                    <span sec:authorize="!isAuthenticated()">Inicia sesión para reseñar</span>
+                    <span th:if="${#authorization.expression('isAuthenticated()')}">
+                        Escribir reseña
+                    </span>
+
+                                        <span th:if="${!#authorization.expression('isAuthenticated()')}">
+                        Inicia sesión para reseñar
+                    </span>
                 </button>
 
             </div>
@@ -446,7 +451,7 @@
                                             class="review-action-btn report-review-btn"
                                             data-bs-toggle="modal"
                                             th:data-bs-target="'#reportModal-' + ${review.id}"
-                                            th:if="${review.source == 'LOCAL'and #authentication.name != review.username}">
+                                            th:if="${review.source == 'LOCAL' and #authentication.name != review.username}">
                                         <i class="bi bi-flag"></i>
                                     </button>
 
@@ -467,7 +472,7 @@
                     </div>
                         <th:block th:replace="~{fragments/report-modal :: reportModal(${review})}">
                         </th:block>
-                        <th:block th:if="${review.source == 'LOCAL'and #authentication.name == review.username}">
+                        <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
                             <th:block th:replace="~{fragments/review-modal :: reviewModal(
                                     ${movie.id},
                                     'MOVIE',
@@ -543,6 +548,10 @@
     )}">
     </th:block>
 
+
+    <!-- Modal trailer -->
+    <th:block th:replace="~{fragments/trailer-modal :: trailerModal}"></th:block>
+
     <!-- Footer -->
     <footer th:replace="fragments/footer :: footer"></footer>
 
@@ -554,6 +563,5 @@
     <script th:src="@{/js/status.js}"></script>
 </body>
 
-<!-- Modal trailer -->
-<th:block th:replace="~{fragments/trailer-modal :: trailerModal}"></th:block>
+
 </html>

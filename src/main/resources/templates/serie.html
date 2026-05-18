@@ -522,6 +522,11 @@
         ${series.posterPath}
     )}">
     </th:block>
+
+
+<!-- Modal tráiler -->
+<th:block th:replace="~{fragments/trailer-modal :: trailerModal}"></th:block>
+
 <!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>
 
@@ -533,7 +538,5 @@
 <script th:src="@{/js/status.js}"></script>
 </body>
 
-<!-- Modal tráiler -->
-<th:block th:replace="~{fragments/trailer-modal :: trailerModal}"></th:block>
 
 </html>

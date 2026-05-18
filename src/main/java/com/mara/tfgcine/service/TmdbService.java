@@ -10,6 +10,7 @@ import com.mara.tfgcine.model.media.Movie;
 import com.mara.tfgcine.model.media.Provider;
 import com.mara.tfgcine.model.media.TvSeries;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -25,8 +26,11 @@ public class TmdbService {
     private Map<Integer, String> movieGenreMap = new HashMap<>(
     private Map<Integer, String> tvGenreMap = new HashMap<>(
 
-    private static final String IMG = "https://image.tmdb.org/t/p/w500";
-    private static final String BACKDROP = "https://image.tmdb.org/t/p/original";
+    @Value("${tmdb.image.poster}")
+    private String posterBaseUrl;
+
+    @Value("${tmdb.image.backdrop}")
+    private String backdropBaseUrl;
 
     public TmdbService(TmdbClient tmdbClient) {
         this.tmdbClient = tmdbClient;
@@ -339,10 +343,10 @@ public class TmdbService {
         m.setReleaseDate(node.path("release_date").asText()
 
         if (!node.path("poster_path").isNull()) {
-            m.setPosterPath(IMG + node.path("poster_path").asText()
+            m.setPosterPath(posterBaseUrl + node.path("poster_path").asText()
         }
         if (!node.path("backdrop_path").isNull()) {
-            m.setBackdropPath(BACKDROP + node.path("backdrop_path").asText()
+            m.setBackdropPath(backdropBaseUrl + node.path("backdrop_path").asText()
         }
         m.setVoteAverage(node.path("vote_average").asDouble()
         m.setVoteCount(node.path("vote_count").asInt()
@@ -361,7 +365,7 @@ public class TmdbService {
         m.setOverview(json.path("overview").asText()
 
         if (!json.path("poster_path").isNull()) {
-            m.setPosterPath(IMG + json.path("poster_path").asText()
+            m.setPosterPath(posterBaseUrl + json.path("poster_path").asText()
         }
 
         if (!json.path("backdrop_path").isNull()) {
@@ -370,7 +374,7 @@ public class TmdbService {
             if (bestBackdrop != null) {
                 m.setBackdropPath(bestBackdrop
             } else {
-                m.setBackdropPath(BACKDROP + json.path("backdrop_path").asText()
+                m.setBackdropPath(backdropBaseUrl + json.path("backdrop_path").asText()
             }
         }
 
@@ -438,7 +442,7 @@ public class TmdbService {
             }
 
             if (bestBackdrop != null && !bestBackdrop.path("file_path").isNull()) {
-                return BACKDROP + bestBackdrop.path("file_path").asText(
+                return backdropBaseUrl + bestBackdrop.path("file_path").asText(
             }
 
             return null;
@@ -495,7 +499,7 @@ public class TmdbService {
         tv.setTitle(title
         tv.setReleaseDate(node.path("first_air_date").asText()
         if (!node.path("poster_path").isNull()) {
-            tv.setPosterPath(IMG + node.path("poster_path").asText()
+            tv.setPosterPath(posterBaseUrl + node.path("poster_path").asText()
         }
 
         tv.setVoteAverage(node.path("vote_average").asDouble()
@@ -504,7 +508,7 @@ public class TmdbService {
 
         // fallback para series sin poster pero con backdrop, así no salen vacías en el listado
         if (!node.path("backdrop_path").isNull()) {
-            tv.setBackdropPath(BACKDROP + node.path("backdrop_path").asText()
+            tv.setBackdropPath(backdropBaseUrl + node.path("backdrop_path").asText()
         }
 
         return tv;
@@ -701,11 +705,11 @@ public class TmdbService {
         tv.setOverview(json.path("overview").asText()
 
         if (!json.path("poster_path").isNull()) {
-            tv.setPosterPath(IMG + json.path("poster_path").asText()
+            tv.setPosterPath(posterBaseUrl + json.path("poster_path").asText()
         }
 
         if (!json.path("backdrop_path").isNull()) {
-            tv.setBackdropPath(BACKDROP + json.path("backdrop_path").asText()
+            tv.setBackdropPath(backdropBaseUrl + json.path("backdrop_path").asText()
         }
 
         tv.setVoteAverage(json.path("vote_average").asDouble()
