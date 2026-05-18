@@ -176,6 +176,17 @@ INSERT INTO users (username, email, password) VALUES
 ('cinefan', 'cinefan@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'),
 ('critic', 'critic@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'
 
+
+
+
+
+
+
+
+
+
+
+
 -- Reviews prueba | para Dune (438631)
 INSERT INTO reviews (
     comment,

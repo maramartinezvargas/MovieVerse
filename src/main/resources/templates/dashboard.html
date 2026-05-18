@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Dashboard Moderación</title>
+
+</head>
+
+<body>
+
+<h1>Dashboard Moderación</h1>
+
+<h2>Reportes</h2>
+
+<div th:if="${#lists.isEmpty(reports)}">
+
+    <p>No hay reportes pendientes.</p>
+
+</div>
+
+<table th:if="${!#lists.isEmpty(reports)}"
+       border="1">
+
+    <thead>
+
+    <tr>
+        <th>ID</th>
+        <th>Review ID</th>
+        <th>Reporter ID</th>
+        <th>Reported User ID</th>
+        <th>Motivo</th>
+        <th>Estado</th>
+        <th>Fecha</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr th:each="report : ${reports}">
+
+        <td th:text="${report.id}"></td>
+
+        <td th:text="${report.reviewId}"></td>
+
+        <td th:text="${report.reporterId}"></td>
+
+        <td th:text="${report.reportedUserId}"></td>
+
+        <td th:text="${report.reason}"></td>
+
+        <td th:text="${report.status}"></td>
+
+        <td th:text="${#temporals.format(report.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+</body>
+
+</html>

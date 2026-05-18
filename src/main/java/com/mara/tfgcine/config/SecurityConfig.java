@@ -52,11 +52,22 @@ public class SecurityConfig {
                                 "/series/**"
                         ).permitAll()
 
-                        // Rutas protegidas (solo para usuarios autenticados)
-                        .requestMatchers("/reviews/**").authenticated()
+                                // Reviews → usuario autenticado
+                                .requestMatchers("/reviews/**")
+                                .authenticated()
 
-                        // Cualquier otra ruta requiere autenticación
-                        .anyRequest().authenticated()
+                                // Dashboard → solo admin/moderador
+                                .requestMatchers("/dashboard/**")
+                                .hasAnyRole("ADMIN", "MODERATOR")
+
+                                // Cualquier otra ruta requiere autenticación
+                                .anyRequest().authenticated()
+                )
+
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendRedirect("/"
+                        })
                 )
 
                 .formLogin(form -> form
