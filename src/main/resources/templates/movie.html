@@ -468,7 +468,14 @@
                         <th:block th:replace="~{fragments/report-modal :: reportModal(${review})}">
                         </th:block>
                         <th:block th:if="${review.source == 'LOCAL'and #authentication.name == review.username}">
-                            <th:block th:replace="~{fragments/review-modal :: reviewModal(${movie.id},'MOVIE',${review})}"></th:block>
+                            <th:block th:replace="~{fragments/review-modal :: reviewModal(
+                                    ${movie.id},
+                                    'MOVIE',
+                                    ${review},
+                                    ${movie.title},
+                                    ${movie.posterPath}
+                                )}">
+                            </th:block>
                         </th:block>
                     </th:block>
                     <!-- BOTÓN VER MÁS -->
@@ -527,7 +534,14 @@
     </section>
 
     <!-- Modal review -->
-    <th:block th:replace="~{fragments/review-modal :: reviewModal(${movie.id},'MOVIE', ${null})}"></th:block>
+    <th:block th:replace="~{fragments/review-modal :: reviewModal(
+        ${movie.id},
+        'MOVIE',
+        ${null},
+        ${movie.title},
+        ${movie.posterPath}
+    )}">
+    </th:block>
 
     <!-- Footer -->
     <footer th:replace="fragments/footer :: footer"></footer>

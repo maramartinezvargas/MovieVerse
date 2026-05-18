@@ -34,6 +34,10 @@ public class Review {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // Snapshot de título y poster para mostrar en perfil
+    private String title;
+    private String posterPath;
+
     public Review() {}
 
     public Long getId() {
@@ -87,6 +91,23 @@ public class Review {
     public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
 
 
 }

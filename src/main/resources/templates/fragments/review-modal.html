@@ -5,7 +5,7 @@
 
 <body>
 
-<div th:fragment="reviewModal(mediaId, mediaType, review)"
+<div th:fragment="reviewModal(mediaId, mediaType, review, title, posterPath)"
      th:id="${review != null
         ? 'editReviewModal-' + review.id
         : 'reviewModal-' + mediaId}"
@@ -40,6 +40,8 @@
 
                     <input type="hidden" name="mediaId" th:value="${mediaId}" />
                     <input type="hidden" name="mediaType" th:value="${mediaType}" />
+                    <input type="hidden" name="title" th:value="${title}">
+                    <input type="hidden" name="posterPath" th:value="${posterPath}">
 
                     <div class="modal-body">
 

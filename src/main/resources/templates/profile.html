@@ -408,8 +408,10 @@
                         ? @{/peliculas/{id}(id=${review.mediaId})}
                         : @{/series/{id}(id=${review.mediaId})}">
 
+                    <!--<img th:if="${review.posterPath != null}"
+                         th:src="'https://image.tmdb.org/t/p/w342' + ${review.posterPath}">-->
                     <img th:if="${review.posterPath != null}"
-                         th:src="'https://image.tmdb.org/t/p/w342' + ${review.posterPath}">
+                         th:src="${review.posterPath}">
 
                     <div th:if="${review.posterPath == null}"
                          class="profile-review-no-poster">
@@ -511,7 +513,9 @@
             fragments/review-modal :: reviewModal(
                 ${review.mediaId},
                 ${review.mediaType},
-                ${review}
+                ${review},
+                ${review.title},
+                ${review.posterPath}
             )}">
             </th:block>
 

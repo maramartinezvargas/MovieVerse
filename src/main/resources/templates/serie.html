@@ -443,8 +443,14 @@
                     <th:block th:replace="~{fragments/report-modal :: reportModal(${review})}">
                     </th:block>
                     <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
-                        <th:block th:replace="~{fragments/review-modal :: reviewModal(${series.id},'SERIE',${review})}">
-                        </th:block>
+                        <th:block th:replace="~{fragments/review-modal :: reviewModal(
+                                    ${series.id},
+                                    'SERIE',
+                                    ${review},
+                                    ${series.title},
+                                    ${series.posterPath}
+                                )}">
+                            </th:block>
                     </th:block>
                     </th:block>
                 <div class="reviews-load-more"
@@ -508,8 +514,14 @@
 </section>
 
 <!-- Modal review -->
-<th:block th:replace="~{fragments/review-modal :: reviewModal(${series.id},'SERIE',${null})}"></th:block>
-
+<th:block th:replace="~{fragments/review-modal :: reviewModal(
+        ${series.id},
+        'SERIE',
+        ${null},
+        ${series.title},
+        ${series.posterPath}
+    )}">
+    </th:block>
 <!-- Footer -->
 <footer th:replace="fragments/footer :: footer"></footer>
 

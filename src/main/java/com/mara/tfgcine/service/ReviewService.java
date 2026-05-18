@@ -101,7 +101,9 @@ public class ReviewService {
                              Long mediaId,
                              String comment,
                              Integer rating,
-                             MediaType mediaType) {
+                             MediaType mediaType,
+                             String title,
+                             String posterPath) {
 
         User user = userRepository.findByUsername(username
 
@@ -116,6 +118,8 @@ public class ReviewService {
         review.setComment(comment
         review.setRating(rating
         review.setCreatedAt(LocalDateTime.now()
+        review.setTitle(title
+        review.setPosterPath(posterPath
 
         reviewRepository.save(review
     }

@@ -30,20 +30,17 @@ public class UserController {
     private final MediaListService mediaListService;
     private final ReviewService reviewService;
     private final LikeService likeService;
-    private final TmdbService tmdbService;
     private final UserMediaStatusService userMediaStatusService;
 
     public UserController(UserService userService,
                           MediaListService mediaListService,
                           ReviewService reviewService,
                           LikeService likeService,
-                          TmdbService tmdbService,
                           UserMediaStatusService userMediaStatusService) {
         this.userService = userService;
         this.mediaListService = mediaListService;
         this.reviewService = reviewService;
         this.likeService = likeService;
-        this.tmdbService = tmdbService;
         this.userMediaStatusService = userMediaStatusService;
     }
 
@@ -112,31 +109,9 @@ public class UserController {
             dto.setComment(review.getComment()
             dto.setRating(review.getRating()
             dto.setCreatedAt(review.getCreatedAt()
+            dto.setTitle(review.getTitle()
+            dto.setPosterPath(review.getPosterPath()
 
-            try {
-
-                if (review.getMediaType() == MediaType.MOVIE) {
-                    Movie movie = tmdbService.getMovieDetails(
-                            review.getMediaId().intValue()
-                    
-
-                    if (movie != null) {
-                        dto.setTitle(movie.getTitle()
-                        dto.setPosterPath(movie.getPosterPath()
-                    }
-                } else {
-                    TvSeries serie = tmdbService.getSerieDetails(
-                            review.getMediaId().intValue()
-                    
-
-                    if (serie != null) {
-                        dto.setTitle(serie.getTitle()
-                        dto.setPosterPath(serie.getPosterPath()
-                    }
-                }
-            } catch (Exception e) {
-                dto.setTitle("Título no disponible"
-            }
             profileReviews.add(dto
         }
 
@@ -163,6 +138,8 @@ public class UserController {
                                @RequestParam String comment,
                                @RequestParam(required = false) Integer rating,
                                @RequestParam MediaType mediaType,
+                               @RequestParam String title,
+                               @RequestParam String posterPath,
                                Authentication auth,
                                RedirectAttributes redirectAttributes) {
 
@@ -173,7 +150,7 @@ public class UserController {
         String username = auth.getName(
 
         try {
-            reviewService.createReview(username, mediaId, comment, rating, mediaType
+            reviewService.createReview(username, mediaId, comment, rating, mediaType, title, posterPath
             redirectAttributes.addFlashAttribute("successMessage", "¡Gracias por tu reseña!"
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", "¡Ups! Ya has reseñado este título antes."
