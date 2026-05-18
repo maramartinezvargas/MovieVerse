@@ -105,7 +105,10 @@
                     <!-- Estado: visto / pendiente -->
                     <div class="media-status-wrapper"
                          th:data-media-id="${series.id}"
-                         data-media-type="SERIE">
+                         data-media-type="SERIE"
+                         th:data-title="${series.title}"
+                         th:data-poster-path="${series.posterPath}"
+                         th:data-vote-average="${series.voteAverage}">
 
                         <button class="btn-pill btn-details btn-status"
                                 id="statusBtn">

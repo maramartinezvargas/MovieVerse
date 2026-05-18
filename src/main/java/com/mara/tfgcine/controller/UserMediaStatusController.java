@@ -1,5 +1,5 @@
-package com.mara.tfgcine.controller;
 
+package com.mara.tfgcine.controller;
 import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.status.MediaStatus;
 import com.mara.tfgcine.model.status.UserMediaStatus;
@@ -14,60 +14,68 @@ import com.mara.tfgcine.model.dto.StatusRequestDTO;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/status")
-public class UserMediaStatusController {
+        @RestController
+        @RequestMapping("/status")
+        public class UserMediaStatusController {
 
-    private final UserMediaStatusService
-            userMediaStatusService;
+            private final UserMediaStatusService
+                    userMediaStatusService;
 
-    private final UserService userService;
+            private final UserService userService;
 
-    public UserMediaStatusController(UserMediaStatusService userMediaStatusService, UserService userService)
-    {
-        this.userMediaStatusService = userMediaStatusService;
-        this.userService = userService;
-    }
+            public UserMediaStatusController(UserMediaStatusService userMediaStatusService, UserService userService)
+            {
+                this.userMediaStatusService = userMediaStatusService;
+                this.userService = userService;
+            }
 
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> saveStatus(@RequestBody StatusRequestDTO request, Authentication authentication) {
+            @PostMapping
+            public ResponseEntity<Map<String, Object>> saveStatus(
+                    @RequestBody StatusRequestDTO request,
+                    Authentication authentication) {
 
-        Map<String, Object> response =
-                new HashMap<>(
+                Map<String, Object> response = new HashMap<>(
 
-        /* Usuario no autenticado */
-        if (authentication == null || !authentication.isAuthenticated()) {
+                /* Usuario no autenticado */
+                if (authentication == null || !authentication.isAuthenticated()) {
+                    response.put("success", false
+                    response.put("message", "Usuario no autenticado"
+                    return ResponseEntity
+                            .status(401)
+                            .body(response
+                }
 
-            response.put("success", false
+                /* Obtener usuario */
+                User user = userService.findByUsername(authentication.getName()
 
-            response.put("message", "Usuario no autenticado"
+                /* Guardar estado */
+                /* Guardar estado */
+                UserMediaStatus savedStatus =
+                        userMediaStatusService.saveStatus(
+                                user,
+                                request.getMediaId(),
+                                request.getMediaType(),
+                                request.getTitle(),
+                                request.getPosterPath(),
+                                request.getVoteAverage(),
+                                request.getStatus()
+                        
 
-            return ResponseEntity
-                    .status(401)
-                    .body(response
+                response.put("success", true
 
-        }
+                /* Si es null → toggle de estado */
+                if (savedStatus == null) {
 
-        /* Obtener usuario */
-        User user = userService.findByUsername(authentication.getName()
+                    response.put("status", null
 
-        /* Guardar estado */
-        UserMediaStatus savedStatus = userMediaStatusService.saveStatus(
-                        user,
-                        request.getMediaId(),
-                        request.getMediaType(),
-                        request.getStatus()
-                
+                } else {
 
-        response.put("success", true
+                    response.put(
+                            "status",
+                            savedStatus.getStatus().name()
+                    
+                }
 
-        /* Si es null → toggle de estado, se ha eliminado el registro */
-        if (savedStatus == null) {
-            response.put("status", null
-        } else {
-            response.put("status", savedStatus.getStatus().name()
-        }
-
-        return ResponseEntity.ok(response
+                return ResponseEntity.ok(response
     }
 }

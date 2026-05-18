@@ -52,19 +52,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 e.stopPropagation(
 
-                const mediaId =
-                    wrapper.dataset.mediaId;
-
-                const mediaType =
-                    wrapper.dataset.mediaType;
-
-                const status =
-                    option.dataset.status;
+                const mediaId = wrapper.dataset.mediaId;
+                const mediaType = wrapper.dataset.mediaType;
+                const status = option.dataset.status;
+                const title = wrapper.dataset.title;
+                const posterPath = wrapper.dataset.posterPath;
+                const voteAverage = wrapper.dataset.voteAverage;
 
                 try {
 
-                    const response =
-                        await fetch("/status", {
+                    const response = await fetch("/status", {
 
                             method: "POST",
 
@@ -76,6 +73,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             body: JSON.stringify({
                                 mediaId,
                                 mediaType,
+                                title,
+                                posterPath,
+                                voteAverage,
                                 status
                             })
 

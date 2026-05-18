@@ -103,19 +103,21 @@ CREATE INDEX idx_likes_user_created
 ON likes(user_id, created_at DESC
 
 CREATE TABLE user_media_status (
-
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     media_id BIGINT NOT NULL,
     media_type ENUM('MOVIE','SERIE') NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    poster_path VARCHAR(255),
+    vote_average DOUBLE,
     status ENUM('WATCHED','WATCHLIST') NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_user_media_status_user 
-		FOREIGN KEY (user_id)
+    CONSTRAINT fk_user_media_status_user
+        FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE,
-        
+
     CONSTRAINT uq_user_media_status
         UNIQUE (user_id, media_id, media_type)
 

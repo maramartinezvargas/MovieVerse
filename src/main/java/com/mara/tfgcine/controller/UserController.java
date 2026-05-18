@@ -69,27 +69,9 @@ public class UserController {
             dto.setMediaId(like.getMediaId()
             dto.setMediaType(like.getMediaType().name()
             dto.setCreatedAt(like.getCreatedAt()
-
-            if (like.getMediaType() == MediaType.MOVIE) {
-
-                Movie movie = tmdbService.getMovieDetails(
-                        like.getMediaId().intValue()
-                
-
-                dto.setTitle(movie.getTitle()
-                dto.setPosterPath(movie.getPosterPath()
-                dto.setVoteAverage(movie.getVoteAverage()
-
-            } else {
-
-                TvSeries serie = tmdbService.getSerieDetails(
-                        like.getMediaId().intValue()
-                
-
-                dto.setTitle(serie.getTitle()
-                dto.setPosterPath(serie.getPosterPath()
-                dto.setVoteAverage(serie.getVoteAverage()
-            }
+            dto.setTitle(like.getTitle()
+            dto.setPosterPath(like.getPosterPath()
+            dto.setVoteAverage(like.getVoteAverage()
 
             likedMedia.add(dto
         }
@@ -162,30 +144,16 @@ public class UserController {
         return "profile";
     }
 
-    private ProfileMediaDTO mapStatusToDTO(UserMediaStatus mediaStatus)
-    {
+    private ProfileMediaDTO mapStatusToDTO(UserMediaStatus mediaStatus) {
+
         ProfileMediaDTO dto = new ProfileMediaDTO(
         dto.setMediaId(mediaStatus.getMediaId()
         dto.setMediaType(mediaStatus.getMediaType().name()
         dto.setCreatedAt(mediaStatus.getCreatedAt()
+        dto.setTitle(mediaStatus.getTitle()
+        dto.setPosterPath(mediaStatus.getPosterPath()
+        dto.setVoteAverage(mediaStatus.getVoteAverage()
 
-        try {
-
-            if (mediaStatus.getMediaType() == MediaType.MOVIE) {
-                Movie movie = tmdbService.getMovieDetails(mediaStatus.getMediaId().intValue()
-                dto.setTitle(movie.getTitle()
-                dto.setPosterPath(movie.getPosterPath()
-                dto.setVoteAverage(movie.getVoteAverage()
-            } else {
-                TvSeries serie = tmdbService.getSerieDetails(mediaStatus.getMediaId().intValue()
-                dto.setTitle(serie.getTitle()
-                dto.setPosterPath(serie.getPosterPath()
-                dto.setVoteAverage(serie.getVoteAverage()
-            }
-
-        } catch (Exception e) {
-            dto.setTitle("Título no disponible"
-        }
         return dto;
     }
 

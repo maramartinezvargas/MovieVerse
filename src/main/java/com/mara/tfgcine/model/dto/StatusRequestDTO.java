@@ -11,6 +11,11 @@ public class StatusRequestDTO {
 
     private MediaStatus status;
 
+    /* SNAPSHOT TMDB */
+    private String title;
+    private String posterPath;
+    private Double voteAverage;
+
     public Long getMediaId() {
         return mediaId;
     }
@@ -33,6 +38,30 @@ public class StatusRequestDTO {
 
     public void setStatus(MediaStatus status) {
         this.status = status;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(Double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
 }

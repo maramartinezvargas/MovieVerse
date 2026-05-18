@@ -48,6 +48,9 @@ public class UserMediaStatusService {
             User user,
             Long mediaId,
             MediaType mediaType,
+            String title,
+            String posterPath,
+            Double voteAverage,
             MediaStatus status
     ) {
 
@@ -87,6 +90,9 @@ public class UserMediaStatusService {
         newStatus.setMediaId(mediaId
         newStatus.setMediaType(mediaType
         newStatus.setStatus(status
+        newStatus.setTitle(title
+        newStatus.setPosterPath(posterPath
+        newStatus.setVoteAverage(voteAverage
 
         return userMediaStatusRepository
                 .save(newStatus

@@ -130,13 +130,12 @@
             <a th:each="item : ${likedMedia}"
 
                th:href="${item.mediaType == 'MOVIE'}
-                    ? @{/peliculas/{id}(id=${item.mediaId})}
-                    : @{/series/{id}(id=${item.mediaId})}"
+                    ? '/peliculas/' + ${item.mediaId}
+                    : '/series/' + ${item.mediaId}"
 
                class="carousel-card">
 
-                <img th:src="${item.posterPath}"
-                     th:alt="${item.title}">
+                <img th:src="${item.posterPath != null ? item.posterPath : '/images/no-poster.png'}">
 
                 <div class="card-meta">
 
@@ -253,8 +252,7 @@
 
                class="carousel-card">
 
-                <img th:src="${item.posterPath}"
-                     th:alt="${item.title}">
+                <img th:src="${item.posterPath != null ? item.posterPath : '/images/no-poster.png'}">
 
                 <div class="card-meta">
 
@@ -334,8 +332,7 @@
 
                class="carousel-card">
 
-                <img th:src="${item.posterPath}"
-                     th:alt="${item.title}">
+                <img th:src="${item.posterPath != null ? item.posterPath : '/images/no-poster.png'}">
 
                 <div class="card-meta">
 
@@ -412,8 +409,7 @@
                         : @{/series/{id}(id=${review.mediaId})}">
 
                     <img th:if="${review.posterPath != null}"
-                         th:src="${review.posterPath}"
-                         th:alt="${review.title}">
+                         th:src="'https://image.tmdb.org/t/p/w342' + ${review.posterPath}">
 
                     <div th:if="${review.posterPath == null}"
                          class="profile-review-no-poster">

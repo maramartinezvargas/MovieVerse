@@ -94,7 +94,10 @@
                         <!-- Estado: visto / pendiente -->
                         <div class="media-status-wrapper"
                              th:data-media-id="${movie.id}"
-                             data-media-type="MOVIE">
+                             data-media-type="MOVIE"
+                             th:data-title="${movie.title}"
+                             th:data-poster-path="${movie.posterPath}"
+                             th:data-vote-average="${movie.voteAverage}">
 
                             <button class="btn-pill btn-details btn-status"
                                     id="statusBtn">

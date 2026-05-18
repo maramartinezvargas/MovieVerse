@@ -1,23 +1,25 @@
 package com.mara.tfgcine.model.status;
+
 import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.user.User;
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import java.time.LocalDateTime;
-@Entity
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        columnNames = {
-                                "user_id",
-                                "media_id",
-                                "media_type"
-                        }
-                )
-        }
-)
 
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+            "user_id",
+            "media_id",
+            "media_type"
+        })
+    }
+)
 public class UserMediaStatus {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,6 +35,13 @@ public class UserMediaStatus {
     @Column(nullable = false)
     private MediaType mediaType;
 
+    /* SNAPSHOT TMDB */
+    @Column(nullable = false)
+    private String title;
+    private String posterPath;
+    private Double voteAverage;
+
+    /* STATUS */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MediaStatus status;
@@ -72,6 +81,30 @@ public class UserMediaStatus {
 
     public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(Double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public MediaStatus getStatus() {
