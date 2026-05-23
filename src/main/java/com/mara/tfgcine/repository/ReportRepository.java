@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-    // Buscar reportes por estado
-    List<Report> findByStatus(ReportStatus status
+    // Buscar todos reportes por id de review (para dashboard)
+    List<Report> findByReviewId(Long reviewId
+
+    // Buscar todos reportes por status de reporte (para dashboard)
+    List<Report> findByStatusIn(List<ReportStatus> statuses
 }

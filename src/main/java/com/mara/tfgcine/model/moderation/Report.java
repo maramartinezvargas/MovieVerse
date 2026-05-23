@@ -30,6 +30,9 @@ public class Report {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "moderator_id")
+    private Long moderatorId;
+
     public Report() {
     }
 
@@ -95,4 +98,8 @@ public class Report {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public Long getModeratorId() {return moderatorId;}
+
+    public void setModeratorId(Long moderatorId) {this.moderatorId = moderatorId;}
 }

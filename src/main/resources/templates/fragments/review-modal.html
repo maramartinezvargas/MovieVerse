@@ -34,9 +34,10 @@
 
                 <!-- Si ya existe una reseña, precargar los datos. Si no, el formulario estará vacío para crear una nueva reseña -->
                 <form th:action="${review != null}
-                        ? @{/reviews/edit/{id}(id=${review.id})}
-                        : @{/reviews}"
+                    ? @{/reviews/edit/{id}(id=${review.id})}
+                    : @{/reviews}"
                       method="post">
+
 
                     <input type="hidden" name="mediaId" th:value="${mediaId}" />
                     <input type="hidden" name="mediaType" th:value="${mediaType}" />

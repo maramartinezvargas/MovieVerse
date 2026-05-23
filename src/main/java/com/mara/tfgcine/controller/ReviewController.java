@@ -1,9 +1,11 @@
 package com.mara.tfgcine.controller;
 
+import com.mara.tfgcine.model.dto.ReviewResponseDTO;
 import com.mara.tfgcine.model.review.Review;
 import com.mara.tfgcine.repository.ReviewRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -85,4 +87,28 @@ public class ReviewController {
 
         return "redirect:" + referer;
     }
+
+    // Obtener una review por su ID (para mostrar en el modal de edición)
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ReviewResponseDTO getReviewById(@PathVariable Long id) {
+
+        Review review = reviewRepository.findById(id)
+                .orElse(null
+
+        if (review == null) {
+            return null;
+        }
+
+        return new ReviewResponseDTO(
+                review.getId(),
+                review.getRating(),
+                review.getComment(),
+                review.getCreatedAt(),
+                review.getMediaId(),
+                review.getMediaType().name(),
+                review.getUser().getUsername()
+        
+    }
+
 }

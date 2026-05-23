@@ -73,6 +73,7 @@ CREATE TABLE reports (
     status ENUM('PENDING','UNDER_REVIEW','RESOLVED','REJECTED')
         DEFAULT 'PENDING',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    moderator_id BIGINT,
 
     FOREIGN KEY (reporter_id) REFERENCES users(id)
         ON DELETE SET NULL,
@@ -172,10 +173,7 @@ CREATE TABLE audit_logs (
 
 -- Usuarios prueba | password = "1234"
 INSERT INTO users (username, email, password) VALUES
-('mara', 'mara@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'),
-('cinefan', 'cinefan@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'),
-('critic', 'critic@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'
-
+('mara', 'mara@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'
 
 
 
@@ -188,16 +186,7 @@ INSERT INTO users (username, email, password) VALUES
 
 
 -- Reviews prueba | para Dune (438631)
-INSERT INTO reviews (
-    comment,
-    rating,
-    created_at,
-    media_id,
-    media_type,
-    title,
-    poster_path,
-    user_id
-)
+INSERT INTO reviews (comment, rating, created_at, media_id, media_type, title, poster_path, user_id)
 
     'Gran dirección y fotografía, pero se siente incompleta.',
     8,

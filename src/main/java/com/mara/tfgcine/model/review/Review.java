@@ -1,5 +1,6 @@
 package com.mara.tfgcine.model.review;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mara.tfgcine.model.user.User;
 import com.mara.tfgcine.model.media.MediaType;
 import jakarta.persistence.*;

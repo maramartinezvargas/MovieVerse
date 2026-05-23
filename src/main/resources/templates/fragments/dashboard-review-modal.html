@@ -1,0 +1,38 @@
+<div th:fragment="dashboardReviewModal"
+     id="dashboardReviewModal"
+     class="review-modal">
+
+    <div class="review-modal-content">
+
+        <!-- HEADER -->
+        <div class="review-modal-header">
+
+            <div class="review-modal-title">
+
+                <i class="bi bi-flag-fill"></i>
+
+                <span>
+                    Review reportada
+                </span>
+
+            </div>
+
+            <div class="close-modal"
+                 onclick="closeDashboardReviewModal()">
+
+                <i class="bi bi-x-lg"></i>
+
+            </div>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="review-modal-body">
+
+            <div id="dashboardReviewContent"></div>
+
+        </div>
+
+    </div>
+
+</div>
