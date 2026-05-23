@@ -288,93 +288,115 @@
         </div>
     </section>
     <!-- RESEÑAS -->
-    <section class="reviews-section" th:if="${reviews != null}">
-        <div class="container">
+<section class="reviews-section" th:if="${reviews != null}">
+    <div class="container">
 
-            <div class="reviews-header">
-                <h2 class="section-title">Reseñas</h2>
+        <!-- HEADER -->
+        <div class="reviews-header">
 
-                <!-- SIEMPRE visible -->
-                <button class="btn-pill btn-action btn-review"
-                        data-bs-toggle="modal"
-                        th:data-bs-target="${'#reviewModal-' + movie.id}">
-                    <i class="bi bi-pencil-fill"></i>
-                    <span th:if="${#authorization.expression('isAuthenticated()')}">
-                        Escribir reseña
-                    </span>
+            <h2 class="section-title">
+                Reseñas
+            </h2>
 
-                                        <span th:if="${!#authorization.expression('isAuthenticated()')}">
-                        Inicia sesión para reseñar
-                    </span>
-                </button>
+            <button class="btn-pill btn-action btn-review"
+                    data-bs-toggle="modal"
+                    th:data-bs-target="${'#reviewModal-' + movie.id}">
 
-            </div>
+                <i class="bi bi-pencil-fill"></i>
 
-            <div th:if="${#lists.isEmpty(reviews)}" class="no-reviews">
+                <span th:if="${#authorization.expression('isAuthenticated()')}">
+                    Escribir reseña
+                </span>
 
-                <p class="no-reviews-text">
-                    Nadie ha reseñado aún este título.
-                </p>
+                <span th:if="${!#authorization.expression('isAuthenticated()')}">
+                    Inicia sesión para reseñar
+                </span>
 
-            </div>
+            </button>
 
-            <div class="reviews-layout"
-                 th:if="${!#lists.isEmpty(reviews)}">
+        </div>
 
-                <!-- COLUMNA IZQUIERDA -->
-                <div class="reviews-summary">
+        <!-- SIN RESEÑAS -->
+        <div th:if="${#lists.isEmpty(reviews)}"
+             class="no-reviews">
 
-                    <!-- TMDB -->
-                    <div class="reviews-main-score">
-                        <div class="reviews-score-big"
-                             th:text="${movie.voteAverageFormatted}"></div>
+            <p class="no-reviews-text">
+                Nadie ha reseñado aún este título.
+            </p>
 
-                        <div class="reviews-count"> En TMDB</div>
+        </div>
 
-                        <div class="reviews-stars"
-                             th:with="stars=${movie.stars}">
+        <!-- CON RESEÑAS -->
+        <div class="reviews-layout"
+             th:if="${!#lists.isEmpty(reviews)}">
 
-                            <i class="bi bi-star-fill"
-                               th:each="i : ${#numbers.sequence(1, stars)}"></i>
+            <!-- IZQUIERDA -->
+            <div class="reviews-summary">
 
-                            <i class="bi bi-star"
-                               th:if="${stars < 10}"
-                               th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+                <!-- TMDB -->
+                <div class="reviews-main-score">
 
-                        </div>
+                    <div class="reviews-score-big"
+                         th:text="${movie.voteAverageFormatted}">
                     </div>
 
-                    <!-- USERS -->
-                    <div class="reviews-user-score" th:if="${localReviewCount > 0}">
-
-                        <div class="reviews-user-value">
-                            <i class="bi bi-people-fill"></i>
-                            <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}"></span>
-                        </div>
-
-                        <div class="reviews-user-label">
-                            Valoración de la comunidad
-                        </div>
-
-
-
-                    </div>
                     <div class="reviews-count">
-                        <span th:text="${reviewCount}"></span> reseñas
+                        En TMDB
+                    </div>
+
+                    <div class="reviews-stars"
+                         th:with="stars=${movie.stars}">
+
+                        <i class="bi bi-star-fill"
+                           th:each="i : ${#numbers.sequence(1, stars)}">
+                        </i>
+
+                        <i class="bi bi-star"
+                           th:if="${stars < 10}"
+                           th:each="i : ${#numbers.sequence(stars + 1, 10)}">
+                        </i>
+
                     </div>
 
                 </div>
 
-                <!-- COLUMNA DERECHA -->
-                <div class="reviews-list">
+                <!-- COMMUNITY -->
+                <div class="reviews-user-score"
+                     th:if="${localReviewCount > 0}">
 
-                    <th:block th:each="review, iterStat : ${reviews}">
-                        <div class="review-card"
+                    <div class="reviews-user-value">
+
+                        <i class="bi bi-people-fill"></i>
+
+                        <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}">
+                        </span>
+
+                    </div>
+
+                    <div class="reviews-user-label">
+                        Valoración de la comunidad
+                    </div>
+
+                    <div class="reviews-count">
+                        <span th:text="${reviewCount}"></span>
+                        reseñas
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- DERECHA -->
+            <div class="reviews-list">
+
+                <th:block th:each="review, iterStat : ${reviews}">
+
+                    <div class="review-card"
                          th:classappend="${iterStat.index > 0} ? ' hidden-review'">
 
                         <div class="review-top">
 
-                            <!-- IZQUIERDA -->
+                            <!-- USER -->
                             <div class="review-user-info">
 
                                 <div class="review-avatar">
@@ -386,24 +408,33 @@
 
                                     <div class="review-avatar avatar-placeholder"
                                          th:if="${review.avatarUrl == null}">
+
                                         <i class="bi bi-person"></i>
+
                                     </div>
 
                                 </div>
 
                                 <div>
+
                                     <div class="review-name">
-                                        <span class="review-username" th:text="'@' + ${review.username}"></span>
+
+                                        <span class="review-username"
+                                              th:text="'@' + ${review.username}">
+                                        </span>
+
                                         <span class="user-badge"
                                               th:classappend="${review.source == 'TMDB'} ? ' badge-tmdb' : ' badge-local'"
                                               th:text="${review.source == 'TMDB'} ? 'Usuario TMDB' : 'Usuario MovieVerse'">
                                         </span>
+
                                     </div>
+
                                 </div>
 
                             </div>
 
-                            <!-- DERECHA -->
+                            <!-- META -->
                             <div class="review-meta-right">
 
                                 <div class="review-stars"
@@ -411,97 +442,145 @@
                                      th:with="stars=${T(java.lang.Math).floor(review.rating)}">
 
                                     <i class="bi bi-star-fill"
-                                       th:each="i : ${#numbers.sequence(1, stars)}"></i>
+                                       th:each="i : ${#numbers.sequence(1, stars)}">
+                                    </i>
 
                                     <i class="bi bi-star"
                                        th:if="${stars < 10}"
-                                       th:each="i : ${#numbers.sequence(stars + 1, 10)}"></i>
+                                       th:each="i : ${#numbers.sequence(stars + 1, 10)}">
+                                    </i>
 
                                     <span class="review-rating"
-                                          th:text="${review.rating}"></span>
+                                          th:text="${review.rating}">
+                                    </span>
+
                                 </div>
 
                                 <div class="review-date"
                                      th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
                                 </div>
+
+                                <!-- ACTIONS -->
                                 <div class="review-actions">
 
                                     <!-- REVIEW PROPIA -->
                                     <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
+
                                         <!-- DELETE -->
                                         <form th:action="@{/reviews/delete/{id}(id=${review.id})}"
                                               method="post">
+
                                             <button type="submit"
                                                     class="review-action-btn delete-review-btn">
+
                                                 <i class="bi bi-trash"></i>
+
                                             </button>
+
                                         </form>
 
                                         <!-- EDIT -->
                                         <button type="button"
                                                 class="review-action-btn"
                                                 data-bs-toggle="modal"
-                                                th:data-bs-target="'#reviewModal-' + ${movie.id}">
+                                                th:data-bs-target="'#editReviewModal-' + ${review.id}">
+
                                             <i class="bi bi-pencil"></i>
+
                                         </button>
+
                                     </th:block>
 
-                                    <!-- REVIEW AJENA / REPORT -->
+                                    <!-- REPORT -->
                                     <button type="button"
                                             class="review-action-btn report-review-btn"
                                             data-bs-toggle="modal"
                                             th:data-bs-target="'#reportModal-' + ${review.id}"
                                             th:if="${review.source == 'LOCAL' and #authentication.name != review.username}">
+
                                         <i class="bi bi-flag"></i>
+
                                     </button>
 
                                 </div>
+
                             </div>
 
-
                         </div>
 
-                        <p class="review-text" th:text="${review.comment}"></p>
+                        <!-- TEXTO -->
+                        <p class="review-text"
+                           th:text="${review.comment}">
+                        </p>
 
+                        <!-- FOOTER -->
                         <div class="review-footer">
-                            <button class="read-more-btn" onclick="toggleReview(event, this)">
-                                <span class="label">Leer más</span>
+
+                            <button class="read-more-btn"
+                                    onclick="toggleReview(event, this)">
+
+                                <span class="label">
+                                    Leer más
+                                </span>
+
                                 <i class="bi bi-chevron-down"></i>
+
                             </button>
+
                         </div>
+
                     </div>
-                        <div sec:authorize="isAuthenticated()">
-                            <th:block th:replace="
-                                ~{fragments/report-review-modal :: reportModal(${review})}">
-                            </th:block>
-                        </div>
-                        <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
-<!--                            <th:block th:replace="~{fragments/review-modal :: reviewModal(
-                                    ${movie.id},
-                                    'MOVIE',
-                                    ${review},
-                                    ${movie.title},
-                                    ${movie.posterPath}
-                                )}">
-                            </th:block>-->
+                    <!-- MODAL EDIT -->
+                    <th:block th:if="${review.source == 'LOCAL'
+                      and #authentication.name == review.username}">
+
+                        <th:block th:replace="~{
+                            fragments/review-modal :: reviewModal(
+                                ${movie.id},
+                                'MOVIE',
+                                ${review},
+                                ${movie.title},
+                                ${movie.posterPath}
+                            )}">
                         </th:block>
+
                     </th:block>
-                    <!-- BOTÓN VER MÁS -->
-                    <div class="reviews-load-more"
-                         th:if="${#lists.size(reviews) > 1}">
+                </th:block>
 
-                        <button id="toggle-reviews-btn" class="btn-pill btn-action">
-                            <i class="bi bi-chevron-down"></i>
-                            Ver más reseñas
-                        </button>
+                <!-- VER MÁS -->
+                <div class="reviews-load-more"
+                     th:if="${#lists.size(reviews) > 1}">
 
-                    </div>
+                    <button id="toggle-reviews-btn"
+                            class="btn-pill btn-action">
+
+                        <i class="bi bi-chevron-down"></i>
+
+                        Ver más reseñas
+
+                    </button>
+
                 </div>
 
             </div>
 
         </div>
-    </section>
+
+        <!-- MODALES FUERA DEL FLEX -->
+        <th:block th:each="review : ${reviews}">
+
+            <div sec:authorize="isAuthenticated()">
+
+                <th:block th:replace="
+                    ~{fragments/report-review-modal :: reportModal(${review})}">
+                </th:block>
+
+            </div>
+
+        </th:block>
+
+    </div>
+</section>
     <!-- Peliculas relacionadas -->
     <section class="carousel-section" th:if="${relatedMovies != null and #lists.size(relatedMovies) > 0}">
         <div class="container">
