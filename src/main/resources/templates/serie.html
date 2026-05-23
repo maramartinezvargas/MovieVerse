@@ -292,7 +292,12 @@
                     data-bs-toggle="modal"
                     th:data-bs-target="${'#reviewModal-' + series.id}">
                 <i class="bi bi-pencil-fill"></i>
-                Escribir reseña
+                <span th:if="${#authorization.expression('isAuthenticated()')}">
+                    Escribir reseña
+                </span>
+                <span th:if="${!#authorization.expression('isAuthenticated()')}">
+                    Inicia sesión para reseñar
+                </span>
             </button>
         </div>
 
@@ -401,7 +406,7 @@
                                 </div>
                                 <div class="review-actions">
                                     <!-- REVIEW PROPIA -->
-                                    <th:block th:if="${review.source == 'LOCAL'and #authentication.name == review.username}">
+                                    <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
                                         <!-- DELETE -->
                                         <form th:action="@{/reviews/delete/{id}(id=${review.id})}" method="post">
                                             <button type="submit"
@@ -414,7 +419,7 @@
                                         <button type="button"
                                                 class="review-action-btn"
                                                 data-bs-toggle="modal"
-                                                th:data-bs-target="'#editReviewModal-' + ${review.id}">
+                                                th:data-bs-target="'#reviewModal-' + ${series.id}">
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
@@ -425,7 +430,7 @@
                                             class="review-action-btn report-review-btn"
                                             data-bs-toggle="modal"
                                             th:data-bs-target="'#reportModal-' + ${review.id}"
-                                            th:if="${review.source == 'LOCAL'and #authentication.name != review.username}">
+                                            th:if="${review.source == 'LOCAL' and #authentication.name != review.username}">
                                         <i class="bi bi-flag"></i>
                                     </button>
                                 </div>
@@ -440,11 +445,14 @@
                         </div>
                     </div>
 
-                    <th:block th:replace="~{fragments/report-review-modal :: reportModal(${review})}">
-                    </th:block>
-                    <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
-                        <th:block th:replace="~{fragments/review-modal :: reviewModal('reviewModal-' + ${series.id})}">
+                    <div sec:authorize="isAuthenticated()">
+                        <th:block th:replace="
+                             ~{fragments/report-review-modal :: reportModal(${review})}">
                         </th:block>
+                    </div>
+                    <th:block th:if="${review.source == 'LOCAL' and #authentication.name == review.username}">
+                        <!--<th:block th:replace="~{fragments/review-modal :: reviewModal('reviewModal-' + ${series.id})}">
+                        </th:block>-->
                     </th:block>
                     </th:block>
                 <div class="reviews-load-more"
@@ -508,7 +516,14 @@
 </section>
 
 <!-- Modal review -->
-<th:block th:replace="~{fragments/review-modal :: reviewModal('reviewModal-' + ${series.id})}"></th:block>
+<th:block th:replace="~{fragments/review-modal :: reviewModal(
+    ${series.id},
+    'SERIE',
+    ${null},
+    ${series.title},
+    ${series.posterPath}
+)}">
+</th:block>
 
 <!-- Modal tráiler -->
 <th:block th:replace="~{fragments/trailer-modal :: trailerModal}"></th:block>
