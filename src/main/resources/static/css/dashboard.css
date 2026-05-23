@@ -6,18 +6,26 @@ body {
 /* HERO */
 
 .dashboard-hero {
-    padding: 5rem 0 3rem;
-
+    position: relative;
+    min-height: 15vh;
+    padding: 6rem 0 0;
+    display: flex;
+    align-items: center !important;
     background:
             linear-gradient(
-                    to bottom,
-                    rgba(19,19,19,0.7),
-                    rgba(19,19,19,1)
+                    to right,
+                    rgba(19,19,19,0.60),
+                    rgba(19,19,19,0.25)
+            ),
+            linear-gradient(
+                    to top,
+                    rgba(19,19,19,1),
+                    rgba(19,19,19,0.2)
             ),
             url('/img/pexels-christopher-welsch.jpg'
-
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
 }
 
 .dashboard-hero-content {
@@ -26,16 +34,11 @@ body {
 
 .dashboard-badge {
     display: inline-flex;
-
     padding: .4rem .8rem;
-
     border-radius: 999px;
-
     background: rgba(255, 189, 89, 0.15
     border: 1px solid rgba(255, 189, 89, 0.3
-
     color: #ffbd59;
-
     font-size: .8rem;
 }
 
@@ -52,7 +55,7 @@ body {
 /* STATS */
 
 .dashboard-stats {
-    padding: 2rem 0;
+    padding: 1rem 0;
 }
 
 .stats-grid {
@@ -69,7 +72,7 @@ body {
     background: rgba(255,255,255,0.04
     border: 1px solid rgba(255,255,255,0.08
     border-radius: 18px;
-    padding: 1.5rem;
+    padding: 1rem;
     backdrop-filter: blur(10px
     text-align: center;
 }
@@ -83,10 +86,10 @@ body {
 }
 
 .stat-label {
+    color: #f0dfc8;
     margin-top: .6rem;
     font-size: .9rem;
     font-weight: 500;
-    opacity: .75;
 }
 
 /* Tabla */
