@@ -169,6 +169,26 @@ CREATE TABLE audit_logs (
         ON DELETE CASCADE
 
 
+-- TRIGGER DE AUDITORÍA DE LAS ACCIONES DE MODERACIÓN -----------------------------------------------------------------
+DELIMITER $$
+
+CREATE TRIGGER trg_audit_moderation
+AFTER UPDATE ON reports
+FOR EACH ROW
+BEGIN
+    IF OLD.status != NEW.status AND NEW.status IN ('RESOLVED', 'REJECTED') THEN
+        INSERT INTO audit_logs (moderator_id, action, target_id, details)
+        
+            NEW.moderator_id,
+            NEW.status,
+            NEW.id,
+            CONCAT('Report ', NEW.id, ' marcado como ', NEW.status)
+        
+    END IF;
+END$$
+
+DELIMITER ;
+
 -- DATOS DE PRUEBA ----------------------------------------------------------------------------------------------------
 
 -- Usuarios prueba | password = "1234"

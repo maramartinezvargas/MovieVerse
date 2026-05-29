@@ -1,0 +1,33 @@
+.error-page {
+    min-height: 70vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.error-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.error-code {
+    font-size: 7rem;
+    font-weight: 800;
+    color: #ffbd59;
+
+    margin: 0;
+}
+
+.error-title {
+    font-size: 2rem;
+    color: #f0dfc8;
+}
+
+.error-text {
+    color: rgba(240, 223, 200, 0.75
+    font-size: 1rem;
+}

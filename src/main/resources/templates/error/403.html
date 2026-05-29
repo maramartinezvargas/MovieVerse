@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('403 - Acceso denegado')}"></head>
+
+<body>
+
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+
+<section class="error-page">
+
+    <div class="container">
+
+        <div class="error-content">
+
+            <h1 class="error-code">
+                403
+            </h1>
+
+            <h2 class="error-title">
+                Acceso denegado
+            </h2>
+
+            <p class="error-text">
+                No tienes permisos para acceder a esta página.
+            </p>
+
+            <a href="/"
+               class="btn-pill btn-action">
+
+                <i class="bi bi-house-fill"></i>
+                Volver al inicio
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

@@ -92,4 +92,11 @@ public class DashboardController {
 
         return "dashboard";
     }
+
+    @GetMapping("/test500")
+    public String test500() {
+
+        throw new RuntimeException("Test 500"
+
+    }
 }
