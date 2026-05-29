@@ -1,7 +1,22 @@
 package com.mara.tfgcine.model.media;
 
+import lombok.Data;
+
 import java.util.List;
 
+
+/**
+ * Clase abstracta base que representa un contenido multimedia.
+ *
+ * Contiene los atributos comunes a películas y series, como identificador,
+ * título, póster, valoración, géneros, fecha de estreno y rutas de navegación
+ * en la aplicación.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
+@Data
 public abstract class Media {
 
     private int id;
@@ -17,7 +32,7 @@ public abstract class Media {
 
     // Getters ----------------------------------------------------------------------------------------
 
-    public int getId() {
+   /* public int getId() {
         return id;
     }
 
@@ -98,7 +113,7 @@ public abstract class Media {
 
     public void setBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
-    }
+    }*/
 
     // Otros métodos ------------------------------------------------------------------------------
 

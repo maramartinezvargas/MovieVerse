@@ -13,6 +13,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
+
+/**
+ * Controlador encargado de la gestión de reportes de reseñas.
+ *
+ * Permite crear reportes sobre reseñas, abrir reportes desde el panel de moderación,
+ * rechazar reportes y eliminar reseñas asociadas a incidencias resueltas.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 @Controller
 @RequestMapping("/reports")
 public class ReportController {
@@ -30,6 +41,21 @@ public class ReportController {
         this.userRepository = userRepository;
     }
 
+
+    /**
+     * Crea un reporte para una reseña determinada.
+     *
+     * Valida que la reseña exista, que el usuario autenticado sea válido y que no
+     * se esté intentando reportar la propia reseña. Si todo es correcto, crea el reporte
+     * con estado pendiente y redirige a la página anterior.
+     *
+     * @param id identificador de la reseña a reportar
+     * @param reason motivo del reporte
+     * @param authentication información del usuario autenticado
+     * @param redirectAttributes atributos flash para mensajes de éxito
+     * @param referer URL de la página anterior, usada para la redirección
+     * @return redirección a la vista anterior, a login o a la raíz según el caso
+     */
     @PostMapping("/review/{id}")
     public String reportReview(@PathVariable Long id,
                                @RequestParam String reason,
@@ -75,7 +101,17 @@ public class ReportController {
         return "redirect:" + referer;
     }
 
-    // Abrir review reportada + asignar moderador
+    /**
+     * Abre una reseña reportada desde el panel de moderación.
+     *
+     * Comprueba que el reporte exista, que esté asociado a una reseña válida y que
+     * no esté ya resuelto o rechazado. Si no tiene moderador asignado, lo asigna al
+     * usuario actual y marca el reporte como en revisión.
+     *
+     * @param id identificador del reporte
+     * @param authentication información del usuario autenticado
+     * @return redirección a la reseña reportada, al dashboard o al login según el caso
+     */
     @GetMapping("/{id}/review")
     public String openReportedReview(@PathVariable Long id,
                                      Authentication authentication) {
@@ -120,10 +156,19 @@ public class ReportController {
         return "redirect:/reviews/" + report.getReviewId(
     }
 
-    // Rechazar reporte
+    /**
+     * Rechaza un reporte existente.
+     *
+     * Cambia el estado del reporte a rechazado y guarda los cambios en la base de datos.
+     *
+     * @param id identificador del reporte a rechazar
+     * @param redirectAttributes atributos flash para mensajes de éxito
+     * @return redirección al dashboard
+     */
     @PostMapping("/{id}/reject")
     public String rejectReport(@PathVariable Long id,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes,
+                               Authentication authentication) {
 
         Report report = reportRepository.findById(id)
                 .orElse(null
@@ -132,6 +177,14 @@ public class ReportController {
             return "redirect:/dashboard";
         }
 
+        User moderator = userRepository.findByUsername(authentication.getName()
+
+        // Validación de seguridad: solo el moderador asignado puede rechazar el reporte
+        if (moderator == null) {
+            return "redirect:/login";
+        }
+
+        report.setModeratorId(moderator.getId()
         report.setStatus(ReportStatus.REJECTED
 
         reportRepository.save(report
@@ -144,10 +197,23 @@ public class ReportController {
         return "redirect:/dashboard";
     }
 
-    // Eliminar reseña y resolver TODOS los reportes asociados a esa reseña
-    // Eliminar reseña y resolver los reportes válidos asociados
+
+    /**
+     * Elimina una reseña asociada a un reporte y resuelve los reportes relacionados
+     * a la misma review.
+     *
+     * Busca todos los reportes asociados a la reseña, marca como resueltos los que
+     * no estén rechazados, desvincula la reseña de los reportes y finalmente elimina
+     * la reseña de la base de datos.
+     *
+     * @param id identificador del reporte desde el que se procesa la eliminación
+     * @return redirección al dashboard
+     */
     @PostMapping("/{id}/delete-review")
-    public String deleteReviewFromReport(@PathVariable Long id) {
+    public String deleteReviewFromReport(@PathVariable Long id,
+                                         Authentication authentication) {
+
+        User moderator = userRepository.findByUsername(authentication.getName()
 
         Report currentReport = reportRepository
                 .findById(id)
@@ -164,29 +230,24 @@ public class ReportController {
         if (review != null) {
 
             // buscar todos los reportes de esa review
-            List<Report> relatedReports =
-                    reportRepository.findByReviewId(review.getId()
+            List<Report> relatedReports = reportRepository.findByReviewId(review.getId()
 
             // resolver solo los NO rechazados
             for (Report report : relatedReports) {
 
                 // no tocar los rechazados
                 if (report.getStatus() != ReportStatus.REJECTED) {
-
+                    report.setModeratorId(moderator.getId()
                     report.setStatus(ReportStatus.RESOLVED
                 }
-
                 // desvincular igualmente
-                report.setReviewId(null
+                //report.setReviewId(null
             }
-
             // guardar cambios
             reportRepository.saveAll(relatedReports
-
             // borrar review
             reviewRepository.delete(review
         }
-
         return "redirect:/dashboard";
     }
 

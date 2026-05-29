@@ -197,10 +197,10 @@
 
                     <!-- STATUS -->
                     <td>
-                        <span class="status-badge"
-                              th:classappend="${report.status.name().toLowerCase()}"
-                              th:text="${report.status}">
-                        </span>
+                    <span class="status-badge"
+                          th:classappend="${report.status.name().toLowerCase()}"
+                          th:text="${report.status.label}">
+                    </span>
                     </td>
 
                     <!-- DATE -->
@@ -251,8 +251,7 @@
                         <!-- RESOLVED -->
                         <th:block th:if="${report.status.name() == 'RESOLVED'}">
                             <span class="closed-case-badge resolved">
-                                <i class="bi bi-trash3-fill"></i>
-                                Caso cerrado · Review eliminada
+                                <i class="bi bi-trash3-fill"> </i> Caso cerrado · Review eliminada
                             </span>
 
                         </th:block>
@@ -260,8 +259,7 @@
                         <!-- REJECTED -->
                         <th:block th:if="${report.status.name() == 'REJECTED'}">
                             <span class="closed-case-badge rejected">
-                                <i class="bi bi-x-circle-fill"></i>
-                                Caso cerrado · Reporte rechazado
+                                <i class="bi bi-x-circle-fill"> </i> Caso cerrado · Reporte rechazado
                             </span>
                         </th:block>
 

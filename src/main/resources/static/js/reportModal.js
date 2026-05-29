@@ -1,23 +1,30 @@
+/**
+* reportModal.js
+*
+* Abrir/ceder modal de revisión de la review desde el panel de moderación.
+* - `openReviewModal(button)` solicita al backend la asignación/estado y carga la review.
+* - Actualiza badges y contadores del dashboard.
+* - Provee funciones para cerrar el modal (clic fuera o ESC).
+*
+*/
 async function openReviewModal(button) {
 
     try {
-
         const reviewId = button.dataset.reviewId;
-
         const reportId = button.dataset.reportId;
 
-        // abrir endpoint que:
-        // - asigna moderador
-        // - persiste UNDER_REVIEW
-        // - valida acceso
+        // Llamada al backend que:
+        // - asigna el moderador al reporte
+        // - cambia el estado del reporte a UNDER_REVIEW (persistente)
+        // - valida permisos
         await fetch(`/reports/${reportId}/review`
 
-        // actualizar badge UI
+        // Actualizar badge UI en la fila correspondiente
         const row = button.closest('tr'
-
         const badge = row.querySelector('.status-badge'
 
-        // evitar duplicar stats si ya estaba en UNDER_REVIEW
+
+        // Si no estaba ya en UNDER_REVIEW, actualizar texto/clases y contadores
         if (badge && !badge.classList.contains('under_review')) {
 
             badge.textContent = 'UNDER_REVIEW';
@@ -30,31 +37,26 @@ async function openReviewModal(button) {
 
             badge.classList.add('under_review'
 
-            // actualizar stats dashboard
-            const pendingCount =
-                document.getElementById('pendingCount'
-
-            const underReviewCount =
-                document.getElementById('underReviewCount'
+            // Actualizar contador en el dashboard (si existen los elementos)
+            const pendingCount = document.getElementById('pendingCount'
+            const underReviewCount = document.getElementById('underReviewCount'
 
             if (pendingCount && underReviewCount) {
+                    // Decrementar pendientes (sin bajar de 0) y aumentar en revisión
+                    pendingCount.textContent =
+                        Math.max(
+                            0,
+                            parseInt(pendingCount.textContent) - 1
+                        
 
-                pendingCount.textContent =
-                    Math.max(
-                        0,
-                        parseInt(pendingCount.textContent) - 1
-                    
-
-                underReviewCount.textContent =
-                    parseInt(underReviewCount.textContent) + 1;
+                underReviewCount.textContent = parseInt(underReviewCount.textContent) + 1;
             }
         }
 
-        // obtener review
+        // Obtener la review concreta (JSON) para mostrar en el modal
         const response = await fetch(`/reviews/${reviewId}`
 
         if (!response.ok) {
-
             throw new Error(
                 'No se pudo cargar la review'
             

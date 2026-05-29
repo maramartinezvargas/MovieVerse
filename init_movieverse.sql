@@ -78,9 +78,6 @@ CREATE TABLE reports (
     FOREIGN KEY (reporter_id) REFERENCES users(id)
         ON DELETE SET NULL,
 
-    FOREIGN KEY (review_id) REFERENCES reviews(id)
-        ON DELETE SET NULL,
-
     FOREIGN KEY (reported_user_id) REFERENCES users(id)
         ON DELETE SET NULL
 
@@ -160,13 +157,16 @@ CREATE TABLE audit_logs (
 
     moderator_id BIGINT NOT NULL,
     action VARCHAR(100),
-    target_id BIGINT,
+    report_id BIGINT,
 
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     details TEXT,
 
     FOREIGN KEY (moderator_id) REFERENCES users(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (report_id) REFERENCES reports(id)
+        ON DELETE SET NULL
 
 
 -- TRIGGER DE AUDITORÍA DE LAS ACCIONES DE MODERACIÓN -----------------------------------------------------------------
@@ -176,15 +176,47 @@ CREATE TRIGGER trg_audit_moderation
 AFTER UPDATE ON reports
 FOR EACH ROW
 BEGIN
-    IF OLD.status != NEW.status AND NEW.status IN ('RESOLVED', 'REJECTED') THEN
-        INSERT INTO audit_logs (moderator_id, action, target_id, details)
+
+    DECLARE moderator_username VARCHAR(50
+
+    IF OLD.status != NEW.status
+       AND NEW.status IN ('RESOLVED', 'REJECTED') THEN
+
+        SELECT username
+        INTO moderator_username
+        FROM users
+        WHERE id = NEW.moderator_id;
         
-            NEW.moderator_id,
-            NEW.status,
-            NEW.id,
-            CONCAT('Report ', NEW.id, ' marcado como ', NEW.status)
-        
+        SELECT comment
+		INTO review_comment
+		FROM reviews
+		WHERE id = NEW.review_id;
+
+       INSERT INTO audit_logs (
+			moderator_id,
+			action,
+			report_id,
+			details
+		)
+		
+			NEW.moderator_id,
+			NEW.status,
+			NEW.id,
+			CONCAT(
+				'Reporte ',
+				NEW.id,
+				' marcado como ',
+				CASE
+					WHEN NEW.status = 'RESOLVED' THEN 'aceptado'
+					WHEN NEW.status = 'REJECTED' THEN 'rechazado'
+				END,
+				' por ',
+				moderator_username
+			)
+		
+
     END IF;
+
 END$$
 
 DELIMITER ;

@@ -14,68 +14,75 @@ import com.mara.tfgcine.model.dto.StatusRequestDTO;
 import java.util.HashMap;
 import java.util.Map;
 
-        @RestController
-        @RequestMapping("/status")
-        public class UserMediaStatusController {
 
-            private final UserMediaStatusService
-                    userMediaStatusService;
+/**
+ * Controlador REST encargado de gestionar el estado de visualización del contenido multimedia del usuario.
+ *
+ * Permite guardar o actualizar el estado de una película o serie para un usuario autenticado,
+ * devolviendo una respuesta JSON con el resultado de la operación.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
+@RestController
+@RequestMapping("/status")
+public class UserMediaStatusController {
 
-            private final UserService userService;
+    private final UserMediaStatusService
+            userMediaStatusService;
 
-            public UserMediaStatusController(UserMediaStatusService userMediaStatusService, UserService userService)
-            {
-                this.userMediaStatusService = userMediaStatusService;
-                this.userService = userService;
-            }
+    private final UserService userService;
 
-            @PostMapping
-            public ResponseEntity<Map<String, Object>> saveStatus(
-                    @RequestBody StatusRequestDTO request,
-                    Authentication authentication) {
+    public UserMediaStatusController(UserMediaStatusService userMediaStatusService, UserService userService)
+    {
+        this.userMediaStatusService = userMediaStatusService;
+        this.userService = userService;
+    }
 
-                Map<String, Object> response = new HashMap<>(
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> saveStatus(
+        @RequestBody StatusRequestDTO request,
+        Authentication authentication) {
 
-                /* Usuario no autenticado */
-                if (authentication == null || !authentication.isAuthenticated()) {
-                    response.put("success", false
-                    response.put("message", "Usuario no autenticado"
-                    return ResponseEntity
-                            .status(401)
-                            .body(response
-                }
+        Map<String, Object> response = new HashMap<>(
 
-                /* Obtener usuario */
-                User user = userService.findByUsername(authentication.getName()
+        // Validación de autenticación
+        if (authentication == null || !authentication.isAuthenticated()) {
+            response.put("success", false
+            response.put("message", "Usuario no autenticado"
+            return ResponseEntity
+                    .status(401)
+                    .body(response
+        }
 
-                /* Guardar estado */
-                /* Guardar estado */
-                UserMediaStatus savedStatus =
-                        userMediaStatusService.saveStatus(
-                                user,
-                                request.getMediaId(),
-                                request.getMediaType(),
-                                request.getTitle(),
-                                request.getPosterPath(),
-                                request.getVoteAverage(),
-                                request.getStatus()
-                        
+        // Obtener usuario autenticado
+        User user = userService.findByUsername(authentication.getName()
 
-                response.put("success", true
+        // Guardar o actualizar el estado de visualización del usuario para el contenido multimedia
+        UserMediaStatus savedStatus =
+                userMediaStatusService.saveStatus(
+                        user,
+                        request.getMediaId(),
+                        request.getMediaType(),
+                        request.getTitle(),
+                        request.getPosterPath(),
+                        request.getVoteAverage(),
+                        request.getStatus()
+                
 
-                /* Si es null → toggle de estado */
-                if (savedStatus == null) {
+        response.put("success", true
 
-                    response.put("status", null
-
-                } else {
-
-                    response.put(
-                            "status",
-                            savedStatus.getStatus().name()
-                    
-                }
-
-                return ResponseEntity.ok(response
+        // Devolver el estado guardado en la respuesta (toggle de estado:
+        // Enum MediaStatus: WATCHED o WATCHLIST (vista o pendiente de ver)
+        if (savedStatus == null) {
+            response.put("status", null
+        } else {
+            response.put(
+                    "status",
+                    savedStatus.getStatus().name()
+            
+        }
+        return ResponseEntity.ok(response
     }
 }

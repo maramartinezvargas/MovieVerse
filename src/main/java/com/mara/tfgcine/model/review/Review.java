@@ -7,6 +7,30 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entidad JPA que representa una reseña de usuario sobre una película o serie.
+ *
+ * Cada instancia almacena la opinión, calificación y comentario que un usuario
+ * realiza sobre un contenido multimedia y se persiste en la tabla {@code reviews}.
+ *
+ * Campos principales:
+ * - rating: calificación numérica de 1 a 10 que el usuario asigna
+ * - comment: comentario o texto de la reseña
+ * - mediaId: identificador de la película o serie reseñada (de TMDB)
+ * - mediaType: tipo de medio (enum {@link com.mara.tfgcine.model.media.MediaType}: MOVIE o SERIE)
+ * - user: relación con el usuario autor de la reseña
+ * - createdAt: fecha y hora en que se creó la reseña
+ * - title: snapshot del título del medio para mostrar en el perfil del usuario
+ * - posterPath: snapshot de la ruta del póster para mostrar en el perfil del usuario
+ *
+ * @author Tamara Martinez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ * @see com.mara.tfgcine.model.user.User
+ * @see com.mara.tfgcine.model.media.MediaType
+ */
+
+
 @Entity
 @Table(name = "reviews")
 public class Review {

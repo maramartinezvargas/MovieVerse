@@ -1,7 +1,26 @@
+/**
+ * main.js - Funcionalidades interactivas principales de la aplicación MovieVerse
+ *
+ * Gestiona los siguientes componentes de la UI:
+ * - Navegación responsiva (menú hamburguesa personalizado)
+ * - Búsqueda en tiempo real de películas/series (resultados dinámicos)
+ * - Validación de contraseñas (registro/login)
+ * - Modal de trailers de YouTube
+ * - Toggle de listados de reseñas
+ * - Sistema de valoración por estrellas
+ * - Expansión/colapso de textos largos ("Leer más/menos")
+ *
+ * @author Tamara Martinez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    /*NAV / BURGER -------------------------------------------------------------------------- */
-
+    /**
+     * MENÚ HAMBURGUESA
+     * Toggle del menú de navegación responsivo
+     */
     const burger = document.getElementById("burger-btn"
     const nav = document.getElementById("main-nav"
 
@@ -11,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nav.classList.toggle("open"
         }
 
+        // Cerrar menú al hacer clic en un enlace
         document.querySelectorAll(".main-nav a").forEach(link => {
             link.addEventListener("click", () => {
                 burger.classList.remove("open"
@@ -19,8 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* SEARCH -------------------------------------------------------------------------- */
 
+    /**
+     * BÚSQUEDA EN TIEMPO REAL
+     * Consulta la API /api/search mientras el usuario escribe
+     * Implementa debounce de 300ms para evitar sobre-solicitudes
+     */
     const input = document.getElementById("search-input"
     const resultsBox = document.getElementById("search-results"
 
@@ -53,7 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 300
         }
 
-        function renderResults(data) {
+            /**
+             * Renderiza resultados de búsqueda en el DOM
+             * @param {Array} data - Array de resultados (películas/series)
+             */
+            function renderResults(data) {
 
             resultsBox.innerHTML = "";
 
@@ -65,11 +93,12 @@ document.addEventListener("DOMContentLoaded", () => {
             resultsBox.classList.remove("hidden"
 
             data.forEach(item => {
-
+                // Construir URL según tipo de contenido
                 const url = item.mediaType === "movie"
                     ? `/peliculas/${item.id}`
                     : `/series/${item.id}`;
 
+                // Extraer año de la fecha
                 let year = "";
 
                 if (item.releaseDate?.length >= 4) {
@@ -80,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     year = item.firstAirDate.substring(0, 4
                 }
 
+                // Crear el elemento visual del resultado
                 const div = document.createElement("div"
                 div.classList.add("search-item"
 
@@ -102,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        // Cerrar resultados cuando el usuario hace clic fuera de la búsqueda
         document.addEventListener("click", (e) => {
             const searchContainer = document.querySelector(".search-container"
 
@@ -111,8 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* Login -------------------------------------------------------------------------- */
 
+    /**
+     * VALIDACIÓN DE CONTRASEÑAS (LOGIN/REGISTRO)
+     * Valida que ambos campos coincidan en tiempo real
+     */
     const password = document.getElementById("password"
     const confirmPassword = document.getElementById("confirmPassword"
 
@@ -136,8 +170,12 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmPassword.addEventListener("blur", validatePassword
     }
 
-    /* TRAILER MODAL -------------------------------------------------------------------------- */
 
+    /**
+     * MODAL DE TRAILERS
+     * Carga trailers de YouTube en un modal automáticamente
+     * Detiene la reproducción al cerrar el modal
+     */
     const modalEl = document.getElementById("trailerModal"
     const iframe = document.getElementById("trailerIframe"
 
@@ -150,6 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const key = button.dataset.trailer;
                 if (!key) return;
 
+                // Iniciar reproducción automática
                 iframe.src = `https://www.youtube.com/embed/${key}?autoplay=1`;
 
                 const modal = new bootstrap.Modal(modalEl
@@ -157,12 +196,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        // Detener reproducción al cerrar el modal
         modalEl.addEventListener("hidden.bs.modal", () => {
             iframe.src = "";
         }
     }
 
-    /* REVIEWS: TOGGLE LIST -------------------------------------------------------------------------- */
+
+    /**
+     * TOGGLE DE LISTADO DE RESEÑAS
+     * Alterna entre mostrar/ocultar reseñas adicionales
+     */
     const btn = document.getElementById("toggle-reviews-btn"
 
     if (btn) {
@@ -184,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 expanded = false;
             }
 
-            // ICONO + TEXTO
+            // Actualizar texto e icono del botón
             btn.innerHTML = expanded
                 ? '<i class="bi bi-chevron-up"></i> Ver menos reseñas'
                 : '<i class="bi bi-chevron-down"></i> Ver más reseñas';
@@ -193,7 +237,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* STAR RATING -------------------------------------------------------------------------- */
+
+    /**
+     * SISTEMA DE VALORACIÓN POR ESTRELLAS
+     * Permite seleccionar calificación de 1-10 interactivamente
+     */
     document.querySelectorAll(".star-rating").forEach(rating => {
         const stars = rating.querySelectorAll(".star"
         const ratingInput = rating.querySelector(".rating-input"
@@ -207,6 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const value = parseInt(star.dataset.value
 
+            // Mostrar vista previa al pasar el mouse
             star.addEventListener("mouseover", () => {
                 highlightStars(value
 
@@ -215,6 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
+            //Registrar selección al hacer clic
             star.addEventListener("click", () => {
                 selectedValue = value;
                 ratingInput.value = value;
@@ -228,6 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
+        // Restaurar visualización anterior al salir
         rating.addEventListener("mouseleave", () => {
             highlightStars(selectedValue
 
@@ -236,6 +287,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+
+        /**
+         * Resalta estrellas hasta el valor especificado
+         * @param {number} value - Número de estrellas a resaltar (1-10)
+         */
         function highlightStars(value) {
             stars.forEach(star => {
                 const starValue = parseInt(star.dataset.value
@@ -243,6 +299,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        /**
+         * Marca estrellas como seleccionadas visualmente
+         * @param {number} value - Calificación final (1-10)
+         */
         function setSelected(value) {
             stars.forEach(star => {
                 const starValue = parseInt(star.dataset.value
@@ -259,7 +319,12 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
 
-/* REVIEW TEXT TOGGLE (leer más/menos) ------------------------------------------------------------------------ */
+/**
+ * Toggle "Leer más/menos" en textos de reseñas
+ * Expande/contrae comentarios largos (>180 caracteres)
+ * @param {Event} event - Evento del clic
+ * @param {HTMLElement} button - Botón que dispara la acción
+ */
 function toggleReview(button) {
     const text = button.closest(".review-card").querySelector(".review-text"
     const label = button.querySelector(".label"
@@ -276,7 +341,11 @@ function toggleReview(button) {
     }
 }
 
-/* CONTROL BOTONES "LEER MÁS" */
+
+/**
+ * Actualiza visibilidad de botones "Leer más" basado en truncamiento de texto
+ * Detecta si el contenido está truncado por CSS line-clamp
+ */
 function updateReadMoreButtons() {
     document.querySelectorAll(".review-card").forEach(card => {
 
@@ -293,7 +362,9 @@ function updateReadMoreButtons() {
             label.textContent = "Leer menos";
             icon.classList.replace("bi-chevron-down", "bi-chevron-up"
             button.style.display = "inline-flex";
-            return; // ← IMPORTANTE: no recalcular nada más
+            return; // IMPORTANTE: si el texto ya está expandido, se mantiene estado visual ("Leer menos")
+                    // y se sale aquí para evitar la comprobación posterior que podría ocultar el botón por error.
+
         }
 
         // detectar si el texto está truncado (line-clamp hack)

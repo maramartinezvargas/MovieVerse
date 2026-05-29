@@ -7,6 +7,18 @@ import com.mara.tfgcine.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio de gestión de usuarios.
+ *
+ * Proporciona operaciones de autenticación y búsqueda de usuarios: registro de nuevas cuentas,
+ * búsqueda por nombre de usuario o email, validación de duplicados y cifrado de contraseñas.
+ *
+ * @author Tamara Martinez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ * @see User
+ * @see com.mara.tfgcine.repository.UserRepository
+ */
 @Service
 public class UserService {
 
@@ -18,6 +30,15 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Registra un nuevo usuario en la aplicación.
+     *
+     * Valida que el nombre de usuario y email sean únicos, cifra la contraseña,
+     * asigna rol STANDARD y estado ACTIVE por defecto, y persiste el usuario.
+     *
+     * @param user objeto User con username, email y password
+     * @throws RuntimeException si el nombre de usuario o email ya existen
+     */
     public void register(User user) {
 
         if (userRepository.existsByUsername(user.getUsername())) {
@@ -35,6 +56,13 @@ public class UserService {
         userRepository.save(user
     }
 
+    /**
+     * Busca un usuario por su nombre de usuario.
+     *
+     * @param username nombre único del usuario
+     * @return objeto User si existe
+     * @throws RuntimeException si el usuario no existe
+     */
     public User findByUsername(String username) {
 
         User user = userRepository.findByUsername(username
@@ -46,6 +74,13 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Busca un usuario por su dirección de correo.
+     *
+     * @param email dirección de correo del usuario
+     * @return objeto User si existe
+     * @throws RuntimeException si el usuario no existe
+     */
     public User findByEmail(String email) {
 
         User user = userRepository.findByEmail(email

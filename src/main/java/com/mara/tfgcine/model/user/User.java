@@ -3,9 +3,38 @@ package com.mara.tfgcine.model.user;
 import com.mara.tfgcine.model.like.Like;
 import com.mara.tfgcine.model.review.Review;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Entidad JPA que representa un usuario de la aplicación.
+ *
+ * Cada instancia almacena la información de autenticación y perfil de un usuario,
+ * así como sus roles y estado de cuenta. Se persiste en la tabla {@code users}.
+ *
+ * Campos principales:
+ * - username: nombre único de usuario para acceso a la aplicación
+ * - email: correo electrónico único del usuario
+ * - password: contraseña encriptada
+ * - role: rol asignado (enum {@link Role}: ADMIN, MODERATOR, STANDARD)
+ * - status: estado de la cuenta (enum {@link AccountStatus}: ACTIVE, BANNED, DISABLED)
+ * - reviews: lista de reseñas creadas por el usuario (relación uno-a-muchos)
+ * - likes: lista de contenidos marcados como favoritos (relación uno-a-muchos)
+ *
+ * Relaciones:
+ * - Un usuario puede crear múltiples reseñas ({@link com.mara.tfgcine.model.review.Review})
+ * - Un usuario puede dar like a múltiples películas/series ({@link com.mara.tfgcine.model.like.Like})
+ *
+ * @author Tamara Martinez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ * @see Role
+ * @see AccountStatus
+ * @see com.mara.tfgcine.model.review.Review
+ * @see com.mara.tfgcine.model.like.Like
+ */
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -43,7 +72,7 @@ public class User {
     public User() {}
 
     // GETTERS & SETTERS
-
+/*
     public Long getId() {
         return id;
     }
@@ -98,5 +127,5 @@ public class User {
 
     public List<Like> getLikes() {return likes;}
 
-    public void setLikes(List<Like> likes) {this.likes = likes;}
+    public void setLikes(List<Like> likes) {this.likes = likes;}*/
 }

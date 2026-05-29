@@ -3,7 +3,7 @@ package com.mara.tfgcine.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mara.tfgcine.client.TmdbClient;
-import com.mara.tfgcine.model.CastMember;
+import com.mara.tfgcine.model.media.CastMember;
 import com.mara.tfgcine.model.dto.ReviewDTO;
 import com.mara.tfgcine.model.media.Media;
 import com.mara.tfgcine.model.media.Movie;

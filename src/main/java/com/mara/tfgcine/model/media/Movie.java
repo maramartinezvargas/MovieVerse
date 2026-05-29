@@ -3,6 +3,17 @@ import lombok.Data;
 
 import java.util.List;
 
+
+/**
+ * Modelo que representa una película.
+ *
+ * Extiende de {@link Media} e incluye información específica como duración,
+ * clave del tráiler, productoras, países de producción e idioma original.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 @Data
 public class Movie extends Media {
 

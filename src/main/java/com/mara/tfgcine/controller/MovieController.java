@@ -19,6 +19,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
+/**
+ * Controlador encargado de la gestión de películas.
+ *
+ * Proporciona las vistas y endpoints necesarios para mostrar el detalle de una película,
+ * explorar el catálogo de películas y cargar páginas adicionales.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 @Controller
 public class MovieController {
 
@@ -41,6 +52,19 @@ public class MovieController {
         this.userMediaStatusService = userMediaStatusService;
     }
 
+    /**
+     * Muestra la página de detalle de una película.
+     *
+     * Carga la información principal de la película, el reparto, los proveedores,
+     * el equipo técnico, las reseñas, los "likes" y el estado de visualización del usuario
+     * si está autenticado.
+     *
+     * @param id identificador de la película en TMDB
+     * @param model modelo de Spring MVC para enviar datos a la vista
+     * @param request petición HTTP actual, usada para obtener la URL actual
+     * @return nombre de la vista de detalle de película
+     * @throws Exception si ocurre un error al consultar los servicios externos
+     */
     @GetMapping("/peliculas/{id}")
     public String movieDetails(@PathVariable int id, Model model, HttpServletRequest request) throws Exception {
 
@@ -146,6 +170,17 @@ public class MovieController {
         return "movie";
     }
 
+    /**
+     * Muestra la página de exploración de películas.
+     *
+     * Recupera películas paginadas, géneros disponibles y una lista de años
+     * para construir los filtros de la vista.
+     *
+     * @param page número de página a mostrar
+     * @param model modelo de Spring MVC para enviar datos a la vista
+     * @return nombre de la vista de exploración de películas
+     * @throws Exception si ocurre un error al consultar los servicios externos
+     */
     @GetMapping("/peliculas")
     public String explorarPeliculas(@RequestParam(defaultValue = "1") int page, Model model) throws Exception {
 
@@ -170,6 +205,24 @@ public class MovieController {
 
         return "movies";
     }
+
+
+    /**
+     * Devuelve una página de películas en formato JSON para carga dinámica.
+     *
+     * Permite filtrar por año, género, ordenación, puntuación mínima y número mínimo
+     * de votos. Si se proporcionan identificadores ya cargados, se excluyen del resultado.
+     *
+     * @param page número de página a recuperar
+     * @param year año de lanzamiento opcional
+     * @param genre género opcional
+     * @param sort criterio de ordenación opcional
+     * @param minRating puntuación mínima opcional
+     * @param minVotes número mínimo de votos opcional
+     * @param loadedIds conjunto de IDs ya cargados para evitar duplicados
+     * @return lista de películas filtradas
+     * @throws Exception si ocurre un error al consultar los servicios externos
+     */
 
     @GetMapping("/api/peliculas")
     @ResponseBody

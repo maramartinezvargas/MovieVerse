@@ -10,6 +10,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.beans.factory.annotation.Value;
 
+
+/**
+ * CONFIGURACIÓN DE SEGURIDAD DE LA APLICACIÓN **************************************
+ *
+ * Define las reglas de acceso a las distintas rutas, la página de login personalizada,
+ * el comportamiento tras autenticarse correctamente, el logout y la funcionalidad
+ * de "remember me".
+ *
+ * Esta clase utiliza Spring Security para proteger las rutas privadas,
+ * permitir acceso público a recursos estáticos y páginas de acceso general,
+ * y restringir determinadas secciones según el rol del usuario.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -23,6 +39,18 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Configura la cadena de filtros de seguridad de Spring Security.
+     *
+     * Define qué rutas son públicas, cuáles requieren autenticación y cuáles
+     * están restringidas a usuarios con roles concretos. También configura la
+     * página de login, el comportamiento tras un inicio de sesión exitoso,
+     * el cierre de sesión y la opción de "remember me".</p>
+     *
+     * @param http objeto de configuración HTTP de Spring Security
+     * @return la cadena de filtros de seguridad construida
+     * @throws Exception si ocurre un error al construir la configuración de seguridad
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -104,6 +132,15 @@ public class SecurityConfig {
 
         return http.build(
     }
+
+    /**
+     * Crea el codificador de contraseñas utilizado por la aplicación.
+     *
+     * Se utiliza BCryptPasswordEncoder para almacenar y validar contraseñas
+     * de forma segura.
+     *
+     * @return una instancia de PasswordEncoder basada en BCrypt
+     */
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -4,6 +4,17 @@ import com.mara.tfgcine.model.moderation.ReportStatus;
 
 import java.time.LocalDateTime;
 
+/**
+ * DTO utilizado para representar los reportes en el panel de administración (DASHBOARD)
+ *
+ * Contiene la información resumida necesaria para mostrar cada reporte en el dashboard,
+ * incluyendo identificador, reseña asociada, nombres de usuario implicados, motivo,
+ * estado y fecha de creación.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 public class ReportDashboardDTO {
 
     private Long id;

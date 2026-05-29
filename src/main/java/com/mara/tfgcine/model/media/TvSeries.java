@@ -1,7 +1,33 @@
 package com.mara.tfgcine.model.media;
 
+import lombok.Data;
+
 import java.util.List;
 
+/**
+ * Modelo que representa una serie de televisión obtenida desde TMDB.
+ *
+ * Contiene los datos específicos de una serie (fecha de primer episodio,
+ * temporadas/episodios, información de producción, duración de episodio, etc.)
+ * y extiende {@link Media} para compartir campos
+ * comunes (título, póster, sinopsis, puntuación, etc.).
+ *
+ * Esta clase se utiliza por el servicio {@link com.mara.tfgcine.service.TmdbService}
+ * para mapear respuestas de la API de TMDB a objetos de la aplicación y para
+ * mostrar/transferir información en las vistas (no es una entidad JPA).
+ *
+ * Notas:
+ * - Algunos getters/ setters sobrescriben o complementan la funcionalidad de {@code Media}.
+ * - Campos relevantes: {@code firstAirDate}, {@code numberOfSeasons}, {@code numberOfEpisodes},
+ *   {@code episodeRuntime}, {@code backdropPath}, {@code trailerKey}, {@code productionCompanies}, etc.
+ *
+ * @author Tamara Martínez
+ * @since 02/03/2026
+ * @version 28/05/2026
+ * @see com.mara.tfgcine.model.media.Media
+ * @see com.mara.tfgcine.service.TmdbService
+ */
+@Data
 public class TvSeries extends Media {
 
     private String firstAirDate;
@@ -20,14 +46,11 @@ public class TvSeries extends Media {
     private Integer episodeRuntime;
 
     // GETTERS & SETTERS
-
-    public String getBackdropPath() {
+   /* public String getBackdropPath() {
         return backdropPath;
     }
 
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
+    public void setBackdropPath(String backdropPath) {this.backdropPath = backdropPath;}
 
     @Override
     public String getOverview() {
@@ -117,5 +140,5 @@ public class TvSeries extends Media {
 
     public void setEpisodeRuntime(Integer episodeRuntime) {
         this.episodeRuntime = episodeRuntime;
-    }
+    }*/
 }

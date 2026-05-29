@@ -1,3 +1,12 @@
+/**
+ * status.js
+ *
+ * Gestiona el estado de visualización de películas/series (WATCHED, WATCHLIST, o sin estado).
+ * - Dropdown personalizado para seleccionar estado
+ * - POST a /status con snapshot data (title, posterPath, voteAverage)
+ * - Actualiza el botón principal según el estado guardado
+ * - Muestra mensajes flash de error
+ */
 document.addEventListener("DOMContentLoaded", () => {
     const csrfInput = document.querySelector("input[name='_csrf']"
 
@@ -20,12 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!button || !dropdown) return;
 
-        /* Abrir / cerrar dropdown - Solo para usuarios autenticados */
+        /* Abrir / cerrar dropdown - Solo para usuarios autenticados --------------*/
         button.addEventListener("click", (e) => {
 
             e.stopPropagation(
 
-            /* Usuario no autenticado */
+            // Si usuario no autenticado, se muestra aviso y no se abre el dropdown
             if (!isAuthenticated) {
                 showFlashMessage(
                     "error",
@@ -34,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Se cierran otros dropdown abiertos para tener uno solo activo
             statusWrappers.forEach(other => {
                 if (other !== wrapper) {
                     other.classList.remove("open"
@@ -44,23 +54,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
-        /* Click opciones */
+        /* Click en opción de estado ---------------------------------------------------*/
 
         options.forEach(option => {
 
             option.addEventListener("click", async (e) => {
 
                 e.stopPropagation(
-
+                // Datos de la peli/serie obtenidos del wrapper html
                 const mediaId = wrapper.dataset.mediaId;
                 const mediaType = wrapper.dataset.mediaType;
-                const status = option.dataset.status;
+                const status = option.dataset.status; // WATCHED | WATCHLIST
                 const title = wrapper.dataset.title;
                 const posterPath = wrapper.dataset.posterPath;
                 const voteAverage = wrapper.dataset.voteAverage;
 
                 try {
-
+                    // POST al backend con snapshot data (para mostrar en perfil sin hacer repetir llamadas a la API)
                     const response = await fetch("/status", {
 
                             method: "POST",
@@ -86,7 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         throw new Error("Error guardando estado"
                     }
                     const data = await response.json(
+                    // Actualizar boton según el nuevo estado
                     updateStatusButton(button, data.status
+                    // Cerrrar dropdown
                     wrapper.classList.remove("open"
 
                 } catch (error) {
@@ -100,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    /* Click fuera */
+    /* Cerrar dropdown si click fuera ------------------------------------------------ */
     document.addEventListener("click", () => {
 
         document.querySelectorAll(".media-status-wrapper")
@@ -112,17 +124,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 }
 
-/* Actualizar botón principal */
 
+/**
+ * Actualiza el botón principal según el estado guardado.
+ * Cambia icono, texto y clases CSS.
+ *
+ * @param button - El botón .btn-status a actualizar
+ * @param status - El nuevo estado (WATCHED, WATCHLIST, o null)
+ */
 function updateStatusButton(button, status) {
 
     const icon = button.querySelector("i"
-
     const text = button.querySelector("span"
 
+    // Limpiar clases previas
     button.classList.remove("watched","watchlist" 
 
-    /* Sin estado */
+    /* Sin estado > Mostrar Guardar en el icono en lugar del estado*/
     if (!status) {
         icon.className =
             "bi bi-bookmark-plus";
@@ -132,7 +150,7 @@ function updateStatusButton(button, status) {
 
     }
 
-    /* Vista */
+    /* Estado WATCHED: "Vista" con icono de ojo */
     if (status === "WATCHED") {
         icon.className =
             "bi bi-eye-fill";
@@ -141,7 +159,7 @@ function updateStatusButton(button, status) {
         button.classList.add("watched"
     }
 
-    /* Pendiente */
+    /* Estado WATCHLIST: "Pendiente" con icono de reloj */
     if (status === "WATCHLIST") {
         icon.className =
             "bi bi-clock-fill";
@@ -152,6 +170,12 @@ function updateStatusButton(button, status) {
 
 }
 
+/**
+ * Crea un mensaje flash temporal (error/éxito) en la UI.
+ *
+ * @param type - Tipo del mensaje (error, success, etc.)
+ * @param message - Texto del mensaje
+ */
 function showFlashMessage(type, message) {
 
     const flashContainer =
@@ -159,19 +183,15 @@ function showFlashMessage(type, message) {
 
     if (!flashContainer) return;
 
-    const existingFlash =
-        flashContainer.querySelector(".flash-alert"
-
+    //Eliminar flash anterior si existe
+    const existingFlash = flashContainer.querySelector(".flash-alert"
     if (existingFlash) {
         existingFlash.remove(
     }
 
-    const flash =
-        document.createElement("div"
-
-    flash.className =
-        `flash-alert ${type}`;
-
+    // Crear nuevo flash
+    const flash = document.createElement("div"
+    flash.className = `flash-alert ${type}`;
     flash.innerHTML = `
         <span>${message}</span>
         <button class="flash-close">&times;</button>
@@ -179,11 +199,13 @@ function showFlashMessage(type, message) {
 
     flashContainer.appendChild(flash
 
+    // Cierre manual al hacer clic en la "x"
     flash.querySelector(".flash-close")
         .addEventListener("click", () => {
             flash.remove(
         }
 
+    // Autocierre transcurridos los 4 segundos
     setTimeout(() => {
         flash.remove(
     }, 4000

@@ -1,3 +1,12 @@
+/**
+ * likes.js
+ *
+ * Gestiona el botón de "me gusta" en la ficha de un medio:
+ * - Envía una petición POST a /likes/toggle para alternar el like
+ * - Actualiza el icono y el contador en la UI
+ * - Muestra mensajes de error/estado usando flash messages
+ *
+ */
 document.addEventListener("DOMContentLoaded", () => {
 
     const likeBtn = document.getElementById("likeBtn"

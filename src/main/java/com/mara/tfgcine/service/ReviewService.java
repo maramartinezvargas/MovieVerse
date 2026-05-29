@@ -16,6 +16,25 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Servicio encargado de gestionar las reseñas de usuarios sobre películas y series.
+ *
+ * Permite crear reseñas locales, comprobar duplicados y recuperar todas las reseñas
+ * asociadas a un contenido concreto, combinando reseñas internas de MovieVerse con
+ * reseñas obtenidas desde TMDB.
+ *
+ * También realiza el mapeo entre entidades locales ({@link com.mara.tfgcine.model.review.Review})
+ * y DTOs de presentación ({@link com.mara.tfgcine.model.dto.ReviewDTO}).
+ *
+ * @author Tamara Martinez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ * @see ReviewRepository
+ * @see TmdbService
+ * @see UserRepository
+ * @see com.mara.tfgcine.model.review.Review
+ * @see com.mara.tfgcine.model.dto.ReviewDTO
+ */
 @Service
 public class ReviewService {
 
@@ -31,7 +50,15 @@ public class ReviewService {
         this.userRepository = userRepository;
     }
 
-    // Obtener todas las reviews (locales + TMDB) para una película o serie concreta, ordenadas por fecha (más recientes primero)
+
+    /**
+    * Obtiene todas las reseñas de un contenido, tanto locales como de TMDB,
+    * ordenadas de más recientes a más antiguas.
+    *
+    * @param mediaId identificador del contenido en TMDB
+    * @param mediaType tipo de medio (película o serie)
+    * @return lista de reseñas combinadas y ordenadas por fecha
+    */
     public List<ReviewDTO> getAllReviews(Long mediaId, MediaType mediaType) {
 
         List<ReviewDTO> local = reviewRepository
@@ -54,7 +81,7 @@ public class ReviewService {
                 .toList(
     }
 
-    // LOCAL
+    // Convierte una review local a DTO para la capa de presentación
     private ReviewDTO mapLocalReview(Review review) {
 
         ReviewDTO dto = new ReviewDTO(
@@ -74,7 +101,16 @@ public class ReviewService {
         return dto;
     }
 
-    // TMDB
+    /**
+     * Mapea una reseña obtenida desde TMDB a un DTO (ReviewDTO)
+     *
+     * @Deprecated El mapeo de reseñas de TMDB se realiza directamente en el servicio de TMDB,
+     * pero se mantiene este método privado por si se necesita en algún caso concreto.
+     *
+     * @param tmdb - reseña obtenida desde TMDB
+     * @return dto - DTO con los datos de la reseña formateados para la presentación
+     */
+    // Convierte una review de TMDB a DTO para mostrarla junto con las locales
     private ReviewDTO mapTmdbReview(TmdbReview tmdb) {
         ReviewDTO dto = new ReviewDTO(
 
@@ -97,6 +133,21 @@ public class ReviewService {
         return dto;
     }
 
+    /**
+     * Crea una nueva reseña local para un usuario.
+     *
+     * Comprueba primero que el usuario no haya escrito ya una reseña sobre
+     * el mismo contenido.
+     *
+     * @param username nombre de usuario autor de la reseña
+     * @param mediaId identificador del contenido en TMDB
+     * @param comment comentario de la reseña
+     * @param rating puntuación otorgada
+     * @param mediaType tipo de medio (película o serie)
+     * @param title título del contenido
+     * @param posterPath ruta del póster del contenido
+     * @throws IllegalStateException si ya existe una reseña previa para ese contenido
+     */
     public void createReview(String username,
                              Long mediaId,
                              String comment,

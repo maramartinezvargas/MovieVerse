@@ -12,6 +12,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Servicio encargado de gestionar los "likes" (me gusta) de los usuarios sobre películas y series.
+ *
+ * Permite alternar un like (crear o eliminar), comprobar si un usuario ya ha dado like
+ * a un contenido, contar el número total de likes y obtener el historial de likes de un usuario.
+ *
+ * Para crear un like, guarda también un snapshot de datos de TMDB (título, póster y valoración)
+ * para poder mostrar el contenido en el perfil aunque cambie en la API externa y para evitar
+ * hacer excesivas llamadas a la API.
+ *
+ * @author Tamara Martinez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ * @see Like
+ * @see LikeRepository
+ * @see TmdbService
+ */
 @Service
 public class LikeService {
 
@@ -27,12 +44,17 @@ public class LikeService {
     }
 
     /**
-     * Toggle de like:
-     * - Si existe → lo elimina
-     * - Si no existe → lo crea
+     * Alterna el toggle del like de un usuario sobre un contenido.
      *
-     * @return true si queda like activo, false si se elimina
+     * Si el like ya existe, lo elimina. Si no existe, lo crea y guarda un snapshot
+     * de los datos del contenido desde TMDB.
+     *
+     * @param user usuario que da o quita el like
+     * @param mediaId identificador del contenido en TMDB
+     * @param mediaType tipo de medio (película o serie)
+     * @return {@code true} si el like queda activo, {@code false} si se elimina
      */
+
     public boolean toggleLike(User user, Long mediaId, MediaType mediaType) {
 
         Optional<Like> existing = likeRepository
@@ -90,7 +112,12 @@ public class LikeService {
     }
 
     /**
-     * Saber si el usuario ya ha dado like
+     * Comprueba si un usuario ya ha dado like a un contenido.
+     *
+     * @param user usuario a comprobar
+     * @param mediaId identificador del contenido en TMDB
+     * @param mediaType tipo de medio (película o serie)
+     * @return {@code true} si ya ha dado like, {@code false} en caso contrario
      */
     public boolean hasUserLiked(User user, Long mediaId, MediaType mediaType) {
         return likeRepository.existsByUserAndMediaIdAndMediaType(
@@ -100,8 +127,13 @@ public class LikeService {
         
     }
 
+
     /**
-     * Contar likes de un contenido
+     * Cuenta el número total de likes de un contenido.
+     *
+     * @param mediaId identificador del contenido en TMDB
+     * @param mediaType tipo de medio (película o serie)
+     * @return número total de likes
      */
     public int countLikes(Long mediaId, MediaType mediaType) {
         return likeRepository.countByMediaIdAndMediaType(
@@ -111,7 +143,10 @@ public class LikeService {
     }
 
     /**
-     * Obtener todos los likes de un usuario
+     * Obtiene todos los likes de un usuario ordenados de más recientes a más antiguos.
+     *
+     * @param user usuario cuyos likes se quieren consultar
+     * @return lista de likes del usuario
      */
     public List<Like> getUserLikes(User user) {
         return likeRepository.findByUserOrderByCreatedAtDesc(user

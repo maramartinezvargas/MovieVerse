@@ -4,9 +4,17 @@ import com.mara.tfgcine.model.media.MediaType;
 
 import java.time.LocalDateTime;
 
+
 /**
- * DTO para representar las reseñas en el perfil del usuario.
- * Contiene información básica sobre la reseña, como el título del medio, el comentario, la calificación y la fecha de creación.
+ * DTO utilizado para representar las reseñas del perfil de usuario.
+ *
+ * Contiene la información necesaria para mostrar las reseñas propias del usuario,
+ * incluyendo identificador, medio asociado, tipo de contenido, título, póster,
+ * comentario, puntuación y fecha de creación.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
  */
 
 public class ProfileReviewDTO {

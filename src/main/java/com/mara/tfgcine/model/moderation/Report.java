@@ -3,6 +3,31 @@ package com.mara.tfgcine.model.moderation;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad JPA que representa un reporte de una reseña realizado por un usuario.
+ *
+ * Cada instancia registra una denuncia/reporte sobre una reseña problemática
+ * (contenido inapropiado, ofensivo, spam, etc.) y se persiste en la tabla {@code reports}
+ * para que moderadores revisen y tomen acciones al respecto.
+ *
+ * Campos principales:
+ * - reason: motivo o descripción del reporte
+ * - status: estado actual del reporte (enum {@link ReportStatus}: PENDING, RESOLVED, REJECTED)
+ * - reporterId: identificador del usuario que realiza el reporte
+ * - reviewId: identificador de la reseña reportada
+ * - reportedUserId: identificador del autor de la reseña reportada
+ * - createdAt: fecha y hora en que se realizó el reporte (se establece automáticamente)
+ * - moderatorId: identificador del moderador que resolvió el reporte (opcional)
+ *
+ * Ciclo de vida: el reporte se crea con estado PENDING, y un moderador puede
+ * cambiar su estado a RESOLVED (si la reseña se elimina) o REJECTED (si se considera válida).
+ *
+ * @author Tamara Martinez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ * @see ReportStatus
+ * @see com.mara.tfgcine.service.ModerationService
+ */
 @Entity
 @Table(name = "reports")
 public class Report {

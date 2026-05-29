@@ -5,9 +5,37 @@ import com.mara.tfgcine.model.user.User;
 
 import jakarta.persistence.*;
 
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+
+/**
+ * Entidad JPA que registra el estado de visualización de un usuario sobre una película o serie.
+ *
+ * Cada instancia representa que un usuario ha marcado un contenido multimedia como visto (WATCHED)
+ * o añadido a su lista de pendientes (WATCHLIST) y se persiste en la tabla {@code user_media_status}.
+ *
+ * Campos principales:
+ * - user: relación con el usuario propietario del estado
+ * - mediaId: identificador de la película o serie en TMDB
+ * - mediaType: tipo de medio (enum {@link MediaStatus}: WATCHED o WATCHLIST)
+ * - status: estado actual del seguimiento
+ * - createdAt: fecha de creación (se establece automáticamente)
+ * - title: snapshot del título del medio para visualización sin consultar TMDB
+ * - posterPath: snapshot de la ruta del póster para visualización sin consultar TMDB
+ * - voteAverage: snapshot de la calificación promedio del medio
+ *
+ * Restricciones: una combinación única (usuario, película/serie, tipo de medio) garantiza
+ * que un usuario no puede tener múltiples estados para el mismo contenido.
+ *
+ * @author Tamara Martinez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ * @see MediaStatus
+ * @see com.mara.tfgcine.model.user.User
+ * @see com.mara.tfgcine.model.media.MediaType
+ */
 
 @Entity
 @Table(uniqueConstraints = {
@@ -18,6 +46,7 @@ import java.time.LocalDateTime;
         })
     }
 )
+@Data
 public class UserMediaStatus {
 
     @Id
@@ -50,7 +79,7 @@ public class UserMediaStatus {
     private LocalDateTime createdAt;
 
     /* Getters and Setters */
-
+/*
     public Long getId() {
         return id;
     }
@@ -121,5 +150,5 @@ public class UserMediaStatus {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
+    }*/
 }

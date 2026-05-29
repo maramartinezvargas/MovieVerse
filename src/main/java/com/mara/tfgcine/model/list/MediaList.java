@@ -5,6 +5,16 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Entidad que representa una lista de contenido multimedia creada por un usuario.
+ *
+ * Almacena el nombre y tipo de la lista, su fecha de creación, el usuario propietario
+ * y los elementos que contiene.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 @Entity
 @Table(name = "media_lists")
 public class MediaList {

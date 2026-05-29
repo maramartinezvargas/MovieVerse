@@ -3,6 +3,18 @@ package com.mara.tfgcine.model.dto;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
+/**
+ * DTO utilizado para representar una reseña mostrada en el perfil o en las fichas de contenido.
+ *
+ * <p>Contiene la información necesaria para mostrar reseñas de usuarios o de TMDB,
+ * incluyendo identificador, nombre de usuario, comentario, puntuación, fecha de creación,
+ * origen de la reseña y avatar del usuario.</p>
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 public class ReviewDTO {
 
     private Long id;
@@ -66,6 +78,14 @@ public class ReviewDTO {
 
     public void setId(Long id) {this.id = id;}
 
+    /**
+     * Compara dos instancias de ReviewDTO por su comentario
+     *
+     * Se utiliza este criterio para considerar iguales las reseñas con el mismo contenido textual.
+     *
+     * @param o objeto a comparar
+     * @return @code true si ambos objetos tienen el mismo comentario
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,6 +94,11 @@ public class ReviewDTO {
         return Objects.equals(comment, that.comment
     }
 
+    /**
+     * Calcula el hash del DTO a partir del comentario.
+     *
+     * @return hash basado en el comentario
+     */
     @Override
     public int hashCode() {
         return Objects.hash(comment

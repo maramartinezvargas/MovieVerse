@@ -23,6 +23,18 @@ import com.mara.tfgcine.model.review.Review;
 
 import java.util.ArrayList;
 
+
+/**
+ * Controlador encargado de la gestión del perfil de usuario.
+ *
+ * Permite mostrar la información del perfil, las listas del usuario, los títulos
+ * marcados como vistos o pendientes, los "likes" y las reseñas propias. También
+ * gestiona la creación de nuevas reseñas desde el perfil o desde la ficha de una película/serie.</p>
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 @Controller
 public class UserController {
 
@@ -44,6 +56,18 @@ public class UserController {
         this.userMediaStatusService = userMediaStatusService;
     }
 
+    /**
+     * Muestra la página de perfil del usuario autenticado.
+     *
+     * Recupera los datos del usuario, sus listas, sus títulos favoritos,
+     * su contenido marcado como visto o por ver, y sus reseñas para mostrarlos
+     * en la vista del perfil.
+     *
+     * @param model modelo de Spring MVC para enviar datos a la vista
+     * @param auth información de autenticación del usuario actual
+     * @return nombre de la vista del perfil
+     * @throws Exception si ocurre un error al consultar los servicios asociados
+     */
     @GetMapping("/perfil")
     public String profile(Model model, Authentication auth) throws Exception {
 
@@ -132,7 +156,23 @@ public class UserController {
         return dto;
     }
 
-    // Manejar creación de reviews
+
+    /**
+     * Crea una nueva reseña para un contenido multimedia.
+     *
+     * Si el usuario no está autenticado, redirige al login. En caso contrario,
+     * intenta registrar la reseña y muestra un mensaje de éxito o error según el resultado.
+     *
+     * @param mediaId identificador del contenido multimedia
+     * @param comment comentario de la reseña
+     * @param rating puntuación opcional de la reseña
+     * @param mediaType tipo de contenido multimedia
+     * @param title título del contenido
+     * @param posterPath ruta del póster del contenido
+     * @param auth información de autenticación del usuario
+     * @param redirectAttributes atributos flash para mostrar mensajes en la redirección
+     * @return redirección a la ficha de la película o serie, o al login si el usuario no está autenticado
+     */
     @PostMapping("/reviews")
     public String createReview(@RequestParam Long mediaId,
                                @RequestParam String comment,

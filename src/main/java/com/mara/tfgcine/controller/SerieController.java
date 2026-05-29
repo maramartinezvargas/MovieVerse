@@ -19,6 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Controlador encargado de la gestión de series.
+ *
+ * Proporciona las vistas y endpoints necesarios para mostrar el detalle de una serie,
+ * explorar el catálogo de series y cargar páginas adicionales.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 @Controller
 public class SerieController {
 
@@ -41,6 +52,19 @@ public class SerieController {
         this.userMediaStatusService = userMediaStatusService;
     }
 
+    /**
+     * Muestra la página de detalle de una serie.
+     *
+     * Carga la información principal de la serie, el reparto, los proveedores,
+     * el equipo técnico, las reseñas, los "likes" y el estado de visualización del usuario
+     * si está autenticado.
+     *
+     * @param id identificador de la serie en TMDB
+     * @param model modelo de Spring MVC para enviar datos a la vista
+     * @param request petición HTTP actual, usada para obtener la URL actual
+     * @return nombre de la vista de detalle de serie
+     * @throws Exception si ocurre un error al consultar los servicios externos
+     */
     @GetMapping("/series/{id}")
     public String serieDetails(@PathVariable int id, Model model, HttpServletRequest request) throws Exception {
 
@@ -54,7 +78,7 @@ public class SerieController {
         // Reparto
         model.addAttribute("cast", tmdbService.getSerieCast(id)
 
-        // Providers (igual que en movies pero método distinto)
+        // Providers
         List<Provider> providers = tmdbService.getProvidersForSeries(id
         model.addAttribute("providers", providers
 
@@ -68,7 +92,7 @@ public class SerieController {
 
         List<ReviewDTO> reviews = reviewService.getAllReviews((long) id, MediaType.SERIE
 
-        // REORDENAR: review del usuario arriba
+        // REORDENAR: mostrar review del usuario autenticado, si la hay, arriba siempre
         Authentication auth = SecurityContextHolder.getContext().getAuthentication(
 
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
@@ -153,8 +177,18 @@ public class SerieController {
         return "serie";
     }
 
-    /* ================= EXPLORAR SERIES ================= */
 
+    /**
+     * Muestra la página de exploración de series.
+     *
+     * Recupera series paginadas, géneros disponibles y una lista de años
+     * para construir los filtros de la vista.
+     *
+     * @param page número de página a mostrar
+     * @param model modelo de Spring MVC para enviar datos a la vista
+     * @return nombre de la vista de exploración de series
+     * @throws Exception si ocurre un error al consultar los servicios externos
+     */
     @GetMapping("/series")
     public String explorarSeries(@RequestParam(defaultValue = "1") int page, Model model) throws Exception {
 
@@ -180,9 +214,21 @@ public class SerieController {
         return "series";
     }
 
-
-    /* ================= API SERIES ================= */
-
+    /**
+     * Devuelve una página de series en formato JSON para carga dinámica.
+     *
+     * Permite filtrar por año, género, ordenación, puntuación mínima y número mínimo
+     * de votos.
+     *
+     * @param page número de página a recuperar
+     * @param year año de estreno opcional
+     * @param genre género opcional
+     * @param sort criterio de ordenación opcional
+     * @param minRating puntuación mínima opcional
+     * @param minVotes número mínimo de votos opcional
+     * @return lista de series filtradas
+     * @throws Exception si ocurre un error al consultar los servicios externos
+     */
     @GetMapping("/api/series")
     @ResponseBody
     public List<TvSeries> getSeriesPage(
@@ -193,7 +239,6 @@ public class SerieController {
             @RequestParam(required = false) Double minRating,
             @RequestParam(required = false) Integer minVotes
     ) throws Exception {
-
         return tmdbService.discoverSeriesFiltered(page, year, genre, sort, minRating, minVotes
     }
 

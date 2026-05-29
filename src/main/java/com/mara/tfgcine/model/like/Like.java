@@ -6,6 +6,18 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+
+/**
+ * Entidad que representa un "like" (me gusta) de un usuario sobre un contenido multimedia.
+ *
+ * Almacena la relación entre el usuario y el medio marcado como favorito,
+ * junto con información auxiliar como el título, el póster, la valoración media
+ * y la fecha en la que se creó el like.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
 @Entity
 @Table(name = "likes")
 public class Like {
@@ -24,17 +36,20 @@ public class Like {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private String title;
-
-    private String posterPath;
-
-    private Double voteAverage;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // Getters and Setters
+    /**
+     * SNAPSHOT: Datos auxiliares de TMDB utilizados para mostrar el contenido en el perfil del usuario.
+     *
+     * Se almacenan el título, el póster y la valoración media del medio para evitar
+     * volver a consultar TMDB cada vez que se renderiza la lista de likes.
+     */
+    private String title;
+    private String posterPath;
+    private Double voteAverage;
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }

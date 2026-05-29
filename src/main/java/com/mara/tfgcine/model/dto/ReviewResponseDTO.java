@@ -2,6 +2,18 @@ package com.mara.tfgcine.model.dto;
 
 import java.time.LocalDateTime;
 
+
+/**
+ * DTO de respuesta utilizado para exponer los datos de una reseña.
+ *
+ * Contiene la información necesaria para mostrar o editar una reseña en la interfaz,
+ * incluyendo identificador, puntuación, comentario, fecha de creación, contenido asociado,
+ * tipo de medio y nombre de usuario.
+ *
+ * @author Tamara Martínez Vargas
+ * @since 02/06/2026
+ * @version 28/05/2026
+ */
 public class ReviewResponseDTO {
 
     private Long id;
@@ -38,6 +50,7 @@ public class ReviewResponseDTO {
         this.username = username;
     }
 
+    // Getters
     public Long getId() {
         return id;
     }

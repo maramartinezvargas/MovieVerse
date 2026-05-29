@@ -1,3 +1,20 @@
+/**
+ * explorer.js
+ *
+ * Inicializa el explorador de películas/series con filtros, paginación y la carga incremental("Mostrar más").
+ *
+ * Parámetros:
+ * - apiUrl: URL de la API que devuelve páginas de resultados (se espera JSON array)
+ * - gridId: id del contenedor donde se insertarán las tarjetas (DOM)
+ * - detailBasePath: ruta base para construir enlaces a la ficha (/peliculas o /series)
+ *
+ * Comportamiento principal:
+ * - Mantiene estado de filtros/orden/página
+ * - Deduplica items ya cargados usando `loadedIds`
+ * - Soporta sliders/inputs para rating y votes
+ * - Provee botón "Mostrar más" que incrementa la página y trae más items
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
 
     window.initExplorer = function ({
@@ -38,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadedIds = new Set(
 
         /* ================= DROPDOWN ================= */
-
         function initDropdown({ target, onChange }) {
 
             const selected = document.getElementById(`${target}-selected`
@@ -79,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         initDropdown({ target: "sort", onChange: v => { currentSort = v || DEFAULTS.sort; resetAndLoad( }}
 
         /* ================= UI ================= */
-
         function applyStateToUI() {
 
             if (ratingInput) {
@@ -122,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /* ================= INIT ================= */
-
         document.querySelectorAll('.movie-card a').forEach(a => {
             const id = a.getAttribute('href')?.split('/').pop(
             if (id) loadedIds.add(id
@@ -133,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
         applyStateToUI(
 
         /* ================= SLIDERS ================= */
-
         ratingInput?.addEventListener('input', () => {
             minRating = parseFloat(ratingInput.value
             ratingValue.textContent = minRating;
@@ -149,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
         votesInput?.addEventListener('change', resetAndLoad
 
         /* ================= URL ================= */
-
         function buildUrl() {
             let url = `${apiUrl}?page=${currentPage}`;
 
@@ -163,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /* ================= RESET ================= */
-
         function resetAndLoad() {
             currentPage = 1;
             grid.innerHTML = '';
@@ -191,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /* ================= LOAD ================= */
-
         async function loadItems() {
 
             button.disabled = true;
