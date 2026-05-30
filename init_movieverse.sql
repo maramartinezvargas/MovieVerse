@@ -69,7 +69,7 @@ CREATE TABLE reports (
     reporter_id BIGINT,
     review_id BIGINT,
     reported_user_id BIGINT,
-    reason TEXT,
+    reason VARCHAR(200),
     status ENUM('PENDING','UNDER_REVIEW','RESOLVED','REJECTED')
         DEFAULT 'PENDING',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -186,11 +186,6 @@ BEGIN
         INTO moderator_username
         FROM users
         WHERE id = NEW.moderator_id;
-        
-        SELECT comment
-		INTO review_comment
-		FROM reviews
-		WHERE id = NEW.review_id;
 
        INSERT INTO audit_logs (
 			moderator_id,

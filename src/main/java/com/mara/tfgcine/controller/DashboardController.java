@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -53,41 +54,35 @@ public class DashboardController {
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         // Convertir los reportes a DTO para mostrarlos en el dashboard
-        List<ReportDashboardDTO> reports =
-                reportRepository.findAll()
-                        .stream()
-                        .map(report -> {
+        List<ReportDashboardDTO> reports = reportRepository.findAll().stream()
+                .map(report -> {
 
-                            // Obtener los nombres de usuario reportador y del reportado
-                            User reporter = userRepository
-                                    .findById(report.getReporterId())
-                                    .orElse(null
+                    User reporter = userRepository
+                            .findById(report.getReporterId())
+                            .orElse(null
 
-                            User reported = userRepository
-                                    .findById(report.getReportedUserId())
-                                    .orElse(null
+                    User reported = userRepository
+                            .findById(report.getReportedUserId())
+                            .orElse(null
 
-                            return new ReportDashboardDTO(
-                                    report.getId(),
+                    return new ReportDashboardDTO(
+                            report.getId(),
+                            report.getReviewId(),
+                            reporter != null ? reporter.getUsername() : "Desconocido",
+                            reported != null ? reported.getUsername() : "Desconocido",
+                            report.getReason(),
+                            report.getStatus(),
+                            report.getCreatedAt()
+                    
+                })
+                .toList(
 
-                                    report.getReviewId(),
-
-                                    reporter != null
-                                            ? reporter.getUsername()
-                                            : "Desconocido",
-
-                                    reported != null
-                                            ? reported.getUsername()
-                                            : "Desconocido",
-
-                                    report.getReason(),
-
-                                    report.getStatus(),
-
-                                    report.getCreatedAt()
-                            
-                        })
-                        .toList(
+        reports = reports.stream()
+                .sorted(
+                        Comparator.comparing((ReportDashboardDTO r) -> r.getStatus() != ReportStatus.PENDING)
+                                .thenComparing(ReportDashboardDTO::getCreatedAt, Comparator.reverseOrder())
+                )
+                .toList(
 
         // Calcular el número de reportes por estado que se muestran en las stats
         long pendingCount = reports.stream()

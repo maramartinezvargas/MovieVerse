@@ -104,43 +104,180 @@ body {
 
 .reports-table {
     width: 100%;
-    border-collapse: collapse;
-
+    border-collapse: separate;
+    border-spacing: 0;
     background: rgba(255,255,255,0.03
-
     border-radius: 18px;
     overflow: hidden;
+    table-layout: auto;
 }
 
 .reports-table th {
-    background: rgba(255,255,255,0.05
-
-    color: #ffbd59;
-
-    text-align: left;
-
-    padding: 1rem;
+    padding: 1.2rem 1rem;
 }
 
 .reports-table td {
-    padding: 1rem;
-
-    border-top: 1px solid rgba(255,255,255,0.05
+    padding: 1.4rem 1rem;
+    vertical-align: top;
 }
 
-.reports-table tr:hover {
-    background: rgba(255,255,255,0.04
+
+
+/* Distribución de columnas */
+
+.reports-table th:nth-child(1),
+.reports-table td:nth-child(1) {
+    width: 3%;
+    text-align: center;
+}
+
+.reports-table th:nth-child(2),
+.reports-table td:nth-child(2) {
+    width: 3%;
+    text-align: center;
+}
+
+.reports-table th:nth-child(3),
+.reports-table td:nth-child(3) {
+    width: 9%;
+}
+
+.reports-table th:nth-child(4),
+.reports-table td:nth-child(4) {
+    width: 8%;
+}
+
+.reports-table th:nth-child(5),
+.reports-table td:nth-child(5) {
+    width: 24%;
+}
+
+.reports-table th:nth-child(6),
+.reports-table td:nth-child(6) {
+    width: 10%;
+}
+
+.reports-table th:nth-child(7),
+.reports-table td:nth-child(7) {
+    width: 14%;
+}
+
+.reports-table th:nth-child(8),
+.reports-table td:nth-child(8) {
+    width: 29%;
+}
+/* Celda motivo con manejo de texto largo */
+.reason-cell {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.7;
+    padding-right: 1.5rem;
+    color: rgba(255,255,255,.92
+}
+
+.reports-table th:nth-child(1),
+.reports-table th:nth-child(2),
+.reports-table td:nth-child(1),
+.reports-table td:nth-child(2) {
+    text-align: center;
+}
+
+.reports-table tbody tr:not(:last-child) td {
+    border-bottom: 1px solid rgba(255,255,255,.06
+}
+
+/* ------------------------------------------------ */
+/* TABLA - ACCIONES */
+/* ------------------------------------------------ */
+
+.actions-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 1rem;
+}
+
+.actions-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.dashboard-btn {
+
+    min-width: 105px;
+
+    height: 42px;
+
+    display: inline-flex;
+
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 12px;
+
+    border: 1px solid transparent;
+
+    font-size: .82rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+/* Ver review */
+.view-btn {
+    background: rgba(255,189,89,.12
+    border-color: rgba(255,189,89,.25
+    color: #ffbd59;
+}
+
+.delete-btn {
+    background: rgba(40,167,69,.15
+    border-color: rgba(40,167,69,.25
+    color: #7ee2a8;
+}
+
+.reject-btn {
+    background: rgba(220,53,69,.15
+    border-color: rgba(220,53,69,.25
+    color: #ff8c9b;
+}
+
+/* Casos cerrados */
+.closed-case-badge {
+    width: 100%;
+    min-height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    padding: .8rem 1rem;
+    border-radius: 12px;
+    font-size: .8rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+.closed-case-badge.resolved {
+    background: rgba(40,167,69,.15
+    color: #7ee2a8;
+}
+
+.closed-case-badge.rejected {
+    background: rgba(220,53,69,.15
+    color: #ff8c9b;
 }
 
 /* STATUS */
-
 .status-badge {
     display: inline-flex;
-
     padding: .35rem .75rem;
-
     border-radius: 999px;
-
     font-size: .75rem;
     font-weight: 600;
 }
@@ -184,42 +321,67 @@ body {
     color: #ffbd59;
 }
 
-/* Acciones */
-.actions-cell {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
 .dashboard-btn {
-    border: none;
-    padding: 0.45rem 0.8rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
+
+    width: 100px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: .65rem 1rem;
+
+    border-radius: 12px;
+
+    font-size: .82rem;
     font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    transition: 0.2s;
+
+    border: 1px solid transparent;
+
+    transition: all .2s ease;
 }
 
+/* Ver review */
 .view-btn {
-    background: #3b82f6;
-    color: white;
+    background: rgba(255, 189, 89, 0.12
+    border-color: rgba(255, 189, 89, 0.25
+    color: #ffbd59;
 }
 
-.delete-btn {
-    background: #ef4444;
-    color: white;
+.view-btn:hover {
+    background: rgba(255, 189, 89, 0.20
+    transform: translateY(-1px
 }
+
+/* Aceptar */
+.delete-btn {
+    background: rgba(46, 204, 113, 0.12
+    border-color: rgba(46, 204, 113, 0.25
+    color: #7ee2a8;
+}
+
+.delete-btn:hover {
+    background: rgba(46, 204, 113, 0.18
+    transform: translateY(-1px
+}
+
+/* Rechazar */
 
 .reject-btn {
-    background: #6b7280;
-    color: white;
+    background: rgba(255,255,255,.05
+    border-color: rgba(255,255,255,.08
+    color: rgba(255,255,255,.85
+}
+
+.reject-btn:hover {
+    background: rgba(255,255,255,.09
+    transform: translateY(-1px
 }
 
 .dashboard-btn:hover {
     opacity: 0.85;
 }
+
 
 /* Modal report details */
 .review-modal {
@@ -458,6 +620,11 @@ body {
     color: #7ee2a8;
     font-size: .75rem;
     font-weight: 600;
+
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.4;
 }
 
 .closed-case-badge.rejected {

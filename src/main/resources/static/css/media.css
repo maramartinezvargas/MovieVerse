@@ -785,7 +785,7 @@
 /* TEXTAREA */
 .custom-textarea {
     resize: none;
-    min-height: 110px;
+    min-height: 80px;
 }
 
 /* FOOTER */

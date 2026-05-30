@@ -6,6 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 /**
+ *
+ * Nota*: Actualmente no se utiliza en el código de la aplicación, pero se mantiene para futuras funcionalidades de análisis de auditoría.
+ * La tabla de auditoría se gestiona mediante triggers SQL que registran automáticamente las acciones de moderación.
+ * -----------------------------------------------------------------------------------------------
+ *
  * Repositorio Spring Data JPA para acceder a registros de auditoría.
  *
  * Proporciona operaciones CRUD y consultas personalizadas sobre la entidad {@link com.mara.tfgcine.model.moderation.AuditLog}.
@@ -21,7 +26,5 @@ import java.util.List;
  * @see com.mara.tfgcine.model.moderation.AuditLog
  */
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
-
     List<AuditLog> findByModeratorId(Long moderatorId
-
 }
