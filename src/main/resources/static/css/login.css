@@ -212,3 +212,43 @@ input:-webkit-autofill:focus {
 #password:invalid + .auth-hint {
     color: #ff5050;
 }
+
+/* Mensajes de registro/login */
+.auth-message {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .9rem 1rem;
+    margin-bottom: 1.25rem;
+    border-radius: 14px;
+    font-size: .9rem;
+    line-height: 1.4;
+    backdrop-filter: blur(10px
+}
+
+.auth-message i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Registro correcto */
+.success-message {
+    background: rgba(255, 189, 89, 0.08
+    border: 1px solid rgba(255, 189, 89, 0.25
+    color: #f0dfc8;
+}
+
+.success-message i {
+    color: #ffbd59;
+}
+
+/* Login incorrecto */
+.error-message {
+    background: rgba(255, 80, 80, 0.08
+    border: 1px solid rgba(255, 80, 80, 0.25
+    color: #f0dfc8;
+}
+
+.error-message i {
+    color: #ff7a7a;
+}

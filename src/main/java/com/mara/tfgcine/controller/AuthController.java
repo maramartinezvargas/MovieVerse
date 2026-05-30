@@ -80,7 +80,7 @@ public class AuthController {
 
         try {
             userService.register(user
-            return "redirect:/login";
+            return "redirect:/login?registered=true";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage()
             return "register";

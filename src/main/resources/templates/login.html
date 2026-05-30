@@ -11,6 +11,22 @@
     <div class="auth-container">
 
         <div class="auth-card">
+            <!-- Mensajes de éxito o error al registrarse o iniciar sesión -->
+            <div th:if="${param.registered}"
+                 class="auth-message success-message">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>
+                    Registro completado correctamente.
+                    Ya puedes iniciar sesión.
+                </span>
+            </div>
+            <div th:if="${param.error}"
+                 class="auth-message error-message">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span>
+                    Usuario o contraseña incorrectos.
+                </span>
+            </div>
 
             <h1 class="auth-title">Iniciar sesión</h1>
 

@@ -99,27 +99,27 @@ public class SecurityConfig {
                 )
 
                 .formLogin(form -> form
-                        // Personalizar la página de login
+                        // Página de login personalizada
                         .loginPage("/login")
-
-                        // Personalizar el comportamiento después del login exitoso
+                        // URL a la que se redirige tras un error de login
+                        .failureUrl("/login?error=true")
+                        // Comportamiento tras un login exitoso: redirigir a la URL original o a "/"
                         .successHandler((request, response, authentication) -> {
-
+                            // Página original a la que se intentaba acceder antes de autenticarse
                             String redirect = request.getParameter("redirect"
-
+                            // Si no hay URL original, redirigir a la página principal
                             if (redirect != null && !redirect.isEmpty() && redirect.startsWith("/")) {
                                 response.sendRedirect(redirect
+                            // Sino redirigir a la raíz
                             } else {
                                 response.sendRedirect("/"
                             }
-
                         })
-
                         .permitAll()
                 )
 
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/?logoutSuccess=true")
                         .permitAll()
                 )
 

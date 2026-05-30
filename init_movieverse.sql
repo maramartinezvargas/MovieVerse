@@ -176,44 +176,26 @@ CREATE TRIGGER trg_audit_moderation
 AFTER UPDATE ON reports
 FOR EACH ROW
 BEGIN
-
     DECLARE moderator_username VARCHAR(50
+    
+    IF OLD.status != NEW.status AND NEW.status IN ('RESOLVED', 'REJECTED') THEN
 
-    IF OLD.status != NEW.status
-       AND NEW.status IN ('RESOLVED', 'REJECTED') THEN
+		SELECT username INTO moderator_username FROM users WHERE id = NEW.moderator_id;
 
-        SELECT username
-        INTO moderator_username
-        FROM users
-        WHERE id = NEW.moderator_id;
-
-       INSERT INTO audit_logs (
-			moderator_id,
-			action,
-			report_id,
-			details
-		)
-		
+       INSERT INTO audit_logs (moderator_id, action, report_id, details) 	
 			NEW.moderator_id,
 			NEW.status,
 			NEW.id,
 			CONCAT(
-				'Reporte ',
-				NEW.id,
+				'Reporte ', NEW.id,
 				' marcado como ',
-				CASE
-					WHEN NEW.status = 'RESOLVED' THEN 'aceptado'
-					WHEN NEW.status = 'REJECTED' THEN 'rechazado'
-				END,
-				' por ',
-				moderator_username
-			)
-		
-
+					CASE
+						WHEN NEW.status = 'RESOLVED' THEN 'aceptado'
+						WHEN NEW.status = 'REJECTED' THEN 'rechazado'
+					END,
+				' por ', moderator_username)
     END IF;
-
 END$$
-
 DELIMITER ;
 
 -- DATOS DE PRUEBA ----------------------------------------------------------------------------------------------------

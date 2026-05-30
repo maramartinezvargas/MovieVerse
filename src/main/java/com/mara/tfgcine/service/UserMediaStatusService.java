@@ -44,9 +44,7 @@ public class UserMediaStatusService {
             UserMediaStatusRepository userMediaStatusRepository
     ) {
 
-        this.userMediaStatusRepository =
-                userMediaStatusRepository;
-
+        this.userMediaStatusRepository = userMediaStatusRepository;
     }
 
     /**
@@ -57,19 +55,8 @@ public class UserMediaStatusService {
      * @param mediaType tipo de medio (MOVIE o SERIE)
      * @return Optional con el UserMediaStatus si existe, vacío si no
      */
-    public Optional<UserMediaStatus> getStatus(
-            User user,
-            Long mediaId,
-            MediaType mediaType
-    ) {
-
-        return userMediaStatusRepository
-                .findByUserAndMediaIdAndMediaType(
-                        user,
-                        mediaId,
-                        mediaType
-                
-
+    public Optional<UserMediaStatus> getStatus(User user, Long mediaId, MediaType mediaType) {
+        return userMediaStatusRepository.findByUserAndMediaIdAndMediaType(user, mediaId, mediaType
     }
 
     /**
@@ -100,32 +87,25 @@ public class UserMediaStatusService {
             MediaStatus status
     ) {
 
-        Optional<UserMediaStatus> existingStatus =
-                getStatus(user, mediaId, mediaType
+        Optional<UserMediaStatus> existingStatus = getStatus(user, mediaId, mediaType
 
         if (existingStatus.isPresent()) {
 
-            UserMediaStatus currentStatus =
-                    existingStatus.get(
+            UserMediaStatus currentStatus = existingStatus.get(
 
             /* Toggle: eliminar estado (si pulsa el mismo que el actual) */
             if (currentStatus.getStatus() == status) {
-                userMediaStatusRepository
-                        .delete(currentStatus
-
+                userMediaStatusRepository.delete(currentStatus
                 return null;
             }
 
             /* Toggle: guardar nuevo estado (diferente al actual) */
             currentStatus.setStatus(status
-            return userMediaStatusRepository
-                    .save(currentStatus
+            return userMediaStatusRepository.save(currentStatus
         }
 
         /* Crear nuevo estado */
-
-        UserMediaStatus newStatus =
-                new UserMediaStatus(
+        UserMediaStatus newStatus = new UserMediaStatus(
 
         newStatus.setUser(user
         newStatus.setMediaId(mediaId
@@ -135,8 +115,7 @@ public class UserMediaStatusService {
         newStatus.setPosterPath(posterPath
         newStatus.setVoteAverage(voteAverage
 
-        return userMediaStatusRepository
-                .save(newStatus
+        return userMediaStatusRepository.save(newStatus
 
     }
 
