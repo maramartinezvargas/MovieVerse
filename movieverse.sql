@@ -171,7 +171,6 @@ CREATE TABLE audit_logs (
 
 -- TRIGGER DE AUDITORÍA DE LAS ACCIONES DE MODERACIÓN -----------------------------------------------------------------
 DELIMITER $$
-
 CREATE TRIGGER trg_audit_moderation
 AFTER UPDATE ON reports
 FOR EACH ROW

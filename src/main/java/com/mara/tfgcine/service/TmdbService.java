@@ -17,6 +17,27 @@ import java.text.Normalizer;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+/**
+ * Servicio que encapsula las llamadas a la API de TMDB y transforma las respuestas JSON
+ * en modelos de la aplicación (Movie, TvSeries, Provider, ReviewDTO, etc.).
+ *
+ * Funcionalidades principales:
+ * - Delega solicitudes HTTP a {@link com.mara.tfgcine.client.TmdbClient}.
+ * - Mappea JSON de TMDB, adapta los datos obtenidos a los objetos de la aplicación (cargando
+ *   géneros al arrancar) y facilita búsqueda, exploración, detalles, reparto, proveedores
+ *   y reseñas.
+ *
+ * Notas:
+ * - Usa {@code tmdb.image.poster} y {@code tmdb.image.backdrop} como base para las URLs de imágenes.
+ * - Algunos métodos lanzan {@code Exception}; otros devuelven colecciones vacías como fallback -> devolver
+ *   un valor por defecto (lista vacía) cuando falla la llamada a TMDB, para que no rompa la app
+ *
+ * @see com.mara.tfgcine.client.TmdbClient
+ * @author Tamara Martínez
+ * @since 02/03/2026
+ * @version 28/05/2026
+ */
+
 @Service
 public class TmdbService {
 
@@ -49,7 +70,17 @@ public class TmdbService {
         }
     }
 
-    /* Search ---------------------------------------------------------------------------- */
+
+    /**
+     * Busca películas y series por título usando la API de TMDB.
+     *
+     * Filtra resultados sin póster/backdrop, normaliza títulos y ordena por
+     * relevancia según coincidencia exacta, contiene frase, comienza con la query, etc.
+     *
+     * @param query término de búsqueda
+     * @return lista de hasta 50 medios ordenados por relevancia
+     * @throws Exception si ocurre error en la comunicación con TMDB
+     */
     public List<Media> search(String query) throws Exception {
 
         if (query == null || query.isBlank()) {
@@ -131,8 +162,12 @@ public class TmdbService {
         return score;
     }
 
-    /* Peliculas ---------------------------------------------------------------------------- */
-
+    /**
+     * Obtiene las películas en tendencia actual desde TMDB.
+     *
+     * @return lista de películas
+     * @throws Exception si ocurre error en la comunicación con TMDB
+     */
     public List<Movie> getTopMovies() throws Exception {
         return processMovieResults(tmdbClient.getTrendingMovies(), true
     }
@@ -149,6 +184,19 @@ public class TmdbService {
         return processMovieResults(tmdbClient.discoverMovies(page), true
     }
 
+
+    /**
+     * Obtiene películas descubiertas con filtros (año, género, ordenación, rating mínimo, votos mínimos).
+     *
+     * @param page número de página
+     * @param year año de lanzamiento (opcional)
+     * @param genre ID de género (opcional)
+     * @param sort criterio de ordenación (p.ej. "popularity.desc")
+     * @param minRating puntuación mínima (opcional)
+     * @param minVotes número mínimo de votos (opcional)
+     * @return lista de películas filtradas
+     * @throws Exception si ocurre error en la comunicación con TMDB
+     */
     public List<Movie> discoverMoviesFiltered(int page, Integer year, Integer genre, String sort, Double minRating, Integer minVotes) throws Exception {
 
         String json = tmdbClient.discoverMoviesFiltered(page, year, genre, sort, minRating, minVotes
@@ -202,10 +250,22 @@ public class TmdbService {
                 .toList(
     }
 
+
+    /**
+     * Obtiene el mapa de IDs a nombres de géneros de películas.
+     *
+     * @return mapa de ID → nombre de género
+     */
     public Map<Integer, String> getMovieGenresMap() {
         return movieGenreMap;
     }
 
+
+    /**
+     * Obtiene el mapa de IDs a nombres de géneros de series.
+     *
+     * @return mapa de ID → nombre de género
+     */
     public Map<Integer, String> getTvGenresMap() {
         return tvGenreMap;
     }
@@ -235,6 +295,13 @@ public class TmdbService {
 
     /* Pelis y series combinadas ---------------------------------------------------------------------------- */
 
+
+    /**
+     * Obtiene contenido aleatorio (películas y series) para ver relajadamente.
+     *
+     * @return lista de hasta 20 medios mezclados y aleatorizados
+     * @throws Exception si ocurre error en la comunicación con TMDB
+     */
     public List<Media> getComfortContent() throws Exception {
 
         List<Media> combined = new ArrayList<>(
@@ -255,10 +322,14 @@ public class TmdbService {
         return new ArrayList<>(processMovieResults(tmdbClient.getComfortMovies(), true)
     }
 
-
-
-    /* Featured (Pelicula que sale en Hero / home)---------------------------------------------------- */
-
+    /**
+     * Obtiene una película destacada para mostrar en el hero/portada principal.
+     *
+     * Selecciona películas con filtros de calidad (>300 votos, rating >6.5) y rota
+     * cada hora para variedad.
+     *
+     * @return película destacada, o null si no hay disponible
+     */
     public Movie getFeaturedMovie() {
 
         try {
@@ -328,6 +399,14 @@ public class TmdbService {
 
     /* Mappers para deserializar los Json de las peticiones a la API y naturalizar los datos ------------ */
 
+    /**
+     * Crea un objeto Movie a partir de un nodo JSON de TMDB, adaptando los campos según el tipo de medio.
+     *
+     * @param node
+     * @param id
+     * @param isMovie
+     * @return
+     */
     private Movie createMovieFromNode(JsonNode node, int id, boolean isMovie) {
 
         Movie m = new Movie(
@@ -355,6 +434,13 @@ public class TmdbService {
         return m;
     }
 
+    /**
+     * Obtiene los detalles completos de una película (sinopsis, reparto, equipo técnico, etc.).
+     *
+     * @param movieId identificador de la película en TMDB
+     * @return objeto Movie con información completa
+     * @throws Exception si ocurre error en la comunicación con TMDB
+     */
     public Movie getMovieDetails(int movieId) throws Exception {
 
         JsonNode json = mapper.readTree(tmdbClient.getMovieDetails(movieId)
@@ -382,7 +468,7 @@ public class TmdbService {
         m.setVoteCount(json.path("vote_count").asInt()
         m.setReleaseDate(json.path("release_date").asText()
 
-        // runtime
+        // runtime: Tiempo de duración de la película en minutos.
         m.setRuntime(json.path("runtime").asInt()
 
         // trailer
@@ -452,6 +538,13 @@ public class TmdbService {
         }
     }
 
+    /**
+     * Obtiene películas recomendadas o similares a una película dada.
+     *
+     * @param movieId identificador de la película de referencia
+     * @return lista de hasta 20 películas relacionadas
+     * @throws Exception si ocurre error en la comunicación con TMDB
+     */
     public List<Movie> getRelatedMovies(int movieId) throws Exception {
 
         try {
@@ -484,7 +577,6 @@ public class TmdbService {
         }
     }
 
-
     private TvSeries createTvFromNode(JsonNode node, int id) {
 
         TvSeries tv = new TvSeries(
@@ -514,7 +606,12 @@ public class TmdbService {
         return tv;
     }
 
-    /* Plataformas de streaming --------------- */
+    /**
+     * Obtiene plataformas de streaming disponibles para una película en España.
+     *
+     * @param movieId identificador de la película
+     * @return lista de proveedores (Netflix, Prime Video, etc.)
+     */
     public List<Provider> getProvidersForMovie(int movieId) {
 
         try {
@@ -539,7 +636,16 @@ public class TmdbService {
         }
     }
 
-    /* Enlaza el ID del proveedor con su web oficial. TMDB no proporciona el link directo, solo el ID y el nombre, así que hacemos esta asociación manualmente para los proveedores más comunes en España. */
+    /**
+     * Obtiene la URL oficial del proveedor de streaming según su ID.
+     *
+     * Enlaza manualmente cada ID de proveedor con su sitio web oficial, ya que TMDB
+     * solo proporciona el ID y nombre sin URLs directas. Se ha incluido los proveedores
+     * más comunes en España (Netflix, Prime Video, Disney+, Movistar+, HBO... etc.).
+     *
+     * @param id identificador del proveedor asignado por TMDB
+     * @return URL del sitio web del proveedor, o null si el ID no es reconocido
+     */
     private String getProviderLink(int id) {
         return switch (id) {
             case 8, 1796 -> "https://www.netflix.com";
@@ -560,7 +666,12 @@ public class TmdbService {
         };
     }
 
-    /* Reviews *--------------------------------------------------------------------------- */
+    /**
+     * Obtiene reseñas de TMDB sobre una película.
+     *
+     * @param movieId identificador de la película
+     * @return lista de reseñas mapeadas a DTO
+     */
     public List<ReviewDTO> getReviews(Long movieId) {
 
         try {
@@ -615,7 +726,13 @@ public class TmdbService {
         }
     }
 
-    /* Cast ---------------------------------------------------------------------------- */
+
+    /**
+     * Obtiene el reparto principal de una película.
+     *
+     * @param movieId identificador de la película
+     * @return lista de hasta 25 actores
+     */
     public List<CastMember> getMovieCast(int movieId) {
 
         try {
@@ -654,7 +771,13 @@ public class TmdbService {
         }
     }
 
-    /* Crew (director, guionista, compositor, director de fotografía) -------------------------------------------------- */
+
+    /**
+     * Obtiene información técnica de una película (director, guionistas, compositor, cinematografía).
+     *
+     * @param movieId identificador de la película
+     * @return mapa con claves "directors", "writers", "composer", "cinematography"
+     */
     public Map<String, String> getMovieCrewInfo(int movieId) {
 
         try {
@@ -693,7 +816,14 @@ public class TmdbService {
         }
     }
 
-    /* SERIES ---------------------------------------------------------------------------- */
+
+    /**
+     * Obtiene los detalles completos de una serie (sinopsis, equipo técnico, número de temporadas, etc.).
+     *
+     * @param tvId identificador de la serie en TMDB
+     * @return objeto TvSeries con información completa
+     * @throws Exception si ocurre error en la comunicación con TMDB
+     */
     public TvSeries getSerieDetails(int tvId) throws Exception {
 
         JsonNode json = mapper.readTree(tmdbClient.getTvDetails(tvId)
@@ -757,6 +887,13 @@ public class TmdbService {
         return tv;
     }
 
+
+    /**
+     * Obtiene el reparto principal de una serie.
+     *
+     * @param tvId identificador de la serie
+     * @return lista de hasta 25 actores
+     */
     public List<CastMember> getSerieCast(int tvId) {
 
         try {
@@ -798,6 +935,14 @@ public class TmdbService {
         }
     }
 
+
+    /**
+     * Obtiene series recomendadas o similares a una serie dada.
+     *
+     * @param tvId identificador de la serie de referencia
+     * @return lista de hasta 20 series relacionadas
+     * @throws Exception si ocurre error en la comunicación con TMDB
+     */
     public List<TvSeries> getRelatedSeries(int tvId) throws Exception {
 
         try {
@@ -829,6 +974,13 @@ public class TmdbService {
         }
     }
 
+
+    /**
+     * Obtiene plataformas de streaming disponibles para una serie en España.
+     *
+     * @param tvId identificador de la serie
+     * @return lista de proveedores
+     */
     public List<Provider> getProvidersForSeries(int tvId) {
 
         try {
@@ -885,6 +1037,13 @@ public class TmdbService {
         }
     }
 
+
+    /**
+     * Obtiene información técnica de una serie (creadores).
+     *
+     * @param tvId identificador de la serie
+     * @return mapa con claves "directors", "writers", "composer", "cinematography"
+     */
     public Map<String, String> getSerieCrewInfo(int tvId) {
 
         try {
@@ -913,6 +1072,13 @@ public class TmdbService {
         }
     }
 
+
+    /**
+     * Obtiene reseñas de TMDB sobre una serie.
+     *
+     * @param tvId identificador de la serie
+     * @return lista de reseñas mapeadas a DTO
+     */
     public List<ReviewDTO> getSerieReviews(Long tvId) {
 
         try {
@@ -963,12 +1129,21 @@ public class TmdbService {
         }
     }
 
-
-
-    /* Obtener trailer tanto de película como de serie */
+    /**
+     * Obtiene la clave del trailer (YouTube) de una película o serie desde TMDB.
+     *
+     * Busca el primer video de tipo "Trailer" en español o inglés alojado en YouTube.
+     * Si no encuentra un trailer exacto, intenta como alternativa cualquier video que
+     * contenga la palabra "trailer" en su nombre. Retorna null si no hay videos disponibles.
+     *
+     * @param id identificador de la película o serie en TMDB
+     * @param isMovie true si es película, false si es serie
+     * @return la clave del video (key) de YouTube del trailer, o null si no hay disponible
+     */
     private String getTrailerKey(int id, boolean isMovie) {
 
         try {
+            // Validar si es película o serie y llamar al endpoint correspondiente para obtener los videos asociados
             String jsonStr = isMovie
                     ? tmdbClient.getMovieVideos(id)
                     : tmdbClient.getTvVideos(id
@@ -993,7 +1168,7 @@ public class TmdbService {
                     return video.path("key").asText(
                 }
 
-                // PRIORIDAD 2 → algo que tenga pinta de trailer
+                // PRIORIDAD 2 (fallback) → algún clip que tenga "pinta" de trailer
                 if (fallback == null && name.contains("trailer")) {
                     fallback = video;
                 }

@@ -3,6 +3,7 @@ package com.mara.tfgcine.model.status;
 import com.mara.tfgcine.model.media.MediaType;
 import com.mara.tfgcine.model.user.User;
 
+import com.mara.tfgcine.service.UserMediaStatusService;
 import jakarta.persistence.*;
 
 import lombok.Data;
@@ -46,7 +47,7 @@ import java.time.LocalDateTime;
         })
     }
 )
-@Data
+
 public class UserMediaStatus {
 
     @Id
@@ -79,7 +80,7 @@ public class UserMediaStatus {
     private LocalDateTime createdAt;
 
     /* Getters and Setters */
-/*
+
     public Long getId() {
         return id;
     }
@@ -150,5 +151,5 @@ public class UserMediaStatus {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }*/
+    }
 }
