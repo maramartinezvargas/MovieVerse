@@ -203,16 +203,6 @@ DELIMITER ;
 INSERT INTO users (username, email, password) VALUES
 ('mara', 'mara@test.com', '$2a$10$QtG2G2tQcNYwn4t33OkiP.78QOpKU6STjGGn.sTcJkvf/qkYONMKy'
 
-
-
-
-
-
-
-
-
-
-
 -- Reviews prueba | para Dune (438631)
 INSERT INTO reviews (comment, rating, created_at, media_id, media_type, title, poster_path, user_id)
 
